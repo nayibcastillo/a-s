@@ -165,7 +165,7 @@ class MenuController extends Controller
 
             self::$user = Usuario::where('person_id', Request()->get('person_id'))->first();
             if (!self::$user) throw new Exception("No existe un usuario asociado", 400);
-            $menus = Menu::whereNull('parent_id')->get(['id', 'name']);
+            $menus = Menu::whereNull('parent_id')->orderBy('order')->get(['id', 'name']);
 
             foreach ($menus as &$item) {
                 $item['child'] = [];
