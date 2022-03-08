@@ -70,7 +70,7 @@ use App\Http\Controllers\VisaTypeController;
 use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Person;
-
+use App\Models\Board;
 use App\Models\RegimenType;
 use App\Models\Level;
 use App\Models\Municipality;
@@ -114,6 +114,7 @@ use App\Http\Controllers\CountableIncomeController;
 use App\Http\Controllers\ElectronicPayrollController;
 use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
+use App\Http\Controllers\BoardController;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -499,6 +500,9 @@ Route::group(
 		Route::resource("professionals", "ProfessionalController");
 
 		Route::resource("company", "CompanyController");
+
+        Route::get("board", [BoardController::class, "getData"]);
+
 		Route::resource("people-type", "PeopleTypeController");
 
 		Route::resource("departments", "DepartmentController");
@@ -630,7 +634,9 @@ Route::group(
 		});
 		Route::post('change-company-work/{id}', [PersonController::class, 'changeCompanyWorked']);
 		Route::post('person/set-companies/{personId}', [PersonController::class, 'setCompaniesWork']);
+        Route::post('person/set-board/{personId}/{board}', [PersonController::class, 'setBoardsPerson']);
 		Route::get('person/get-companies/{personId}', [PersonController::class, 'personCompanies']);
+        Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
 
 		//se ejecuta al crear
         Route::resource("subcategory", "SubcategoryController");
@@ -643,7 +649,7 @@ Route::group(
         Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
 		Route::resource("subcategory", "SubcategoryController");
         Route::resource("category", "CategoryController");
-		
+
 		Route::resource("product-accounting", "ProductAccountingPlanController");
         Route::resource("product", "ProductController");
 	}

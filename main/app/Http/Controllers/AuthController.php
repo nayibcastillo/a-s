@@ -146,12 +146,15 @@ class AuthController extends Controller
             $user = Usuario::with(
                 [
                     'person' => function ($q) {
-                        $q->select('*')->with('companies','companyWorked')
-                        ;
+                        $q->select('*')->with('companies','companyWorked');
                     },
                     'permissions' => function ($q) {
                         $q->select('*');
-                    }
+                    },
+                    'board' => function ($q) {
+                        $q->select('*');
+                    },
+
                 ]
             )->find($user->id);
 

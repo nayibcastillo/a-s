@@ -64,4 +64,9 @@ class Usuario extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Permission::class);
     }
+
+    public function board()
+    {
+        return $this->belongsTo(Board::class);
+    }
 }
