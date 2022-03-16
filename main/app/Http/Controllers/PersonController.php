@@ -641,13 +641,13 @@ class PersonController extends Controller
     {
         try {
             $companies = $req->get('companies');
-          
+
             DB::table('company_person')->where('person_id', '=', $personId)->delete();
 
             $person = Person::find($personId);
             $person->company_worked_id = $companies[0];
             $person->save();
-            
+
             foreach ($companies as $ids) {
                 DB::insert('insert into company_person (company_id, person_id) values (?, ?)', [$ids, $personId]);
             }
