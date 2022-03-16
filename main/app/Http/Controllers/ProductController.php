@@ -83,6 +83,57 @@ class ProductController extends Controller
         );
     }
 
+    public function getProductActa()
+    {
+        $page = Request()->get('page');
+        $page = $page ? $page : 1;
+        $pageSize = Request()->get('pageSize');
+        $pageSize = $pageSize ? $pageSize : 10;
+
+        $d = DB::table('producto as p')
+            ->Leftjoin('inventario_nuevo AS inu', 'inu.Id_Producto', '=', 'p.Id_Producto')
+            ->select(
+                DB::raw(' IFNULL(inu.Cantidad, 0) as CantidadInventario'),
+                'p.Id_Producto',
+                'inu.Lote',
+                'p.Codigo_Cum',
+
+                'p.Principio_Activo',
+
+                'p.Codigo_Barras',
+
+                'p.Id_Categoria',
+                'p.Id_Subcategoria',
+                'p.Laboratorio_Generico as Generico',
+                'p.Laboratorio_Comercial as Comercial',
+                'p.Invima as Invima',
+                'p.Imagen as Foto',
+                'p.Nombre_Comercial as Nombre_Comercial',
+
+                'p.Embalaje',
+                'p.Tipo as Tipo',
+                'p.Tipo_Catalogo',
+                'p.Id_Tipo_Activo_Fijo',
+                'p.Estado',
+                'p.Referencia'
+            )
+            ->where('inu.Cantidad', '>', 0)
+            ->where('p.Tipo_Catalogo', 'Medicamento')
+            ->selectRaw('(SELECT IFNULL(SUM(Cantidad-(Cantidad_Apartada+Cantidad_Seleccionada)),0)
+                          FROM Inventario_Nuevo WHERE Id_Producto = p.Id_Producto ) as cantidadA')
+
+            ->when(Request()->get('type'),  function ($q, $fill) {
+                $q->where('ID.type', $fill);
+            })
+            ->when(Request()->get('name'),  function ($q, $fill) {
+                $q->where('ID.name', 'like', '%' . $fill . '%');
+            })
+
+            ->paginate($pageSize, '*', 'page', $page);
+
+        return $this->success($d);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -162,7 +213,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = $request->except(["dynamic","Status","Codigo","Producto_Dotacion_Tipo"]);
+            $data = $request->except(["dynamic", "Status", "Codigo", "Producto_Dotacion_Tipo"]);
             $dynamic = request()->get("dynamic");
             // var_dump($dynamic);
             $product = Product::where('Id_Producto', $id)->update($data);

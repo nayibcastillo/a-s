@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountPlanController;
 use App\Http\Controllers\AdministratorController;
 use App\Http\Controllers\AgendamientoController;
+use App\Http\Controllers\ApplicationCertificateController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ArlController;
 use Illuminate\Support\Facades\Route;
@@ -111,9 +112,11 @@ use App\Http\Controllers\WorkContractController;
 use App\Http\Controllers\BankAccountsController;
 use App\Http\Controllers\ClinicalHistoryController;
 use App\Http\Controllers\CountableIncomeController;
+use App\Http\Controllers\DispensingPointController;
 use App\Http\Controllers\ElectronicPayrollController;
 use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -131,6 +134,27 @@ Route::post('/asistencia/validar', [AsistenciaController::class, 'validar']);
 Route::get('/', function () {
 	dd(Hash::make(12345));
 });
+
+Route::get('/image', function () {
+
+    $path = Request()->get('path');
+    if ($path) {
+        $path = storage_path('app/public') . '/' . $path;
+        return response()->file($path);
+    }
+    return 'path not found';
+});
+
+
+Route::get('/file', function () {
+    $path = Request()->get('path');
+    $download = storage_path('app/' . $path);
+    if ($path) {
+        return response()->download($download);
+    }
+    return 'path not found';
+});
+
 
 Route::prefix("auth")->group(
 	function () {
@@ -468,6 +492,12 @@ Route::group(
 		Route::get('/company-global', [CompanyController::class, 'getGlobal']);
 
 
+        /* Acata de aplicacion */
+        // Route::post('aplication-certificate', 'ApplicationCertificateController@store');
+		Route::resource('aplication-certificate', 'ApplicationCertificateController');
+		Route::post('/aplication-certificate/{id}',  [ApplicationCertificateController::class, 'update']);
+
+
 
 
 		/* END PAYROLL ROUTES */
@@ -499,6 +529,9 @@ Route::group(
 		Route::resource("professionals", "ProfessionalController");
 
 		Route::resource("company", "CompanyController");
+		Route::resource("dispensing", "DispensingPointController");
+		Route::post('dispensing/{personId}', [DispensingPointController::class, 'setPerson']);
+
 		Route::resource("people-type", "PeopleTypeController");
 
 		Route::resource("departments", "DepartmentController");
@@ -562,6 +595,8 @@ Route::group(
         Route::resource("category", "CategoryController");
 
         Route::resource("product", "ProductController");
+		Route::get('/product-acta',  [ProductController::class, 'getProductActa']);
+
 
 
         Route::resource("catalogo", "CatalogoController");
@@ -643,7 +678,7 @@ Route::group(
         Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
 		Route::resource("subcategory", "SubcategoryController");
         Route::resource("category", "CategoryController");
-		
+
 		Route::resource("product-accounting", "ProductAccountingPlanController");
         Route::resource("product", "ProductController");
 	}

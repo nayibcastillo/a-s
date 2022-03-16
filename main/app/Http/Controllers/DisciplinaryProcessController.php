@@ -58,7 +58,7 @@ class DisciplinaryProcessController extends Controller
     }
 
     /* public function getHistory(){
-       
+
     } */
 
     /**
@@ -181,7 +181,7 @@ class DisciplinaryProcessController extends Controller
      */
     public function edit($id)
     {
-        
+
     }
 
     /**

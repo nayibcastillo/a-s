@@ -56,6 +56,7 @@ class Person extends Model
         "medical_record",
          'arl_id',
          'company_worked_id',
+         'dispensing_point_id',
         // "ips"
 
         // contract: '';
@@ -168,7 +169,7 @@ class Person extends Model
     {
         return $this->belongsTo(Company::class);
     }
-    
+
     public function companyWorked()
     {
         return $this->belongsTo(Company::class,'company_worked_id');
