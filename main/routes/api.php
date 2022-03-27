@@ -71,6 +71,7 @@ use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Person;
 use App\Models\Board;
+use App\Models\Task;
 use App\Models\RegimenType;
 use App\Models\Level;
 use App\Models\Municipality;
@@ -115,6 +116,7 @@ use App\Http\Controllers\ElectronicPayrollController;
 use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -502,6 +504,7 @@ Route::group(
 		Route::resource("company", "CompanyController");
 
         Route::get("board", [BoardController::class, "getData"]);
+		Route::get("task", [TaskController::class, "getData"]);
 
 		Route::resource("people-type", "PeopleTypeController");
 
@@ -638,6 +641,21 @@ Route::group(
 		Route::get('person/get-companies/{personId}', [PersonController::class, 'personCompanies']);
         Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
 
+		//tareas
+		Route::post('upload', [TaskController::class, 'upload']);
+		Route::get('taskview/{id}', [TaskController::class, 'taskView']);
+		Route::post('newtask/{task}', [TaskController::class, 'newTask']);
+		Route::get('task/{id}', [TaskController::class, 'personTask']);
+		Route::get('taskperson/{personId}', [TaskController::class, 'person']);
+		Route::get('taskfor/{id}', [TaskController::class, 'personTaskFor']);
+		Route::get('person-taskpendientes/{personId}', [TaskController::class, 'personTaskPendientes']);
+		Route::get('person-taskejecucion/{personId}', [TaskController::class, 'personTaskEjecucion']);
+		Route::get('person-taskespera/{personId}', [TaskController::class, 'personTaskEspera']);
+		Route::get('person-taskfinalizado/{personId}', [TaskController::class, 'personTaskFinalizado']);
+		Route::post('updatefinalizado/{id}', [TaskController::class, 'updateFinalizado']);
+		Route::post('updatependiente/{id}', [TaskController::class, 'updatePendiente']);
+		Route::post('updateejecucion/{id}', [TaskController::class, 'updateEjecucion']);
+		Route::post('updateespera/{id}', [TaskController::class, 'updateEspera']);
 		//se ejecuta al crear
         Route::resource("subcategory", "SubcategoryController");
 		Route::post("subcategory-variable/{id}", "SubcategoryController@deleteVariable");

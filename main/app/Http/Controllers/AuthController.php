@@ -154,6 +154,9 @@ class AuthController extends Controller
                     'board' => function ($q) {
                         $q->select('*');
                     },
+                    'task' => function ($q) {
+                        $q->select('*');
+                    },
 
                 ]
             )->find($user->id);

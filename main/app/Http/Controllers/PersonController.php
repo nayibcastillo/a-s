@@ -679,4 +679,6 @@ class PersonController extends Controller
         ->get();
         return $this->success($board);
     }
+
+    
 }

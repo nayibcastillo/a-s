@@ -69,4 +69,9 @@ class Usuario extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Board::class);
     }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }
