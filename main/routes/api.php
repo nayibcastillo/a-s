@@ -152,7 +152,25 @@ Route::prefix("auth")->group(
 	}
 );
 
+Route::get('/image', function () {
 
+    $path = Request()->get('path');
+    if ($path) {
+        $path = public_path('app/public') . '/' . $path;
+        return response()->file($path);
+    }
+    return 'path not found';
+});
+
+
+Route::get('/file', function () {
+    $path = Request()->get('path');
+    $download = storage_path('app/' . $path);
+    if ($path) {
+        return response()->download($download);
+    }
+    return 'path not found';
+});
 
 Route::group(
 	[
@@ -504,7 +522,7 @@ Route::group(
 		Route::resource("company", "CompanyController");
 
         Route::get("board", [BoardController::class, "getData"]);
-		Route::get("task", [TaskController::class, "getData"]);
+		
 
 		Route::resource("people-type", "PeopleTypeController");
 
@@ -642,10 +660,17 @@ Route::group(
         Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
 
 		//tareas
+		Route::get("task", [TaskController::class, "getData"]);
 		Route::post('upload', [TaskController::class, 'upload']);
+		Route::get('deletetask/{idTask}', [TaskController::class, 'deleteTask']);	
+		Route::get('adjuntostask/{idTask}', [TaskController::class, 'adjuntosTask']);		
 		Route::get('taskview/{id}', [TaskController::class, 'taskView']);
 		Route::post('newtask/{task}', [TaskController::class, 'newTask']);
+		Route::post('newcomment/{comment}', [TaskController::class, 'newComment']);
+		Route::get('deletecomment/{commentId}', [TaskController::class, 'deleteComment']);
+		Route::get('getarchivada/{id}', [TaskController::class, 'getArchivada']);
 		Route::get('task/{id}', [TaskController::class, 'personTask']);
+		Route::get('getcomments/{idTask}', [TaskController::class, 'getComments']);
 		Route::get('taskperson/{personId}', [TaskController::class, 'person']);
 		Route::get('taskfor/{id}', [TaskController::class, 'personTaskFor']);
 		Route::get('person-taskpendientes/{personId}', [TaskController::class, 'personTaskPendientes']);
@@ -656,6 +681,7 @@ Route::group(
 		Route::post('updatependiente/{id}', [TaskController::class, 'updatePendiente']);
 		Route::post('updateejecucion/{id}', [TaskController::class, 'updateEjecucion']);
 		Route::post('updateespera/{id}', [TaskController::class, 'updateEspera']);
+		Route::post('updatearchivada/{id}', [TaskController::class, 'updateArchivado']);
 		//se ejecuta al crear
         Route::resource("subcategory", "SubcategoryController");
 		Route::post("subcategory-variable/{id}", "SubcategoryController@deleteVariable");
