@@ -71,7 +71,8 @@ use App\Http\Controllers\VisaTypeController;
 use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Person;
-
+use App\Models\Board;
+use App\Models\Task;
 use App\Models\RegimenType;
 use App\Models\Level;
 use App\Models\Municipality;
@@ -117,6 +118,8 @@ use App\Http\Controllers\ElectronicPayrollController;
 use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\PayrollParametersController;
@@ -183,7 +186,25 @@ Route::prefix("auth")->group(
 	}
 );
 
+Route::get('/image', function () {
 
+    $path = Request()->get('path');
+    if ($path) {
+        $path = public_path('app/public') . '/' . $path;
+        return response()->file($path);
+    }
+    return 'path not found';
+});
+
+
+Route::get('/file', function () {
+    $path = Request()->get('path');
+    $download = storage_path('app/' . $path);
+    if ($path) {
+        return response()->download($download);
+    }
+    return 'path not found';
+});
 
 Route::group(
 	[
@@ -560,6 +581,9 @@ Route::group(
 		Route::resource("dispensing", "DispensingPointController");
 		Route::post('dispensing/{personId}', [DispensingPointController::class, 'setPerson']);
 
+        Route::get("board", [BoardController::class, "getData"]);
+		
+
 		Route::resource("people-type", "PeopleTypeController");
 
 		Route::resource("departments", "DepartmentController");
@@ -695,8 +719,33 @@ Route::group(
 		});
 		Route::post('change-company-work/{id}', [PersonController::class, 'changeCompanyWorked']);
 		Route::post('person/set-companies/{personId}', [PersonController::class, 'setCompaniesWork']);
+        Route::post('person/set-board/{personId}/{board}', [PersonController::class, 'setBoardsPerson']);
 		Route::get('person/get-companies/{personId}', [PersonController::class, 'personCompanies']);
+        Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
 
+		//tareas
+		Route::get("task", [TaskController::class, "getData"]);
+		Route::post('upload', [TaskController::class, 'upload']);
+		Route::get('deletetask/{idTask}', [TaskController::class, 'deleteTask']);	
+		Route::get('adjuntostask/{idTask}', [TaskController::class, 'adjuntosTask']);		
+		Route::get('taskview/{id}', [TaskController::class, 'taskView']);
+		Route::post('newtask/{task}', [TaskController::class, 'newTask']);
+		Route::post('newcomment/{comment}', [TaskController::class, 'newComment']);
+		Route::get('deletecomment/{commentId}', [TaskController::class, 'deleteComment']);
+		Route::get('getarchivada/{id}', [TaskController::class, 'getArchivada']);
+		Route::get('task/{id}', [TaskController::class, 'personTask']);
+		Route::get('getcomments/{idTask}', [TaskController::class, 'getComments']);
+		Route::get('taskperson/{personId}', [TaskController::class, 'person']);
+		Route::get('taskfor/{id}', [TaskController::class, 'personTaskFor']);
+		Route::get('person-taskpendientes/{personId}', [TaskController::class, 'personTaskPendientes']);
+		Route::get('person-taskejecucion/{personId}', [TaskController::class, 'personTaskEjecucion']);
+		Route::get('person-taskespera/{personId}', [TaskController::class, 'personTaskEspera']);
+		Route::get('person-taskfinalizado/{personId}', [TaskController::class, 'personTaskFinalizado']);
+		Route::post('updatefinalizado/{id}', [TaskController::class, 'updateFinalizado']);
+		Route::post('updatependiente/{id}', [TaskController::class, 'updatePendiente']);
+		Route::post('updateejecucion/{id}', [TaskController::class, 'updateEjecucion']);
+		Route::post('updateespera/{id}', [TaskController::class, 'updateEspera']);
+		Route::post('updatearchivada/{id}', [TaskController::class, 'updateArchivado']);
 		//se ejecuta al crear
 		Route::resource("subcategory", "SubcategoryController");
 		Route::post("subcategory-variable/{id}", "SubcategoryController@deleteVariable");
@@ -708,6 +757,7 @@ Route::group(
 		Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
 		Route::resource("subcategory", "SubcategoryController");
         Route::resource("category", "CategoryController");
+
 		Route::resource("product-accounting", "ProductAccountingPlanController");
        
 		Route::resource("product", "ProductController");

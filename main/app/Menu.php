@@ -11,7 +11,7 @@ class Menu extends Model
 
     public function scopeFindCustom($query, $id)
     {
-        return $query->select(['name', 'id'])->firstWhere('id', $id);
+        return $query->select(['name', 'id', 'icon'])->firstWhere('id', $id);
     }
 
     public function usuario()

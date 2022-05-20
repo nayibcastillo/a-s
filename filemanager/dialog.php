@@ -185,6 +185,7 @@ if (isset($_POST['submit'])) {
 		<link href="css/bootstrap-lightbox.min.css" rel="stylesheet" type="text/css" />
 		<link href="css/style.css" rel="stylesheet" type="text/css" />
 		<link href="css/dropzone.min.css" type="text/css" rel="stylesheet" />
+		
 		<?php
 		$sprite_lang_file = 'img/spritemap_' . $lang . '.png';
 		$sprite_lang_file2 = 'img/spritemap@2x_' . $lang . '.png';

@@ -8,6 +8,7 @@ use App\Models\Usuario;
 use App\Models\WorkContract;
 use App\Restriction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -70,7 +71,7 @@ class ProfessionalRepository
             if ($person) ImgUploadFacade::deleteImg($person->signature_blob);
             $infoImg =  ImgUploadFacade::converFromBase64(request()->get('signature_blob'));
             request()->merge([
-                'signature_blob' =>  $infoImg['image_blob'],
+                'signature_blob' => URL::to('/') . '/api/image?path=' . $infoImg['image_blob'],
             ]);
         }
 
@@ -78,7 +79,7 @@ class ProfessionalRepository
             if ($person) ImgUploadFacade::deleteImg($person->image_blob);
             $infoImg =  ImgUploadFacade::converFromBase64(request()->get('image_blob'));
             request()->merge([
-                'image_blob' =>  $infoImg['image_blob'],
+                'image_blob' => URL::to('/') . '/api/image?path=' . $infoImg['image_blob'],
             ]);
         }
 

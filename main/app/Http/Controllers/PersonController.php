@@ -659,9 +659,26 @@ class PersonController extends Controller
         }
     }
 
+    public function setBoardsPerson($personId, $boards)
+    {
+        DB::table('usuario')->where('person_id', $personId)->update(['board_id' => $boards]);
+    }
+
     public function personCompanies($personId)
     {
         $companies = DB::table('company_person')->where('person_id',$personId)->get('*');
         return $this->success($companies);
     }
+
+    public function personBoards($personId)
+    {
+        $board = DB::table('usuario')
+        ->join('boards', 'usuario.board_id','=','boards.id')
+        ->where('person_id',$personId)
+        ->select('boards.id', 'boards.name_board')
+        ->get();
+        return $this->success($board);
+    }
+
+    
 }

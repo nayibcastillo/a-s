@@ -57,6 +57,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'taskmanager' => [
+            'driver' => 'local',
+            'root' => storage_path('app/taskmanager'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
         'descargos' => [
             'driver' => 'local',
             'root' => storage_path('app/descargos'),
