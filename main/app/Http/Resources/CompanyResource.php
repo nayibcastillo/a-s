@@ -18,6 +18,8 @@ class CompanyResource extends JsonResource
             'value' => $this->id,
             'text' => $this->name,
             'tipo' => ($this->type) ? 'Compañias propias' : 'Compañias de terceros',
+            'estado' => ($this->state) ? 'Activo' : 'Inactivo',
+            'categoria' => ($this->category)
         ];
     }
 }

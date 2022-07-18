@@ -18,7 +18,8 @@ class Company extends Model
     [
         "address", "category", "city", "code", "country_code", "creation_date", "disabled", "email",
         "encoding_characters", "id", "logo", "name", "pbx", "send_email", "settings", "slogan", "state", "telephone",
-        "tin", "type"
+        "tin", "type", "email_contact", "phone", "short_name", "agreements", "interface_id", "parent_id", "regional_id", "social_reason", "document_type",
+        "api_key"
     ];
 
     public function locations()

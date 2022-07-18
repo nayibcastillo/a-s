@@ -66,7 +66,7 @@ class DotationController extends Controller
             ->join('inventary_dotations AS ID', 'ID.id', '=', 'PD.inventary_dotation_id')
             ->join('product_dotation_types AS GI', 'GI.id', '=', 'ID.product_dotation_type_id')
             ->join('people AS  P', 'P.id', '=', 'D.person_id')
-            ->join('users AS US', 'US.id', '=', 'D.user_id')
+            ->join('usuario AS US', 'US.id', '=', 'D.id')
             ->join('people AS PF', 'PF.id', '=', 'US.person_id')
             ->select(
                 DB::raw('GROUP_CONCAT( PD.quantity , " X  " , ID.name ) AS product_name'),

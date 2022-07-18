@@ -16,7 +16,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CupController;
 use App\Http\Controllers\DataInit\PersonController as DataInitPersonController;
 use App\Http\Controllers\DependencyController;
-
+use App\Http\Controllers\PrettyCashController;
 use App\Http\Controllers\DisabilityLeaveController;
 use DisabilityLeaveController as CoreDisabilityLeaveController;
 
@@ -140,6 +140,7 @@ use App\Http\Controllers\RCuentaMedicaController;
 Route::get('get-company', [CompanyController::class, 'getCompanyByIdentifier']);
 Route::post('save-radicacion', [RCuentaMedicaController::class, 'store']);
 Route::get('get-companies', [CompanyController::class, 'getCompanies']);
+Route::get('get-all-companies', [CompanyController::class, 'getAllCompanies']);
 //End Radicatioon routes
 
 
@@ -292,8 +293,7 @@ Route::group(
 		Route::put('liquidate/{id}', [PersonController::class, 'liquidate']);
 		Route::get('liquidado/{id}', [WorkContractController::class, 'getLiquidated']);
 
-
-
+		
         /** Rutas inventario dotacion rrhh */
         /*
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
@@ -368,6 +368,7 @@ Route::group(
 		]);
 
 		Route::get("people-all", [PersonController::class, "getAll"]);
+		Route::get("validar-cedula/{documento}", [PersonController::class, "validarCedula"]);
 
 		/** Rutas inventario dotacion rrhh */
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
@@ -376,7 +377,7 @@ Route::group(
 		Route::post('/dotations-update/{id}',  [DotationController::class, 'update']);
 		Route::get('/dotations-total-types',  [DotationController::class, 'getTotatlByTypes']);
 		/** end*/
-
+		Route::resource('jobs', JobController::class);
 		Route::resource('dotations', 'DotationController');
 		Route::resource('product-dotation-types', 'ProductDotationTypeController');
 
@@ -385,7 +386,7 @@ Route::group(
 
 		Route::get('/horarios/datos/generales/{semana}', [RotatingTurnHourController::class, 'getDatosGenerales']);
 		Route::resource('alerts', 'AlertController');
-
+		Route::get('account-plan-balance', [AccountPlanController::class, 'listBalance']);
 		Route::resource('countable_incomes', CountableIncomeController::class);
 		Route::resource('countable_deductions', 'CountableDeductionController');
 
@@ -444,7 +445,7 @@ Route::group(
 		Route::get('countable_income', [BonificationsController::class, 'countable_income']);
 		Route::resource('bonifications', 'BonificationsController');
 
-		Route::get('companyData', [CompanyController::class, 'getBasicData']);
+		Route::get('companyData/{id}', [CompanyController::class, 'getBasicData']);
 		Route::post('saveCompanyData', [CompanyController::class, 'saveCompanyData']);
 
 		Route::get('proyeccion_pdf/{id}', [LoanController::class, 'loanpdf']);
@@ -563,6 +564,7 @@ Route::group(
 		Route::get("clean-info", [AppointmentController::class, "getDataCita"]);
 		Route::get("validate-info-patient", [DataInitPersonController::class, "validatePatientByLineFront"]);
 
+		Route::resource('pretty-cash', 'PrettyCashController');
 		Route::resource('dependencies', 'DependencyController');
 		Route::resource('rotating-turns', RotatingTurnController::class);
 		Route::resource('group', GroupController::class);
@@ -691,6 +693,7 @@ Route::group(
 		Route::get('info-grafical-by-regional', [ReporteController::class, 'getDataByRegional']);
 		Route::get('info-grafical-by-formality', [ReporteController::class, 'getDataByFormality']);
 		Route::get('info-grafical-by-deparment', [ReporteController::class, 'getDataByDepartment']);
+		Route::get('info-grafical-resume', [ReporteController::class, 'getDataByRegional', 'getDataByFormality', 'getDataByDepartment']);
 
 
 		//Price List

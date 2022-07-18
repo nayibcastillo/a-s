@@ -193,30 +193,30 @@ class ReporteController extends Controller
             ->select(
 
                 'appointments.code As consecutivo',
-                // 'type_documents.code as tipo_documnto',
-                // DB::raw('Concat_ws(" ",patients.firstname, patients.surname) As nombre'),
-                // 'patients.date_of_birth As cumple',
-                // 'patients.gener As sexo',
-                // 'patients.phone As telefono',
-                // 'patients.address As direccion',
-                // 'municipalities.name As municipio',
-                // 'departments.name As departamento',
-                // 'administrators.name As eps',
-                // 'regimen_types.name As regimen',
-                // 'locations.name As lugar',
-                // 'spaces.hour_start As fecha_cita',
-                // DB::raw('Concat_ws(" ",agente.first_name, agente.first_surname) As asigna'),
-                // 'appointments.state As estado',
-                // DB::raw('Concat_ws(" ",doctor.first_name, doctor.first_surname) As doctor'),
-                // 'type_appointments.name As consulta',
-                // 'specialities.name As especialidad',
-                // 'cups.code As cup',
-                // 'cups.description As cup_name',
-                // 'cie10s.description As diagnostico',
-                // 'appointments.ips As ips_remisora',
-                // 'appointments.profesional As professional_remisor',
-                // 'appointments.speciality As speciality_remisor',
-                // 'appointments.created_at'
+                'type_documents.code as tipo_documnto',
+                DB::raw('Concat_ws(" ",patients.firstname, patients.surname) As nombre'),
+                'patients.date_of_birth As cumple',
+                'patients.gener As sexo',
+                'patients.phone As telefono',
+                'patients.address As direccion',
+                'municipalities.name As municipio',
+                'departments.name As departamento',
+                'administrators.name As eps',
+                'regimen_types.name As regimen',
+                'locations.name As lugar',
+                'spaces.hour_start As fecha_cita',
+                DB::raw('Concat_ws(" ",agente.first_name, agente.first_surname) As asigna'),
+                'appointments.state As estado',
+                DB::raw('Concat_ws(" ",doctor.first_name, doctor.first_surname) As doctor'),
+                'type_appointments.name As consulta',
+                'specialities.name As especialidad',
+                'cups.code As cup',
+                'cups.description As cup_name',
+                'cie10s.description As diagnostico',
+                'appointments.ips As ips_remisora',
+                'appointments.profesional As professional_remisor',
+                'appointments.speciality As speciality_remisor',
+                'appointments.created_at'
             )->get();
     }
 
@@ -228,31 +228,31 @@ class ReporteController extends Controller
             ->select(
 
                 'appointments.globo_id As consecutivo',
-                // 'type_documents.code as tipo_documnto',
-                // DB::raw('Concat_ws(" ",patients.firstname, patients.secondsurname, patients.middlename, patients.surname) As nombre'),
-                // 'patients.date_of_birth As cumple',
-                // 'patients.gener As sexo',
-                // 'patients.identifier',
-                // 'patients.phone As telefono',
-                // 'patients.address As direccion',
-                // 'municipalities.name As municipio',
-                // 'departments.name As departamento',
-                // 'administrators.name As eps',
-                // 'regimen_types.name As regimen',
-                // 'locations.name As lugar',
-                // 'spaces.hour_start As fecha_cita',
-                // DB::raw('Concat_ws(" ",agente.first_name, agente.first_surname) As asigna'),
-                // 'appointments.state As estado',
-                // DB::raw('Concat_ws(" ",doctor.first_name, doctor.first_surname) As doctor'),
-                // 'type_appointments.name As consulta',
-                // 'specialities.name As especialidad',
-                // 'cups.code As cup',
-                // 'cups.description As cup_name',
-                // 'cie10s.description As diagnostico',
-                // 'appointments.ips As ips_remisora',
-                // 'appointments.profesional As professional_remisor',
-                // 'appointments.speciality As speciality_remisor',
-                // 'appointments.created_at'
+                 'type_documents.code as type_documents',
+                 DB::raw('Concat_ws(" ",patients.firstname, patients.secondsurname, patients.middlename, patients.surname) As nombre'),
+                'patients.date_of_birth As cumple',
+                'patients.gener As sexo',
+                'patients.identifier',
+                'patients.phone As telefono',
+                'patients.address As direccion',
+                'municipalities.name As municipio',
+                'departments.name As departamento',
+                'administrators.name As eps',
+                'regimen_types.name As regimen',
+                'locations.name As lugar',
+                'spaces.hour_start As fecha_cita',
+                DB::raw('Concat_ws(" ",agente.first_name, agente.first_surname) As asigna'),
+                 'appointments.state As estado',
+                 DB::raw('Concat_ws(" ",doctor.first_name, doctor.first_surname) As doctor'),
+                 'type_appointments.name As consulta',
+                 'specialities.name As especialidad',
+                 'cups.code As cup',
+                 'cups.description As cup_name',
+                 'cie10s.description As diagnostico',
+                 'appointments.ips As ips_remisora',
+                 'appointments.profesional As professional_remisor',
+                 'appointments.speciality As speciality_remisor',
+                 'appointments.created_at'
             )
 
             ->join('spaces', 'agendamientos.id', 'spaces.agendamiento_id')
@@ -306,6 +306,7 @@ class ReporteController extends Controller
     {
         return DB::table('waiting_lists')
             ->join('specialities', 'specialities.id',  'waiting_lists.speciality_id')
+            ->join('agendamientos', 'specialities.id',  'agendamientos.speciality_id') //agregada para corregir problema
             ->join('appointments', 'appointments.id',  'waiting_lists.appointment_id')
             ->join('call_ins', 'call_ins.id',  'appointments.call_id')
             ->join('patients', 'patients.identifier', 'call_ins.Identificacion_Paciente')
@@ -355,7 +356,7 @@ class ReporteController extends Controller
 
 
             ->select(
-                'type_documents.code as tipo_documnto',
+                'type_documents.code as type_documents',
                 'patients.identifier as patient_identifier',
                 DB::raw('CONCAT(patients.firstname, " ", patients.surname) as patient_name'),
                 'patients.gener As sexo',
@@ -373,9 +374,9 @@ class ReporteController extends Controller
 
     public function AgendasStatus($request)
     {
-        return DB::table('agendamientos')
+        return DB::table('agendamientos', 'patients')
 
-            ->join('spaces', 'agendamientos.id', 'spaces.agendamiento_id')
+            ->join('spaces', 'agendamientos.id', 'spaces.agendamiento_id')            
             ->join('locations', 'locations.id', 'agendamientos.location_id')
             ->join('people As doctor', 'doctor.id', 'agendamientos.person_id')
             ->join('specialities', 'specialities.id', 'agendamientos.speciality_id')
@@ -419,11 +420,11 @@ class ReporteController extends Controller
                 DB::raw('IF(spaces.status = 0,1,0) as Espacios_Ocupados'),
                 DB::raw('IF(spaces.status = 1 AND spaces.state="Activo",1,0) as Espacios_Disponibles'),
                 DB::raw('IF(spaces.status = 1 AND spaces.state="Cancelado",1,0) as Espacios_Cancelados'),
-                'companies.name As company',
-                'agendamientos.date_start As fecha_inicio',
-                'agendamientos.date_end As fecha_finalizacion',
-                'agendamientos.created_at As hora_creacion',
-                'specialities.name As especialidad'
+                'companies.name as company',
+                'agendamientos.date_start ss fecha_inicio',
+                'agendamientos.date_end as fecha_finalizacion',
+                'agendamientos.created_at as hora_creacion',
+                'specialities.name as especialidad'
             )
             ->groupBy('agendamientos.id')
             ->get();

@@ -13,8 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Exists;
 use App\Models\WorkContract;
-
+use Illuminate\Support\Facades\Storage;
+use App\CustomFacades\ImgUploadFacade;
+use Illuminate\Support\Facades\URL;
 use function GuzzleHttp\Promise\all;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -61,10 +64,10 @@ class CompanyController extends Controller
         return $this->success(CompanyResource::collection($companies->where('type', $brandShowCompany)->get()));
     }
 
-    public function getBasicData()
+    public function getBasicData($id)
     {
         return $this->success(
-            Company::with('arl')->with('bank')->first()
+            Company::with('arl')->with('bank')->where('id', '=', $id)->get()->first()
         );
     }
 
@@ -98,9 +101,14 @@ class CompanyController extends Controller
 
     public function saveCompanyData(Request $request)
     {
+        $infoImg =  ImgUploadFacade::converFromBase64($request->input('logo'));
+        $request->merge([
+            'logo' => URL::to('/') . '/api/image?path=' . $infoImg['image_blob'],
+        ]);
+        $company = Company::findOrFail($request->get('id'));
+        $company->update($request->all());
         return $this->success(
-            $company = Company::findOrFail($request->get('id')),
-            $company->update($request->all())
+            $request->all()
         );
     }
     /**
@@ -212,5 +220,10 @@ class CompanyController extends Controller
     {
         $companies = Company::query();
         return $this->success(CompanyResource::collection($companies->where('type', 1)->get()));
+    }
+    public function getAllCompanies()
+    {
+        $companies = DB::table('companies')->get();
+        return $this->success($companies);
     }
 }
