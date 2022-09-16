@@ -136,7 +136,7 @@ class LaboratoriesController extends Controller
 
     public function getCausalAnulation()
     {
-        return $this->success(DB::table('causal_anulacion')->select('Id_Causal_Anulacion as value', 'Nombre as text')->get());
+        return $this->success(DB::table('Causal_Anulacion')->select('Id_Causal_Anulacion as value', 'Nombre as text')->get());
     }
 
     /**
