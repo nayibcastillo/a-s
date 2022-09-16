@@ -23,6 +23,7 @@
         "lotous/elibom-laravel": "^1.0",
         "maatwebsite/excel": "^3.1",
         "mateusjunges/laravel-invite-codes": "^1.4",
+        "milon/barcode": "^7.0",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "tymon/jwt-auth": "^1.0"
     },

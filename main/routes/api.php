@@ -69,6 +69,7 @@ use App\Http\Controllers\TravelExpenseController;
 use App\Http\Controllers\TypeAppointmentController;
 use App\Http\Controllers\VisaTypeController;
 use App\Http\Controllers\WaitingListController;
+use App\Http\Controllers\Cie10Controller;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Person;
 use App\Models\Board;
@@ -119,6 +120,8 @@ use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\LaboratoriesController;
+use App\Http\Controllers\LaboratoriesPlacesController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
 
@@ -162,7 +165,7 @@ Route::get('/image', function () {
 
 Route::get('/file', function () {
     $path = Request()->get('path');
-    $download = storage_path('app/' . $path);
+    $download = public_path('app' . '/' . $path);
     if ($path) {
         return response()->download($download);
     }
@@ -417,7 +420,14 @@ Route::group(
 		Route::get('paginateHotels', [HotelController::class, 'paginate']);
 		Route::get('paginateTaxis', [TaxiControlller::class, 'paginate']);
 		Route::get('paginateCities', [CityController::class, 'paginate']);
-
+		Route::resource('laboratories-places', 'LaboratoriesPlacesController');
+		Route::resource('laboratories', 'LaboratoriesController');
+		Route::get('paginate-laboratories', [LaboratoriesController::class, 'paginate']);
+		Route::get('cups-laboratory/{id}', [LaboratoriesController::class, 'cupsLaboratory']);
+		Route::post('tomar-anular-laboratorio', [LaboratoriesController::class, 'tomarOrAnular']);
+		Route::get('causal-anulation', [LaboratoriesController::class, 'getCausalAnulation']);
+		Route::post('document-laboratory', [LaboratoriesController::class, 'cargarDocumento']);
+		Route::get('download-laboratory/{id}', [LaboratoriesController::class, 'pdf']);
 		Route::resource('taxis', 'TaxiControlller');
 		Route::resource('taxi-city', 'TaxiCityController');
 		Route::resource('city', 'CityController');
@@ -575,6 +585,7 @@ Route::group(
 		Route::resource("patients", "PatientController");
 		Route::resource("calls", "CallController");
 		Route::resource("cie10s", "Cie10Controller");
+		Route::get("getall-cie10s", [Cie10Controller::class, "getAll"]);
 		Route::resource("person", "PersonController");
 
 		Route::resource("professionals", "ProfessionalController");

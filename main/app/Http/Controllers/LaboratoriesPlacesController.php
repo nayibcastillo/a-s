@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cie10;
-use App\Http\Resources\Cie10Resource;
-use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use App\Models\LaboratoriesPlace;
+use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\DB;
 
-
-class Cie10Controller extends Controller
+class LaboratoriesPlacesController extends Controller
 {
     use ApiResponser;
     /**
@@ -19,21 +17,12 @@ class Cie10Controller extends Controller
      */
     public function index()
     {
-        try {
-
-            $cies10 = Cie10::query();
-            $cies10->when(request()->input('search') != '', function ($q) {
-                $q->where(function ($query) {
-                    $query->where('description', 'like', '%' . request()->input('search') . '%')
-                        ->orWhere('code', 'like', '%' . request()->input('search') . '%');
-                });
-            });
-
-            return $this->success(Cie10Resource::collection($cies10->take(10)->get()));
-            // return $this->success(Cie10Resource::collection(Cie10::get()));
-        } catch (\Throwable $th) {
-            return $this->error($th->getMessage(), 400);
-        }
+        
+        return $this->success(DB::table('laboratories_places')
+        ->select(
+            'id As value',
+            'name As text'
+        )->get());
     }
 
     /**
@@ -60,10 +49,10 @@ class Cie10Controller extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Cie10  $cie10
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cie10 $cie10)
+    public function show($id)
     {
         //
     }
@@ -71,10 +60,10 @@ class Cie10Controller extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Cie10  $cie10
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cie10 $cie10)
+    public function edit($id)
     {
         //
     }
@@ -83,10 +72,10 @@ class Cie10Controller extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Cie10  $cie10
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cie10 $cie10)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -94,16 +83,12 @@ class Cie10Controller extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Cie10  $cie10
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cie10 $cie10)
+    public function destroy($id)
     {
         //
     }
-
-    public function getAll(){
-
-        return $this->success(DB::table('cie10s')->get());
-    }
 }
+

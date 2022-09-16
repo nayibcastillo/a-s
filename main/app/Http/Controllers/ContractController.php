@@ -49,7 +49,7 @@ class ContractController extends Controller
         });
 
 
-        $result = $contract->get();
+        $result = $contract->where('state','=','Activo')->get();
 
         return $this->success($result);
     }
