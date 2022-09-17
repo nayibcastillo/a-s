@@ -20,4 +20,8 @@ class Laboratories extends Model
         'hour',
         'status',
     ];
+    public function cup()
+    {
+        return $this->belongsTo(CupLaboratory::class, 'id', 'id_laboratory');
+    }
 }

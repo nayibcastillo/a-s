@@ -12,4 +12,8 @@ class CupLaboratory extends Model
         'file',
         'state'
     ];
+    public function laboratory()
+    {
+        return $this->belongsTo(Laboratories::class, 'id_laboratory', 'id');
+    }
 }

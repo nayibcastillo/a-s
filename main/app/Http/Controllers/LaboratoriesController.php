@@ -29,23 +29,27 @@ class LaboratoriesController extends Controller
 
     public function paginate()
     {
-        return $this->success(
-            DB::table('laboratories')
-                ->when(request()->get('paciente'), function ($q, $fill) {
-                    $q->where('patient', 'like', '%' . $fill . '%');
-                })
-                ->join('patients', 'laboratories.patient', '=', 'patients.id')
-                ->join('municipalities', 'patients.municipality_id', '=', 'municipalities.id')
-                ->join('eps', 'patients.eps_id', '=', 'eps.id')
-                ->select(
-                    'municipalities.name as name_city',
-                    DB::raw("CONCAT(patients.firstname, ' ', patients.middlename, ' ', patients.surname, ' ', patients.secondsurname) AS name_patient"),
-                    'eps.name as name_eps',
-                    'laboratories.*'
-                )
-                ->orderByDesc('laboratories.created_at')
-                ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
-        );
+
+        return $this->success(Laboratories::
+            when(request()->get('paciente'), function ($q, $fill) {
+                $q->where('patient', 'like', '%' . $fill . '%');
+            })
+            ->join('patients', 'laboratories.patient', '=', 'patients.id')
+            ->join('municipalities', 'patients.municipality_id', '=', 'municipalities.id')
+            ->join('eps', 'patients.eps_id', '=', 'eps.id')
+            ->with([
+                'cup' => function ($q) {
+                    $q->get();
+                }, 
+            ])
+            ->select(
+                'municipalities.name as name_city',
+                DB::raw("CONCAT(patients.firstname, ' ', patients.middlename, ' ', patients.surname, ' ', patients.secondsurname) AS name_patient"),
+                'eps.name as name_eps',
+                'laboratories.*'
+            )
+            ->orderByDesc('laboratories.created_at')
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
     }
     /**
      * Show the form for creating a new resource.
@@ -100,7 +104,7 @@ class LaboratoriesController extends Controller
             DB::table('cup_laboratories')
                 ->where('id_laboratory',  '=', $id)
                 ->join('cups', 'cups.id', '=', 'cup_laboratories.id_cup')
-                ->select('cup_laboratories.*', 'cups.description as name_cup')
+                ->select('cup_laboratories.*', 'cups.description as name_cup', 'cups.code')
                 ->get()
         );
     }
@@ -114,7 +118,7 @@ class LaboratoriesController extends Controller
     {
         try {
             $base64 = saveBase64File($request->file, 'laboratory/', false, '.pdf');
-            URL::to('/') . '/api/file?path=' . $base64;
+            $file = URL::to('/') . '/api/file?path=' . $base64;
             foreach ($request->get('ids') as $cup) {
                 //return $this->success($cup);
                 CupLaboratory::updateOrCreate(
@@ -122,7 +126,7 @@ class LaboratoriesController extends Controller
                         'id' => $cup,
                     ],
                     [
-                        'file' => $base64,
+                        'file' => $file,
                         'state' => $request->get('status'),
                     ]
                 );

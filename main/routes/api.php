@@ -163,14 +163,6 @@ Route::get('/image', function () {
 });
 
 
-Route::get('/file', function () {
-    $path = Request()->get('path');
-    $download = public_path('app' . '/' . $path);
-    if ($path) {
-        return response()->download($download);
-    }
-    return 'path not found';
-});
 
 
 Route::prefix("auth")->group(
@@ -199,16 +191,23 @@ Route::get('/image', function () {
     }
     return 'path not found';
 });
-
-
 Route::get('/file', function () {
+    $path = Request()->get('path');
+    $download = public_path('app/' . $path);
+    if ($path) {
+        return response()->download($download);
+    }
+    return 'path not found';
+});
+
+/* Route::get('/file', function () {
     $path = Request()->get('path');
     $download = storage_path('app/' . $path);
     if ($path) {
         return response()->download($download);
     }
     return 'path not found';
-});
+}); */
 
 Route::group(
 	[
