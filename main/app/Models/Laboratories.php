@@ -22,6 +22,10 @@ class Laboratories extends Model
     ];
     public function cup()
     {
-        return $this->belongsTo(CupLaboratory::class, 'id', 'id_laboratory');
+        return $this->hasMany(CupLaboratory::class, 'id_laboratory', 'id');
+    }
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient', 'id')->with('municipality')->with('eps');
     }
 }

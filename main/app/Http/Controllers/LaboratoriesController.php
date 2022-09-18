@@ -29,26 +29,9 @@ class LaboratoriesController extends Controller
 
     public function paginate()
     {
-
-        return $this->success(Laboratories::
-            when(request()->get('paciente'), function ($q, $fill) {
-                $q->where('patient', 'like', '%' . $fill . '%');
-            })
-            ->join('patients', 'laboratories.patient', '=', 'patients.id')
-            ->join('municipalities', 'patients.municipality_id', '=', 'municipalities.id')
-            ->join('eps', 'patients.eps_id', '=', 'eps.id')
-            ->with([
-                'cup' => function ($q) {
-                    $q->get();
-                }, 
-            ])
-            ->select(
-                'municipalities.name as name_city',
-                DB::raw("CONCAT(patients.firstname, ' ', patients.middlename, ' ', patients.surname, ' ', patients.secondsurname) AS name_patient"),
-                'eps.name as name_eps',
-                'laboratories.*'
-            )
-            ->orderByDesc('laboratories.created_at')
+        return $this->success(Laboratories::with('patient')
+            ->with('cup')
+            ->orderByDesc('created_at')
             ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
     }
     /**
@@ -58,6 +41,7 @@ class LaboratoriesController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
