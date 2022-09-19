@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ThirdPartyPerson;
+use Illuminate\Support\Facades\Auth;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class AuthThirdController extends Controller
+{
+    use ApiResponser;
+    /**
+     * Login usuario y retornar el token
+     * @return token
+     */
+
+    public function login(Request $request)
+    {
+        try {
+            $credentials = $request->only('user', 'password');
+            $data['usuario'] = $credentials['user'];
+            $data['password'] = $credentials['password'];
+            if (!$token = JWTAuth::attempt([
+                'usuario' => $data['usuario'],
+                'password' => $data['password']
+            ])) {
+                return response()->json(['error' => 'Unauthoriz55ed'], 401);
+            }
+
+            return response()->json(['status' => 'success', 'token' => $this->respondWithToken($token)], 200)->header('Authorization', $token)
+                ->withCookie(
+                    'token',
+                    $token,
+                    config('jwt.ttl'),
+                    '/'
+                );
+        } catch (\Throwable $th) {
+            return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
+        }
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logged out Successfully.'
+        ], 200);
+    }
+
+    /**
+     * Obtener el usuario autenticado
+     *
+     * @return Usuario
+     */
+
+
+    /**
+     * Refrescar el token por uno nuevo
+     *
+     * @return token
+     */
+
+    public function refresh()
+    {
+        if ($token = $this->guard()->refresh()) {
+            return response()->json()
+                ->json(['status' => 'successs'], 200)
+                ->header('Authorization', $token);
+        }
+        return response()->json(['error' => 'refresh_token_error'], 401);
+    }
+
+    public function renew()
+    {
+        try {
+            //code...
+            if (!$token = $this->guard()->refresh()) {
+                return response()->json(['error' => 'refresh_token_error'], 401);
+            }
+
+            $user = auth()->user();
+
+            $user = ThirdPartyPerson::with('laboratory')->find($user->id);
+
+            return response()
+                ->json(['status' => 'successs', 'token' => $token, 'user' => $user], 200)
+                ->header('Authorization', $token);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['error' => 'refresh_token_error' . $th->getMessage()], 401);
+        }
+    }
+
+    /**
+     * Retornar el guard
+     *
+     * @return Guard
+     */
+    private function guard()
+    {
+        return Auth::guard();
+    }
+    protected function respondWithToken($token)
+    {
+        auth()->factory()->getTTL() * 60;
+
+        return $token;
+        // return response()->json([
+        //     'access_token' => $token,
+        //     'token_type' => 'bearer',
+        //     'expires_in' => auth()->factory()->getTTL() * 60
+        // ]);
+    }
+}

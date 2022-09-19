@@ -31,6 +31,35 @@ class LaboratoriesController extends Controller
     {
         return $this->success(Laboratories::with('patient')
             ->with('cup')
+            ->when(request()->get('fecha'), function ($q, $fill) {
+                $fechas = explode('a', request()->get('fecha'));
+                $f1 = new Carbon($fechas[0]);
+                $f2 = new Carbon($fechas[1]);
+                $q->whereBetween('date', [$f1, $f2]);
+            })
+            ->when(request()->get('paciente'), function ($q, $fill) {
+                $q->whereHas('patient', function ($query) {
+                    $query->where(DB::raw("CONCAT(firstname,' ', middlename, ' ', surname, ' ', secondsurname)"), 'like', '%' . request()->get('paciente') . '%')
+                        ->orWhere('identifier', 'like', '%' . request()->get('paciente') . '%');
+                });
+            })
+            ->when(request()->get('ciudad'), function ($q, $fill) {
+                $q->whereHas('patient', function ($query) {
+                    $query->whereHas('municipality', function ($query2) {
+                        $query2->where('name', 'like', '%' . request()->get('ciudad') . '%');
+                    });
+                });
+            })
+            ->when(request()->get('eps'), function ($q, $fill) {
+                $q->whereHas('patient', function ($query) {
+                    $query->whereHas('eps', function ($query2) {
+                        $query2->where('name', 'like', '%' . request()->get('eps') . '%');
+                    });
+                });
+            })
+            ->when(request()->get('estado'), function ($q, $fill) {
+                $q->where('status', 'like', '%' . $fill . '%');
+            })
             ->orderByDesc('created_at')
             ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
     }
@@ -79,7 +108,10 @@ class LaboratoriesController extends Controller
      */
     public function show($id)
     {
-        //
+        return $this->success(Laboratories::where('id' , $id)
+            ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
+            /* ->join('causal_anulacion', 'Causal_Anulacion.Id_Causal_Anulacion', '=', 'laboratories.motivo_id') */
+            ->first());
     }
 
     public function cupsLaboratory($id)

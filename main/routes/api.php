@@ -8,6 +8,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ArlController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthThirdController;
 use App\Http\Controllers\CaracterizacionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
@@ -176,6 +177,22 @@ Route::prefix("auth")->group(
 			Route::get("renew", [AuthController::class, "renew"]);
 			Route::get("change-password", [
 				AuthController::class,
+				"changePassword",
+			]);
+		});
+	}
+);
+
+Route::prefix("auth-third")->group(
+	function () {
+		Route::post("login", "AuthThirdController@login");
+		Route::middleware("auth.jwt")->group(function () {
+			Route::post("logout", [AuthThirdController::class, "logout"]);
+			Route::post("refresh", [AuthThirdController::class, "refresh"]);
+			Route::post("me", [AuthThirdController::class, "me"]);
+			Route::get("renew", [AuthThirdController::class, "renew"]);
+			Route::get("change-password", [
+				AuthThirdController::class,
 				"changePassword",
 			]);
 		});

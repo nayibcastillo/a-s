@@ -28,4 +28,24 @@ class Laboratories extends Model
     {
         return $this->belongsTo(Patient::class, 'patient', 'id')->with('municipality')->with('eps');
     }
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id', 'id')->with('company');
+    }
+    public function place()
+    {
+        return $this->belongsTo(LaboratoriesPlace::class, 'laboratory_id', 'id');
+    }
+    public function professional()
+    {
+        return $this->belongsTo(Person::class, 'professional_id', 'id');
+    }
+    public function cie10()
+    {
+        return $this->belongsTo(Cie10::class, 'cie10_id', 'id');
+    }
+    public function motivo()
+    {
+        return $this->belongsTo(CausalAnulacion::class, 'motivo_id', 'Id_Causal_Anulacion');
+    }
 }
