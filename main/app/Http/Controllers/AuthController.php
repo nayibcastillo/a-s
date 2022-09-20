@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Config;
+
 class AuthController extends Controller
 {
 
@@ -23,9 +25,14 @@ class AuthController extends Controller
      * Login usuario y retornar el token
      * @return token
      */
-    public function __construct()
+    /* public function __construct()
     {
-    }
+        Config::set('jwt.user', Usuario::class);
+        Config::set('auth.providers', ['users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Usuario::class,
+        ]]);
+    } */
 
     public function index()
     {
@@ -49,7 +56,12 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Unauthoriz55ed'], 401);
             }
 
-            return response()->json(['status' => 'success', 'token' => $this->respondWithToken($token)], 200)->header('Authorization', $token)
+            return response()->json([
+                'status' => 'success',
+                'token' => $this
+                    ->respondWithToken($token)
+            ], 200)
+                ->header('Authorization', $token)
                 ->withCookie(
                     'token',
                     $token,
@@ -146,7 +158,7 @@ class AuthController extends Controller
             $user = Usuario::with(
                 [
                     'person' => function ($q) {
-                        $q->select('*')->with('companies','companyWorked');
+                        $q->select('*')->with('companies', 'companyWorked');
                     },
                     'permissions' => function ($q) {
                         $q->select('*');

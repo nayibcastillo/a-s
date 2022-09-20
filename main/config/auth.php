@@ -78,10 +78,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Usuario::class,
         ],
-        'thirds' => [
+        /* 'thirds' => [
             'driver' => 'eloquent',
             'model' => App\Models\ThirdPartyPerson::class,
-        ],
+        ], */
 
         // 'users' => [
         //     'driver' => 'database',

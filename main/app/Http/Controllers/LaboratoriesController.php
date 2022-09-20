@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LaboratoryExport;
 use Illuminate\Http\Request;
 use App\Models\Laboratories;
 use App\Models\CupLaboratory;
@@ -12,6 +13,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Carbon;
 use \Milon\Barcode\DNS1D;
 use \Milon\Barcode\DNS2D;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class LaboratoriesController extends Controller
@@ -59,6 +61,9 @@ class LaboratoriesController extends Controller
             })
             ->when(request()->get('estado'), function ($q, $fill) {
                 $q->where('status', 'like', '%' . $fill . '%');
+            })
+            ->when(request()->get('codigo'), function ($q, $fill) {
+                $q->where('id', '=', $fill);
             })
             ->orderByDesc('created_at')
             ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
@@ -108,7 +113,7 @@ class LaboratoriesController extends Controller
      */
     public function show($id)
     {
-        return $this->success(Laboratories::where('id' , $id)
+        return $this->success(Laboratories::where('id', $id)
             ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
             /* ->join('causal_anulacion', 'Causal_Anulacion.Id_Causal_Anulacion', '=', 'laboratories.motivo_id') */
             ->first());
@@ -128,6 +133,13 @@ class LaboratoriesController extends Controller
     public function tomarOrAnular(Request $request)
     {
         Laboratories::updateOrCreate(['id' => $request->get('id')], $request->all());
+    }
+
+    public function deleteDocument($id) {
+        CupLaboratory::find($id)->update([
+            'state' => 'Pendiente',
+            'file' => null
+        ]);
     }
 
     public function cargarDocumento(Request $request)
@@ -191,6 +203,19 @@ class LaboratoriesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function report()
+    {
+        $laboratoriesday = Laboratories::whereDate('created_at', Carbon::today())
+            ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
+            ->get();
+        
+        return Excel::download(new LaboratoryExport(), 'reporte-dia.xlsx');
+        return 'asd';
+        /* $pdf = PDF::loadHTML($contenido);
+        return $pdf->download('reporte.pdf'); */
     }
 
     public function pdf($id)

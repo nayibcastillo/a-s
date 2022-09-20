@@ -3,13 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\ThirdPartyPerson;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Config;
 
 class AuthThirdController extends Controller
 {
+    /* public function __construct()
+    {
+        Config::set('jwt.user', ThirdPartyPerson::class);
+        Config::set('auth.providers', ['users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ThirdPartyPerson::class,
+        ]]);
+    } */
     use ApiResponser;
     /**
      * Login usuario y retornar el token
@@ -29,13 +39,17 @@ class AuthThirdController extends Controller
                 return response()->json(['error' => 'Unauthoriz55ed'], 401);
             }
 
-            return response()->json(['status' => 'success', 'token' => $this->respondWithToken($token)], 200)->header('Authorization', $token)
-                ->withCookie(
-                    'token',
-                    $token,
-                    config('jwt.ttl'),
-                    '/'
-                );
+            return response()->json([
+                'status' => 'success', 
+                'token' => $this
+                    ->respondWithToken($token)], 200)
+                    ->header('Authorization', $token)
+                    ->withCookie(
+                        'token',
+                        $token,
+                        config('jwt.ttl'),
+                        '/'
+                    );
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
         }
@@ -73,7 +87,7 @@ class AuthThirdController extends Controller
         return response()->json(['error' => 'refresh_token_error'], 401);
     }
 
-    public function renew()
+   /*  public function renew()
     {
         try {
             //code...
@@ -92,8 +106,44 @@ class AuthThirdController extends Controller
             //throw $th;
             return response()->json(['error' => 'refresh_token_error' . $th->getMessage()], 401);
         }
-    }
+    } */
 
+    public function renew()
+    {
+        try {
+            //code...
+            if (!$token = $this->guard()->refresh()) {
+                return response()->json(['error' => 'refresh_token_error'], 401);
+            }
+
+            $user = auth()->user();
+
+            $user = Usuario::with(
+                [
+                    'person' => function ($q) {
+                        $q->select('*')->with('companies', 'companyWorked');
+                    },
+                    'permissions' => function ($q) {
+                        $q->select('*');
+                    },
+                    'board' => function ($q) {
+                        $q->select('*');
+                    },
+                    'task' => function ($q) {
+                        $q->select('*');
+                    },
+
+                ]
+            )->find($user->id);
+
+            return response()
+                ->json(['status' => 'successs', 'token' => $token, 'user' => $user], 200)
+                ->header('Authorization', $token);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['error' => 'refresh_token_error' . $th->getMessage()], 401);
+        }
+    }
     /**
      * Retornar el guard
      *
