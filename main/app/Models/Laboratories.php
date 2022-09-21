@@ -22,7 +22,7 @@ class Laboratories extends Model
     ];
     public function cup()
     {
-        return $this->hasMany(CupLaboratory::class, 'id_laboratory', 'id');
+        return $this->hasMany(CupLaboratory::class, 'id_laboratory', 'id')->with('cup');
     }
     public function patient()
     {

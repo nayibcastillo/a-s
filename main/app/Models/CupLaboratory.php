@@ -16,4 +16,8 @@ class CupLaboratory extends Model
     {
         return $this->belongsTo(Laboratories::class, 'id_laboratory', 'id');
     }
+    public function cup()
+    {
+        return $this->belongsTo(Cup::class, 'id_cup', 'id');
+    }
 }
