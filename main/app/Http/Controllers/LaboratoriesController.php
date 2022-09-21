@@ -65,6 +65,9 @@ class LaboratoriesController extends Controller
             ->when(request()->get('codigo'), function ($q, $fill) {
                 $q->where('id', '=', $fill);
             })
+            ->when(request()->get('laboratory_id'), function ($q, $fill) {
+                $q->where('laboratory_id', '=', $fill);
+            })
             ->orderByDesc('created_at')
             ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
     }

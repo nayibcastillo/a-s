@@ -21,6 +21,7 @@ class ThirdPartyPerson extends Authenticatable implements JWTSubject
         'observation',
         'third_party_id',
         'laboratory_id',
+        'photo',
         'usuario',
         'password',
     ];
