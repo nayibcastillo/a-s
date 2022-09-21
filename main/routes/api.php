@@ -164,9 +164,6 @@ Route::get('/image', function () {
 	return 'path not found';
 });
 
-
-
-
 Route::prefix("auth")->group(
 	function () {
 		Route::post("login", "AuthController@login");

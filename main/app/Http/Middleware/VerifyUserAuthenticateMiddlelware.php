@@ -14,12 +14,15 @@ class VerifyUserAuthenticateMiddlelware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = null)
     {
+        if($guard != null)
+            auth()->shouldUse($guard);
+        return $next($request);
 
-        if (auth()->user()) {
+        /* if (auth()->user()) {
             return $next($request);
         }
-        return response(['error' => true, 'respuesta' => 'no autenticado'], 200);
+        return response(['error' => true, 'respuesta' => 'no autenticado'], 200); */
     }
 }

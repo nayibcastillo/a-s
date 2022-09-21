@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // use App\CustomModels\Patient;
 
 use App\Models\Patient;
+use App\Models\ThirdPartyPerson;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Usuario;
@@ -19,20 +20,18 @@ use Illuminate\Support\Facades\Config;
 
 class AuthController extends Controller
 {
-
     use ApiResponser;
     /**
      * Login usuario y retornar el token
      * @return token
      */
-    /* public function __construct()
+
+    public function __construct()
     {
-        Config::set('jwt.user', Usuario::class);
-        Config::set('auth.providers', ['users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Usuario::class,
-        ]]);
-    } */
+        Config::set('jwt.user', 'App\Models\Usuario'); 
+        Config::set('auth.defaults.guard', 'api');
+        Config::set('auth.defaults.passwords', 'users');
+    }
 
     public function index()
     {
@@ -45,6 +44,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $token = Auth::shouldUse('api');
         try {
             $credentials = $request->only('user', 'password');
             $data['usuario'] = $credentials['user'];
@@ -147,6 +147,7 @@ class AuthController extends Controller
 
     public function renew()
     {
+        $token = Auth::shouldUse('api');
         try {
             //code...
             if (!$token = $this->guard()->refresh()) {
@@ -191,6 +192,7 @@ class AuthController extends Controller
     {
         return Auth::guard();
     }
+
 
 
     protected function respondWithToken($token)
