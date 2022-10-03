@@ -6,6 +6,8 @@ use App\Models\Cie10;
 use App\Http\Resources\Cie10Resource;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class Cie10Controller extends Controller
 {
@@ -98,5 +100,10 @@ class Cie10Controller extends Controller
     public function destroy(Cie10 $cie10)
     {
         //
+    }
+
+    public function getAll(){
+
+        return $this->success(DB::table('cie10s')->get());
     }
 }

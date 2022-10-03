@@ -21,7 +21,7 @@
     <tbody>
         @foreach($data as $datum)
         <tr>
-            <td> {{   $datum->tipo_documnto    }} </td>
+            <td> {{   $datum->type_documents    }} </td>
             <td> {{   $datum->patient_identifier  }} </td>
             <td> {{   $datum->patient_name  }} </td>
             <td> {{   $datum->sexo }}

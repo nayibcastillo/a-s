@@ -76,7 +76,14 @@ $config = array(
     | with start and final /
     |
     */
-    'upload_dir' => '/source/',
+    'upload_dir' => '/DOCUMENTOS/', // path from base_url to base of upload folder (with start and final /)
+    'current_path' => '../../DOCUMENTOS/', // relative path from filemanager folder to upload folder (with final /)
+    //thumbs folder can't put inside upload folder
+    'thumbs_base_path' => '../thumbs/', // relative path from filemanager fold
+
+
+
+   // 'upload_dir' => '/source/',
     /*
     |--------------------------------------------------------------------------
     | relative path from filemanager folder to upload folder
@@ -85,7 +92,7 @@ $config = array(
     | with final /
     |
     */
-    'current_path' => '../source/',
+  //  'current_path' => '../source/',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +103,7 @@ $config = array(
     | DO NOT put inside upload folder
     |
     */
-    'thumbs_base_path' => '../thumbs/',
+ //   'thumbs_base_path' => '../thumbs/',
 
     /*
     |--------------------------------------------------------------------------

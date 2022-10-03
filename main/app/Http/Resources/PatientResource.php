@@ -21,6 +21,7 @@ class PatientResource extends JsonResource
             'Regimen' => strtoupper ($this->regimentype->name),
             'Apellidos' => strtoupper ($this->surname . ' ' .  $this->secondsurname),
             'Nombres' => strtoupper ($this->firstname . ' ' . $this->middlename),
+            'NombreCompleto' => strtoupper ($this->identifier . ' - ' . $this->firstname . ' ' . $this->middlename . ' ' . $this->surname . ' ' .  $this->secondsurname),
             'EPS' => strtoupper ($this->eps->name),
             'IPS' => strtoupper ($this->company->name),
             'Regional' => strtoupper ($this->regional->id),

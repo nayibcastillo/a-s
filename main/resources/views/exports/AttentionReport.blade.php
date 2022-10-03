@@ -35,7 +35,7 @@
         @foreach($data as $datum)
         <tr>
             <td> {{ $datum->consecutivo }} </td>
-            <td> {{ $datum->tipo_documnto }} </td>
+            <td> {{ $datum->type_documents }} </td>
             <td> {{ $datum->identifier }} </td>
             <td> {{ $datum->nombre }} </td>
             <td> {{ $datum->cumple }} </td>
@@ -60,8 +60,8 @@
             <td> {{ $datum->ips_remisora }} </td>
             <td> {{ $datum->professional_remisor }} </td>
             <td> {{ $datum->speciality_remisor }} </td>
-            <td> {{ $datum->state }} </td>
-            <td> {{ $datum->cancellation_at }} </td>
+            {{-- <td> {{ $datum->state }} </td> --}}
+            {{-- <td> {{ $datum->cancellation_at }} </td> --}}
         </tr>
         @endforeach
     </tbody>

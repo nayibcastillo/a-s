@@ -94,7 +94,7 @@ class CallInController extends Controller
     {
         try {
             $data = $request->all();
-            $data['Identificacion_Agente'] =  auth()->user()->usuario;
+            /* $data['Identificacion_Agente'] =  auth()->user()->usuario; */
             $call = CallIn::create($data);
 
             $patient = Patient::with('eps', 'company', 'municipality', 'department', 'regional', 'level', 'regimentype', 'typedocument', 'contract')->firstWhere('identifier', $call->Identificacion_Paciente);

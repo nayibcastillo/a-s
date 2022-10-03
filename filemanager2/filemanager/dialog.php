@@ -2,6 +2,9 @@
 $time = time();
 
 $config = include 'config/config.php';
+$upload_dir = '../DOCUMENTOS/' . $_GET['car'] . '/';
+$current_path = '../DOCUMENTOS/' . $_GET['car'] . '/';
+$thumbs_base_path = '../thumbs/' . $_GET['car'] . '/';
 
 if (USE_ACCESS_KEYS == true){
 	if (!isset($_GET['akey'], $config['access_keys']) || empty($config['access_keys'])){
@@ -303,7 +306,17 @@ if (isset($_GET['CKEditorFuncNum'])) {
 }
 $get_params['fldr'] ='';
 
-$get_params = http_build_query($get_params);
+$get_params = http_build_query(array(
+    'car'      => (isset($_GET['car']) && $_GET['car'] != '' ? $_GET['car'] : ''),
+
+    'type'      => $type_param,
+
+    'lang'      => $lang,
+    'popup'     => $popup,
+    'field_id'  => $field_id,
+    'akey' 		=> (isset($_GET['akey']) && $_GET['akey'] != '' ? $_GET['akey'] : 'key'),
+    'fldr'      => ''
+));
 ?>
 <!DOCTYPE html>
 <html>
@@ -387,7 +400,7 @@ $get_params = http_build_query($get_params);
     <input type="hidden" id="crossdomain" value="<?php echo $crossdomain;?>" />
     <input type="hidden" id="editor" value="<?php echo $editor;?>" />
     <input type="hidden" id="view" value="<?php echo $view;?>" />
-    <input type="hidden" id="subdir" value="<?php echo $subdir;?>" />
+    <input type="hidden" id="subdir" value="<?php echo $_GET['car'] . "/" .  $subdir;?>" />
     <input type="hidden" id="field_id" value="<?php echo $field_id;?>" />
     <input type="hidden" id="multiple" value="<?php echo $multiple;?>" />
     <input type="hidden" id="type_param" value="<?php echo $type_param;?>" />
@@ -1265,9 +1278,9 @@ $files = $sorted;
                 <?php foreach ($config['tui_defaults_config'] as $aopt_key => $aopt_val) {
                     if ( !empty($aopt_val) ) {
                         echo "'$aopt_key':".json_encode($aopt_val).",";
-                    }
-                } ?>
-            }; 
+                    };
+                }; ?>
+            };
         </script>
 
         <script>

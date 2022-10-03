@@ -25,6 +25,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'third' => [
+            'driver' => 'jwt',
+            'provider' => 'thirds',
+        ],
     ],
 
     /*
@@ -44,17 +48,22 @@ return [
     |
     */
 
-    // 'guards' => [
-    //     'web' => [
-    //         'driver' => 'session',
-    //         'provider' => 'admins',
-    //     ],
+    /* 'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
 
-    //     'api' => [
-    //         'driver' => 'jwt',
-    //         'provider' => 'admins',
-    //     ],
-    // ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
+
+        'third' => [
+            'driver'   => 'jwt',
+            'provider' => 'thirds',
+        ],
+    ], */
 
     /*
     |--------------------------------------------------------------------------
@@ -77,6 +86,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\Usuario::class,
+        ],
+        'thirds' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ThirdPartyPerson::class,
         ],
 
         // 'users' => [

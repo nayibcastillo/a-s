@@ -8,6 +8,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ArlController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthThirdController;
 use App\Http\Controllers\CaracterizacionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CupController;
 use App\Http\Controllers\DataInit\PersonController as DataInitPersonController;
 use App\Http\Controllers\DependencyController;
-
+use App\Http\Controllers\PrettyCashController;
 use App\Http\Controllers\DisabilityLeaveController;
 use DisabilityLeaveController as CoreDisabilityLeaveController;
 
@@ -69,6 +70,7 @@ use App\Http\Controllers\TravelExpenseController;
 use App\Http\Controllers\TypeAppointmentController;
 use App\Http\Controllers\VisaTypeController;
 use App\Http\Controllers\WaitingListController;
+use App\Http\Controllers\Cie10Controller;
 use App\Http\Controllers\SubcategoryController;
 use App\Models\Person;
 use App\Models\Board;
@@ -119,11 +121,14 @@ use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\LaboratoriesController;
+use App\Http\Controllers\LaboratoriesPlacesController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Config;
 use App\Http\Controllers\PayrollParametersController;
 use App\Http\Controllers\RCuentaMedicaController;
+use App\Models\ThirdPartyPerson;
 
 /*
 |--------------------------------------------------------------------------
@@ -140,6 +145,7 @@ use App\Http\Controllers\RCuentaMedicaController;
 Route::get('get-company', [CompanyController::class, 'getCompanyByIdentifier']);
 Route::post('save-radicacion', [RCuentaMedicaController::class, 'store']);
 Route::get('get-companies', [CompanyController::class, 'getCompanies']);
+Route::get('get-all-companies', [CompanyController::class, 'getAllCompanies']);
 //End Radicatioon routes
 
 
@@ -150,24 +156,13 @@ Route::get('/', function () {
 
 Route::get('/image', function () {
 
-    $path = Request()->get('path');
-    if ($path) {
-        $path = storage_path('app/public') . '/' . $path;
-        return response()->file($path);
-    }
-    return 'path not found';
+	$path = Request()->get('path');
+	if ($path) {
+		$path = storage_path('app/public') . '/' . $path;
+		return response()->file($path);
+	}
+	return 'path not found';
 });
-
-
-Route::get('/file', function () {
-    $path = Request()->get('path');
-    $download = storage_path('app/' . $path);
-    if ($path) {
-        return response()->download($download);
-    }
-    return 'path not found';
-});
-
 
 Route::prefix("auth")->group(
 	function () {
@@ -186,25 +181,48 @@ Route::prefix("auth")->group(
 	}
 );
 
+Route::prefix("auth-third")->group(
+	function () {
+		Route::post("login", "AuthThirdController@login");
+		Route::middleware("auth.jwt")->group(function () {
+			Route::post("logout", [AuthThirdController::class, "logout"]);
+			Route::post("refresh", [AuthThirdController::class, "refresh"]);
+			Route::post("me", [AuthThirdController::class, "me"]);
+			Route::get("renew", [AuthThirdController::class, "renew"]);
+			Route::get("change-password", [
+				AuthThirdController::class,
+				"changePassword",
+			]);
+		});
+	}
+);
+
 Route::get('/image', function () {
 
-    $path = Request()->get('path');
-    if ($path) {
-        $path = public_path('app/public') . '/' . $path;
-        return response()->file($path);
-    }
-    return 'path not found';
+	$path = Request()->get('path');
+	if ($path) {
+		$path = public_path('app/public') . '/' . $path;
+		return response()->file($path);
+	}
+	return 'path not found';
+});
+Route::get('/file', function () {
+	$path = Request()->get('path');
+	$download = public_path('app/' . $path);
+	if ($path) {
+		return response()->download($download);
+	}
+	return 'path not found';
 });
 
-
-Route::get('/file', function () {
+/* Route::get('/file', function () {
     $path = Request()->get('path');
     $download = storage_path('app/' . $path);
     if ($path) {
         return response()->download($download);
     }
     return 'path not found';
-});
+}); */
 
 Route::group(
 	[
@@ -293,9 +311,8 @@ Route::group(
 		Route::get('liquidado/{id}', [WorkContractController::class, 'getLiquidated']);
 
 
-
-        /** Rutas inventario dotacion rrhh */
-        /*
+		/** Rutas inventario dotacion rrhh */
+		/*
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
 		Route::get('/inventary-dotation-statistics',  [InventaryDotationController::class, 'statistics']);
 		Route::get('/inventary-dotation-stock',  [InventaryDotationController::class, 'getInventary']);
@@ -307,7 +324,7 @@ Route::group(
 		Route::resource('product-dotation-types', 'ProductDotationTypeController');
 
 		Route::resource('inventary-dotation', 'InventaryDotationController');
-	    /** end*/
+		/** end*/
 
 
 
@@ -368,6 +385,7 @@ Route::group(
 		]);
 
 		Route::get("people-all", [PersonController::class, "getAll"]);
+		Route::get("validar-cedula/{documento}", [PersonController::class, "validarCedula"]);
 
 		/** Rutas inventario dotacion rrhh */
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
@@ -376,7 +394,7 @@ Route::group(
 		Route::post('/dotations-update/{id}',  [DotationController::class, 'update']);
 		Route::get('/dotations-total-types',  [DotationController::class, 'getTotatlByTypes']);
 		/** end*/
-
+		Route::resource('jobs', JobController::class);
 		Route::resource('dotations', 'DotationController');
 		Route::resource('product-dotation-types', 'ProductDotationTypeController');
 
@@ -385,7 +403,7 @@ Route::group(
 
 		Route::get('/horarios/datos/generales/{semana}', [RotatingTurnHourController::class, 'getDatosGenerales']);
 		Route::resource('alerts', 'AlertController');
-
+		Route::get('account-plan-balance', [AccountPlanController::class, 'listBalance']);
 		Route::resource('countable_incomes', CountableIncomeController::class);
 		Route::resource('countable_deductions', 'CountableDeductionController');
 
@@ -416,7 +434,17 @@ Route::group(
 		Route::get('paginateHotels', [HotelController::class, 'paginate']);
 		Route::get('paginateTaxis', [TaxiControlller::class, 'paginate']);
 		Route::get('paginateCities', [CityController::class, 'paginate']);
-
+		Route::resource('laboratories-places', 'LaboratoriesPlacesController');
+		Route::resource('laboratories', 'LaboratoriesController');
+		Route::get('paginate-laboratories', [LaboratoriesController::class, 'paginate']);
+		Route::get('cups-laboratory/{id}', [LaboratoriesController::class, 'cupsLaboratory']);
+		Route::post('tomar-anular-laboratorio', [LaboratoriesController::class, 'tomarOrAnular']);
+		Route::get('causal-anulation', [LaboratoriesController::class, 'getCausalAnulation']);
+		Route::post('document-laboratory', [LaboratoriesController::class, 'cargarDocumento']);
+		Route::get('download-laboratory/{id}', [LaboratoriesController::class, 'pdf']);
+		Route::get('laboratory-report', [LaboratoriesController::class, 'report']);
+		Route::get('delete-document-laboratory/{id}', [LaboratoriesController::class, 'deleteDocument']);
+		Route::get('download-files-laboratory/{id}', [LaboratoriesController::class, 'downloadFiles']);
 		Route::resource('taxis', 'TaxiControlller');
 		Route::resource('taxi-city', 'TaxiCityController');
 		Route::resource('city', 'CityController');
@@ -444,7 +472,7 @@ Route::group(
 		Route::get('countable_income', [BonificationsController::class, 'countable_income']);
 		Route::resource('bonifications', 'BonificationsController');
 
-		Route::get('companyData', [CompanyController::class, 'getBasicData']);
+		Route::get('companyData/{id}', [CompanyController::class, 'getBasicData']);
 		Route::post('saveCompanyData', [CompanyController::class, 'saveCompanyData']);
 
 		Route::get('proyeccion_pdf/{id}', [LoanController::class, 'loanpdf']);
@@ -536,8 +564,8 @@ Route::group(
 		Route::get('/company-global', [CompanyController::class, 'getGlobal']);
 
 
-        /* Acata de aplicacion */
-        // Route::post('aplication-certificate', 'ApplicationCertificateController@store');
+		/* Acata de aplicacion */
+		// Route::post('aplication-certificate', 'ApplicationCertificateController@store');
 		Route::resource('aplication-certificate', 'ApplicationCertificateController');
 		Route::post('/aplication-certificate/{id}',  [ApplicationCertificateController::class, 'update']);
 
@@ -563,6 +591,7 @@ Route::group(
 		Route::get("clean-info", [AppointmentController::class, "getDataCita"]);
 		Route::get("validate-info-patient", [DataInitPersonController::class, "validatePatientByLineFront"]);
 
+		Route::resource('pretty-cash', 'PrettyCashController');
 		Route::resource('dependencies', 'DependencyController');
 		Route::resource('rotating-turns', RotatingTurnController::class);
 		Route::resource('group', GroupController::class);
@@ -573,6 +602,7 @@ Route::group(
 		Route::resource("patients", "PatientController");
 		Route::resource("calls", "CallController");
 		Route::resource("cie10s", "Cie10Controller");
+		Route::get("getall-cie10s", [Cie10Controller::class, "getAll"]);
 		Route::resource("person", "PersonController");
 
 		Route::resource("professionals", "ProfessionalController");
@@ -581,8 +611,8 @@ Route::group(
 		Route::resource("dispensing", "DispensingPointController");
 		Route::post('dispensing/{personId}', [DispensingPointController::class, 'setPerson']);
 
-        Route::get("board", [BoardController::class, "getData"]);
-		
+		Route::get("board", [BoardController::class, "getData"]);
+
 
 		Route::resource("people-type", "PeopleTypeController");
 
@@ -634,27 +664,27 @@ Route::group(
 		Route::resource("fees", "FeeController");
 
 
-        //se ejecuta al crear
-        Route::resource("subcategory", "SubcategoryController");
+		//se ejecuta al crear
+		Route::resource("subcategory", "SubcategoryController");
 		Route::post("subcategory-variable/{id}", "SubcategoryController@deleteVariable");
 
-        //se ejecuta al crear
-        Route::get("subcategory-field/{id}", "SubcategoryController@getField");
+		//se ejecuta al crear
+		Route::get("subcategory-field/{id}", "SubcategoryController@getField");
 
-        //se ejecuta al editar
-        Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
+		//se ejecuta al editar
+		Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
 		Route::resource("subcategory", "SubcategoryController");
-        Route::resource("category", "CategoryController");
+		Route::resource("category", "CategoryController");
 
-        Route::resource("product", "ProductController");
+		Route::resource("product", "ProductController");
 		Route::get('/product-acta',  [ProductController::class, 'getProductActa']);
 
 
 
-        Route::resource("catalogo", "CatalogoController");
+		Route::resource("catalogo", "CatalogoController");
 
 
-        /** Rutas inventario dotacion rrhh */
+		/** Rutas inventario dotacion rrhh */
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
 		Route::get('/inventary-dotation-statistics',  [InventaryDotationController::class, 'statistics']);
 		Route::get('/inventary-dotation-stock',  [InventaryDotationController::class, 'getInventary']);
@@ -691,6 +721,7 @@ Route::group(
 		Route::get('info-grafical-by-regional', [ReporteController::class, 'getDataByRegional']);
 		Route::get('info-grafical-by-formality', [ReporteController::class, 'getDataByFormality']);
 		Route::get('info-grafical-by-deparment', [ReporteController::class, 'getDataByDepartment']);
+		Route::get('info-grafical-resume', [ReporteController::class, 'getDataByRegional', 'getDataByFormality', 'getDataByDepartment']);
 
 
 		//Price List
@@ -719,15 +750,15 @@ Route::group(
 		});
 		Route::post('change-company-work/{id}', [PersonController::class, 'changeCompanyWorked']);
 		Route::post('person/set-companies/{personId}', [PersonController::class, 'setCompaniesWork']);
-        Route::post('person/set-board/{personId}/{board}', [PersonController::class, 'setBoardsPerson']);
+		Route::post('person/set-board/{personId}/{board}', [PersonController::class, 'setBoardsPerson']);
 		Route::get('person/get-companies/{personId}', [PersonController::class, 'personCompanies']);
-        Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
+		Route::get('person/get-boards/{personId}', [PersonController::class, 'personBoards']);
 
 		//tareas
 		Route::get("task", [TaskController::class, "getData"]);
 		Route::post('upload', [TaskController::class, 'upload']);
-		Route::get('deletetask/{idTask}', [TaskController::class, 'deleteTask']);	
-		Route::get('adjuntostask/{idTask}', [TaskController::class, 'adjuntosTask']);		
+		Route::get('deletetask/{idTask}', [TaskController::class, 'deleteTask']);
+		Route::get('adjuntostask/{idTask}', [TaskController::class, 'adjuntosTask']);
 		Route::get('taskview/{id}', [TaskController::class, 'taskView']);
 		Route::post('newtask/{task}', [TaskController::class, 'newTask']);
 		Route::post('newcomment/{comment}', [TaskController::class, 'newComment']);
@@ -756,10 +787,10 @@ Route::group(
 		//se ejecuta al editar
 		Route::get("subcategory-edit/{id?}/{idSubcategoria}", "SubcategoryController@getFieldEdit");
 		Route::resource("subcategory", "SubcategoryController");
-        Route::resource("category", "CategoryController");
+		Route::resource("category", "CategoryController");
 
 		Route::resource("product-accounting", "ProductAccountingPlanController");
-       
+
 		Route::resource("product", "ProductController");
 	}
 );

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // use App\CustomModels\Patient;
 
 use App\Models\Patient;
+use App\Models\ThirdPartyPerson;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Usuario;
@@ -15,16 +16,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Config;
+
 class AuthController extends Controller
 {
-
     use ApiResponser;
     /**
      * Login usuario y retornar el token
      * @return token
      */
+
     public function __construct()
     {
+        Config::set('jwt.user', 'App\Models\Usuario'); 
+        Config::set('auth.defaults.guard', 'api');
+        Config::set('auth.defaults.passwords', 'users');
     }
 
     public function index()
@@ -38,6 +44,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $token = Auth::shouldUse('api');
         try {
             $credentials = $request->only('user', 'password');
             $data['usuario'] = $credentials['user'];
@@ -49,7 +56,12 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Unauthoriz55ed'], 401);
             }
 
-            return response()->json(['status' => 'success', 'token' => $this->respondWithToken($token)], 200)->header('Authorization', $token)
+            return response()->json([
+                'status' => 'success',
+                'token' => $this
+                    ->respondWithToken($token)
+            ], 200)
+                ->header('Authorization', $token)
                 ->withCookie(
                     'token',
                     $token,
@@ -135,6 +147,7 @@ class AuthController extends Controller
 
     public function renew()
     {
+        $token = Auth::shouldUse('api');
         try {
             //code...
             if (!$token = $this->guard()->refresh()) {
@@ -146,7 +159,7 @@ class AuthController extends Controller
             $user = Usuario::with(
                 [
                     'person' => function ($q) {
-                        $q->select('*')->with('companies','companyWorked');
+                        $q->select('*')->with('companies', 'companyWorked');
                     },
                     'permissions' => function ($q) {
                         $q->select('*');
@@ -179,6 +192,7 @@ class AuthController extends Controller
     {
         return Auth::guard();
     }
+
 
 
     protected function respondWithToken($token)

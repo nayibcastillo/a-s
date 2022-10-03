@@ -12,6 +12,8 @@ use App\Traits\ApiResponser;
 use App\Traits\manipulateDataFromExternalService;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Http\Resources\PatientResource;
+use Illuminate\Support\Facades\DB;
 
 
 class PatientController extends Controller
@@ -25,7 +27,20 @@ class PatientController extends Controller
      */
     public function index()
     {
-        //
+        try {
+
+            $patient = Patient::query();
+            $patient->when(request()->input('search') != '', function ($q) {
+                $q->where(function ($query) {
+                    $query->where('identifier', 'like', '%' . request()->input('search') . '%');
+                });
+            });
+
+            return $this->success(PatientResource::collection($patient->take(10)->get()));
+            // return $this->success(Cie10Resource::collection(Cie10::get()));
+        } catch (\Throwable $th) {
+            return $this->error($th->getMessage(), 400);
+        }
     }
 
     /**
