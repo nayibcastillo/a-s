@@ -20,7 +20,7 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
     public function headings(): array
     {
         return [
-          'N°', 'Nombres y apellidos', 'N° de documento', 'Hora de recolección', 'Número telefónico'
+          'N°', 'Nombres y apellidos', 'N° de documento', 'Hora de recolección', 'Número telefónico', 'Código CUP', 'Nombre CUP'
         ];
     }
     /**
@@ -35,6 +35,7 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
             ->join('municipalities', 'patients.municipality_id', '=', 'municipalities.id')
             ->join('eps', 'patients.eps_id', '=', 'eps.id')
             ->join('cup_laboratories', 'cup_laboratories.id_laboratory', '=', 'laboratories.id')
+            ->join('cups', 'cup_laboratories.id_cup', '=', 'cups.id')
             ->where('status', '=', 'Tomado')
             ->select(
                 'laboratories.id',
@@ -42,7 +43,8 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
                 'patients.identifier',
                 'laboratories.hour',
                 'patients.phone',
-                'cup_laboratories.*',
+                'cups.code',
+                'cups.description',
             )
             ->orderByDesc('laboratories.created_at')
             ->get()
@@ -55,7 +57,7 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
 
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:W1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
             },
         ];

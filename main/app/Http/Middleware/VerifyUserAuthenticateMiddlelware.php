@@ -18,11 +18,10 @@ class VerifyUserAuthenticateMiddlelware
     {
         if($guard != null)
             auth()->shouldUse($guard);
-        return $next($request);
-
-        /* if (auth()->user()) {
+        if (auth()->user()) {
             return $next($request);
         }
-        return response(['error' => true, 'respuesta' => 'no autenticado'], 200); */
+        return $next($request);
+        return response(['error' => true, 'respuesta' => 'no autenticado'], 200);
     }
 }

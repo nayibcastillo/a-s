@@ -444,6 +444,7 @@ Route::group(
 		Route::get('download-laboratory/{id}', [LaboratoriesController::class, 'pdf']);
 		Route::get('laboratory-report', [LaboratoriesController::class, 'report']);
 		Route::get('delete-document-laboratory/{id}', [LaboratoriesController::class, 'deleteDocument']);
+		Route::get('download-files-laboratory/{id}', [LaboratoriesController::class, 'downloadFiles']);
 		Route::resource('taxis', 'TaxiControlller');
 		Route::resource('taxi-city', 'TaxiCityController');
 		Route::resource('city', 'CityController');

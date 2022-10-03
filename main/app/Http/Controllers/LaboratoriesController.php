@@ -15,6 +15,8 @@ use \Milon\Barcode\DNS1D;
 use \Milon\Barcode\DNS2D;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+
 
 class LaboratoriesController extends Controller
 {
@@ -138,7 +140,8 @@ class LaboratoriesController extends Controller
         Laboratories::updateOrCreate(['id' => $request->get('id')], $request->all());
     }
 
-    public function deleteDocument($id) {
+    public function deleteDocument($id)
+    {
         CupLaboratory::find($id)->update([
             'state' => 'Pendiente',
             'file' => null
@@ -214,11 +217,24 @@ class LaboratoriesController extends Controller
         $laboratoriesday = Laboratories::whereDate('created_at', Carbon::today())
             ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
             ->get();
-        
+
         return Excel::download(new LaboratoryExport(), 'reporte-dia.xlsx');
         return 'asd';
         /* $pdf = PDF::loadHTML($contenido);
         return $pdf->download('reporte.pdf'); */
+    }
+
+    public function downloadFiles($id)
+    {
+        /* $pdfmerge = PDFMerger::init(); */
+        $laboratory = Laboratories::where('id', $id)->with('cup')->first();
+        $files = [];
+        foreach ($laboratory->cup as $cup) {
+            if ($cup->file != null) {
+                array_push($files, $cup->file);
+            }
+        }
+        return $this->success(array_unique($files));
     }
 
     public function pdf($id)
