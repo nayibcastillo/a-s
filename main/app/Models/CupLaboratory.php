@@ -18,6 +18,6 @@ class CupLaboratory extends Model
     }
     public function cup()
     {
-        return $this->belongsTo(Cup::class, 'id_cup', 'id');
+        return $this->belongsTo(Cup::class, 'id_cup', 'id')->with('colors');
     }
 }
