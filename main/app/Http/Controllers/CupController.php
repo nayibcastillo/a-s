@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Imports\CupsImport;
 use App\Http\Controllers\Controller;
 use App\Models\Agendamiento;
+use App\Models\Color;
+use App\Models\Cup_type;
 use App\Models\Space;
 use App\Services\CupService;
 use App\Models\Speciality;
@@ -73,6 +75,12 @@ class CupController extends Controller
             });
         });
 
+        $cups->when(request()->get('type'), function ($q) {
+            $q->where(function ($q) {
+                $q->where('cup_type_id', request()->get('type'));
+            });
+        });
+
         return $this->success($cups->get(['id as value',  DB::raw("CONCAT( code, ' - ' ,description) as text")])->take(30));
     }
 
@@ -80,9 +88,12 @@ class CupController extends Controller
     {
         try {
             return $this->success(
-                Cup::orderBy('description')
+                Cup::orderBy('description')->with('colors','type_cup')
                     ->when(request()->get('description'), function (Builder $q) {
                         $q->where('description', 'like', '%' . request()->get('description') . '%');
+                    })
+                    ->when(request()->get('cup_type_id'), function (Builder $q) {
+                        $q->where('cup_type_id', '=', request()->get('cup_type_id'));
                     })
                     ->when(request()->get('code'), function (Builder $q) {
                         $q->where('code', 'like', '%' . request()->get('code') . '%');
@@ -91,6 +102,10 @@ class CupController extends Controller
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
         }
+    }
+
+    public function getTypes() {
+        return $this->success(Cup_type::select('id as value', 'name as text')->get());
     }
 
 
@@ -114,7 +129,7 @@ class CupController extends Controller
         try {
             $Cup = Cup::updateOrCreate(['id' => request()->get('id')], request()->all());
             $Cup->specialities()->sync(request()->get('specialities'));
-            return ($Cup->wasRecentlyCreated === true) ? response()->success('creado con exito') : response()->success('Actualizado con exito');
+            return ($Cup->wasRecentlyCreated === true) ? response()->success('Creado con éxito') : response()->success('Actualizado con éxito');
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
         }
@@ -128,7 +143,10 @@ class CupController extends Controller
      */
     public function show($cup)
     {
-        return response()->success(Cup::with('specialities:id')->find($cup));
+        return response()->success(
+            Cup::with('specialities:id')
+                ->find($cup)
+        );
     }
 
     /**

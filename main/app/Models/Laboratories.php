@@ -19,6 +19,8 @@ class Laboratories extends Model
         'specialty_id',
         'hour',
         'status',
+        'file_order',
+        'file_document',
     ];
     public function cup()
     {

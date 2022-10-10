@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\LaboratoryExport;
+use App\Models\Color;
+use App\Models\Cup;
 use Illuminate\Http\Request;
 use App\Models\Laboratories;
 use App\Models\CupLaboratory;
@@ -15,6 +17,7 @@ use \Milon\Barcode\DNS1D;
 use \Milon\Barcode\DNS2D;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 
@@ -91,6 +94,10 @@ class LaboratoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $base64Order = saveBase64File($request->file_order, 'order/', false, '.pdf');
+        $base64Document = saveBase64File($request->file_document, 'document/', false, '.pdf');
+        $order = URL::to('/') . '/api/file?path=' . $base64Order;
+        $document = URL::to('/') . '/api/file?path=' . $base64Document;
         $id = Laboratories::create([
             'patient' => $request->get('patient')['id'],
             'date' => $request->get('date'),
@@ -99,6 +106,8 @@ class LaboratoriesController extends Controller
             'cie10_id' => $request->get('cie10_id')['value'],
             'laboratory_id' => $request->get('laboratory_id'),
             'ips_id' => $request->get('ips_id'),
+            'file_document' => $document,
+            'file_order' => $order,
         ])->id;
         foreach ($request->get('cups') as $cup) {
             CupLaboratory::create([
@@ -135,9 +144,35 @@ class LaboratoriesController extends Controller
         );
     }
 
+    public function getTubeId($id)
+    {
+        $cups = CupLaboratory::where('id_laboratory', $id)->with('cup')->get();
+        $colors = array();
+        foreach ($cups as $cup) {
+            if (isset($cup->cup->colors)) {
+                array_push($colors, [
+                    'name' => $cup->cup->colors->color,
+                    'id' => $cup->cup->colors->id,
+                    'hex' => $cup->cup->colors->hex,
+                ]);
+            }
+        }
+        return $this->success(array_unique($colors, SORT_REGULAR));
+    }
+
     public function tomarOrAnular(Request $request)
     {
         Laboratories::updateOrCreate(['id' => $request->get('id')], $request->all());
+        if ($request->has('tube')) {
+            $tubes = $request->get('tube');
+            foreach ($tubes as $tube) {
+                DB::table('laboratory_tube')->insert([
+                    'laboratory_id' => $tube['id_laboratory'],
+                    'color_id' => $tube['color_id'],
+                    'amount' => $tube['amount'],
+                ]);
+            }
+        }
     }
 
     public function deleteDocument($id)
@@ -252,28 +287,29 @@ class LaboratoriesController extends Controller
                 'l.*'
             )
             ->first();
-        $cups = DB::table('laboratories as l')->where('l.id', $id)
-            ->join('cup_laboratories as cl', 'cl.id_laboratory', '=', 'l.id')
+        $cups = Laboratories::where('laboratories.id', $id)
+            ->join('cup_laboratories as cl', 'cl.id_laboratory', '=', 'laboratories.id')
             ->join('cups as c', 'cl.id_cup', '=', 'c.id')
-            ->select('c.code')
+            ->join('colors', 'colors.id', '=', 'c.color_id')
+            ->select('c.code', 'c.color_id','colors.abbreviation', DB::raw('group_concat(c.code SEPARATOR " - ") AS CUPS'))
+            ->groupBy('c.color_id')
             ->get();
+        //return $cups;
         $ips = DB::table('laboratories as l')->where('l.id', $id)
             ->join('companies as c', 'c.id', '=', 'l.ips_id')
             ->select('c.name', 'c.tin', 'c.dv')
             ->first();
         $cupsHTML = '';
-        foreach ($cups as $cup) {
-            $cupsHTML = $cupsHTML . $cup->code . ' - ';
-        }
+      
         $edad = Carbon::parse($patient->date_of_birth)->age;
         $hora = date("g:i a", strtotime($patient->hour));
         $fecha = date("d/m/Y", strtotime($patient->hour));
         $codebar = new DNS1D();
         $codebarLaboratory = $codebar->getBarcodeHTML(str_pad($patient->id, 12, "0", STR_PAD_LEFT), 'EAN13', 1.8, 20);
-        $contenido =
-            '<!DOCTYPE html>
-        <html lang="en" style="margin: 2pt;">
         
+        /* AGREGAS EL HEADER DEL HTML DE LA ETIQUETA GENERAL */
+        $contenido = '<!DOCTYPE html>
+        <html lang="en" style="margin: 2pt;">
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -296,23 +332,31 @@ class LaboratoriesController extends Controller
                 -o-transform-origin: 100% 100%;
                 -webkit-transform-origin: 100% 100%;
               }
+              .page {
+                page-break-after: always;
+             }
+             .page:last-child {
+                page-break-after: unset;
+             }
             </style>
         </head>
-        
-        <body style="margin: 0;">                       
-            <div>
-                <span style="font-size: 7.5px;">' . $patient->name_patient . '<br>'
-            . $patient->code . '. ' . number_format($patient->identifier, 0, "", ".") . '<br>Edad: '
-            . $edad . ' años - (' . date("d/m/Y", strtotime($patient->date_of_birth)) . ')<br>Sexo: ' . $patient->gener . '<br>Fecha y hora: ' . $fecha . ' a las ' . $hora . '<br></span>
-                ' . $codebarLaboratory . '
-                <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">' . $cupsHTML . '</p>
-                 
-            </div>   
-            <div class="vertical"><b style="font-size: 3.2px !important">' . number_format($ips->tin, 0, "", ".") . '-' . $ips->dv . '</b> ' .  $ips->name . '</div>          
-        </body>
-        
+        <body style="margin: 0;"> ';
+        for ($i=0; $i<count($cups); $i++){
+            $num = $i +1;
+            $cupsHTML=$cups[$i]["CUPS"];
+            $contenido .='                      
+                <div class="page">
+                    <span style="font-size: 7.5px;">' . $patient->name_patient . ' <small style="margin-left: 30px;; font-size: 4px">' 
+                    . $cups[$i]["abbreviation"] . ' - ' .$num .'/'.count($cups). '</small><br>'
+                . $patient->code . '. ' . number_format($patient->identifier, 0, "", ".") . '<br>Edad: '
+                . $edad . ' años - (' . date("d/m/Y", strtotime($patient->date_of_birth)) . ')<br>Sexo: ' . $patient->gener . '<br>Fecha y hora: ' . $fecha . ' a las ' . $hora . '<br></span>
+                    ' . $codebarLaboratory . '
+                    <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">' . $cupsHTML . '</p>
+                    <div class="vertical"><b style="font-size: 3.2px !important">' . number_format($ips->tin, 0, "", ".") . '-' . $ips->dv . '</b> ' .  $ips->name . '</div> 
+                </div>';
+        }
+        $contenido.='</body>
         </html>';
-
         $pdf = PDF::loadHTML($contenido)->setPaper([0.0, 0.0, 71, 144], 'landscape');
         return $this->success('data:application/pdf;base64,', base64_encode($pdf->stream()));
         //return $pdf->stream('etiqueta.pdf');
