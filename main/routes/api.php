@@ -440,6 +440,9 @@ Route::group(
         Route::get('paginate-laboratories', [LaboratoriesController::class, 'paginate']);
         Route::get('cups-laboratory/{id}', [LaboratoriesController::class, 'cupsLaboratory']);
         Route::post('tomar-anular-laboratorio', [LaboratoriesController::class, 'tomarOrAnular']);
+        Route::post('asignar-tubos', [LaboratoriesController::class, 'asignarTubos']);
+        Route::post('asignar-horas-laboratorio', [LaboratoriesController::class, 'asignarHoras']);
+        Route::get('get-all-tubes/{id}', [LaboratoriesController::class, 'getAllTubes']);
         Route::get('causal-anulation', [LaboratoriesController::class, 'getCausalAnulation']);
         Route::post('document-laboratory', [LaboratoriesController::class, 'cargarDocumento']);
         Route::get('download-laboratory/{id}', [LaboratoriesController::class, 'pdf']);
