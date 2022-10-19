@@ -290,14 +290,8 @@ class LaboratoriesController extends Controller
 
     public function report()
     {
-        $laboratoriesday = Laboratories::whereDate('created_at', Carbon::today())
-            ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
-            ->get();
-
-        return Excel::download(new LaboratoryExport(), 'reporte-dia.xlsx');
-        return 'asd';
-        /* $pdf = PDF::loadHTML($contenido);
-        return $pdf->download('reporte.pdf'); */
+        $today = Carbon::today();
+        return Excel::download(new LaboratoryExport(request()->all()), 'reporte-dia'.$today.'.xlsx');
     }
 
     public function downloadFiles($id)

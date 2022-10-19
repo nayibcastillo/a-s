@@ -54,6 +54,7 @@ use ProfessionController as CoreProfessionController;
 use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ReporteHorariosController;
+use App\Http\Controllers\CompensationFundController;
 use App\Http\Controllers\RetentionTypeController;
 use App\Http\Controllers\RiskTypesController;
 use App\Http\Controllers\RotatingTurnHourController;
@@ -522,6 +523,8 @@ Route::group(
         Route::get("waiting-list-statistics", [WaitingListController::class, "statistics"]);
         Route::get("spaces-statistics-detail", [SpaceController::class, "statisticsDetail"]);
         Route::get("get-type_appointments/{query?}", [TypeAppointmentController::class, "index"]);
+        Route::get("type-appointments-paginate", [TypeAppointmentController::class, "paginate"]);
+        Route::get("sub-type-appointments-paginate", [SubTypeAppointmentController::class, "paginate"]);
 
         Route::get("get-durations", [DurationController::class, "index"]);
         Route::get("appointments-pending", [AppointmentController::class, "getPending"]);
@@ -656,7 +659,8 @@ Route::group(
         Route::get("paginate-especialities", [SpecialityController::class, "paginate"]);
 
 
-        Route::resource('compensation-funds', CompensationFundController::class);
+        Route::resource('compensation-funds', "CompensationFundController");
+        Route::get('paginate-compensation-funds', [CompensationFundController::class, 'paginate']);
         Route::resource('severance-funds', 'SeveranceFundController');
 
 
