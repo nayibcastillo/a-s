@@ -104,7 +104,7 @@ class PersonController extends Controller
                     'p.first_name',
                     'pos.name as position',
                     'd.name as dependency',
-                    'c.name as company',
+                    'c.short_name as company',
                     DB::raw(
                         'w.id AS work_contract_id'
                     )
