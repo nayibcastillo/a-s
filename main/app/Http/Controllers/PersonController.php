@@ -135,10 +135,14 @@ class PersonController extends Controller
     }
 
     public function validarCedula($documento){
+        $user= '';
         $person = DB::table("people")
             ->where('identifier', $documento)
             ->exists();
-        return $this->success($person);
+        if ($person) {
+            $user=  DB::table('people')->where('identifier', $documento)->first();
+        }
+        return $this->success($person, $user);
     }
 
     public function getAll(Request $request)
@@ -237,7 +241,9 @@ class PersonController extends Controller
                         "Concat_ws('', IFNULL(p.image, p.image_blob )) As image"
                     ),
                     'p.second_name',
-                    'p.second_surname'
+                    'p.second_surname',
+                    'p.title',
+                    'p.status'
                 )
                 ->LeftJoin('work_contracts as w', function ($join) {
                     $join->on('p.id', '=', 'w.person_id')
