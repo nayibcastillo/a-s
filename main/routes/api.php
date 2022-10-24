@@ -303,7 +303,7 @@ Route::group(
 
         Route::resource('work_contracts', 'WorkContractController');
 
-        Route::get('paginatePensionFun', [PensionFundController::class, 'paginate']);
+        Route::get('paginatePensionFund', [PensionFundController::class, 'paginate']);
         Route::resource('pension-funds', 'PensionFundController');
 
 
