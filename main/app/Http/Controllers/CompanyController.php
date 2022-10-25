@@ -221,9 +221,19 @@ class CompanyController extends Controller
         $companies = Company::query();
         return $this->success(CompanyResource::collection($companies->where('type', 1)->get()));
     }
+
     public function getAllCompanies()
     {
         $companies = DB::table('companies')->get();
-        return $this->success($companies);
+        return $this->success(
+            Company::orderBy('name')
+                ->when(request()->get('name'), function ($q, $fill) {
+                    $q->where('name', 'like', '%' . $fill . '%');
+                })
+                ->when(request()->get('tin'), function ($q, $fill) {
+                    $q->where('tin', 'like', '%' . $fill . '%');
+                })
+                ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
     }
 }

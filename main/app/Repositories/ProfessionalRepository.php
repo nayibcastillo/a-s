@@ -45,6 +45,7 @@ class ProfessionalRepository
             ->leftJoin('companies as c', 'c.id', '=', 'w.company_id')
             ->leftJoin('positions as pos', 'pos.id', '=', 'w.position_id')
             ->leftJoin('dependencies as d', 'd.id', '=', 'pos.dependency_id')
+            ->orderBy('full_name')
             ->where('people_type_id', 3)
             ->when(request()->get('identifier'), function ($q) {
                 $q->where('p.identifier', 'like', request()->get('identifier') . '%');
