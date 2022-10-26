@@ -433,6 +433,7 @@ Route::group(
         Route::get('paginateSeveranceFunds', [SeveranceFundController::class, 'paginate']);
         Route::get('paginateBanks', [BanksController::class, 'paginate']);
         Route::get('paginateBankAccount', [BankAccountsController::class, 'paginate']);
+        Route::resource('banksAccount', 'BankAccountsController');
         Route::get('paginateHotels', [HotelController::class, 'paginate']);
         Route::get('paginateTaxis', [TaxiControlller::class, 'paginate']);
         Route::get('paginateCities', [CityController::class, 'paginate']);
