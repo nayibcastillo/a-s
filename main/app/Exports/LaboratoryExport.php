@@ -16,51 +16,66 @@ use Illuminate\Support\Facades\DB;
 
 
 class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize, WithEvents
-{    
+{
+    public function __construct($data)
+    {
+        $this->fecha = $data['fecha'];
+    }
     public function headings(): array
     {
         return [
-          'N°', 'Nombres y apellidos', 'N° de documento', 'Hora de recolección', 'Número telefónico', 'Código CUP', 'Nombre CUP'
+            'N°', 
+            'Tipo de doc', 
+            'N° de documento', 
+            'Apellidos y nombres', 
+            'Fecha de nacimiento', 
+            'Sexo', 
+            'Código CUP',
+            'Tipo de muestra',
+            'Total muestras',
+            'EPS',
         ];
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-
-         return new Collection(
-            DB::table('laboratories')
+        return new Collection(
+            Laboratories::where('status', '=', 'Tomado')
+            ->when($this->fecha, function ($q, $fill) {
+                $fechas = explode('a', $this->fecha);
+                $f1 = new Carbon($fechas[0]);
+                $f2 = new Carbon($fechas[1]);
+                $q->whereBetween('date', [$f1, $f2]);
+            })
             ->join('patients', 'laboratories.patient', '=', 'patients.id')
-            ->join('municipalities', 'patients.municipality_id', '=', 'municipalities.id')
-            ->join('eps', 'patients.eps_id', '=', 'eps.id')
-            ->join('cup_laboratories', 'cup_laboratories.id_laboratory', '=', 'laboratories.id')
-            ->join('cups', 'cup_laboratories.id_cup', '=', 'cups.id')
-            ->where('status', '=', 'Tomado')
+            ->join('cup_laboratories as cl', 'cl.id_laboratory', '=', 'laboratories.id')
+            ->join('cups as c', 'cl.id_cup', '=', 'c.id')
+            ->join('type_documents', 'type_documents.id', '=', 'patients.type_document_id')
+            ->join('laboratory_tube', 'laboratory_tube.laboratory_id', '=', 'laboratories.id')
             ->select(
                 'laboratories.id',
-                DB::raw("CONCAT(patients.firstname, ' ', patients.middlename, ' ', patients.surname, ' ', patients.secondsurname) AS name_patient"),
+                'type_documents.code',
                 'patients.identifier',
-                'laboratories.hour',
-                'patients.phone',
-                'cups.code',
-                'cups.description',
+                DB::raw("CONCAT_WS(' ', patients.surname, patients.secondsurname, patients.firstname, patients.middlename) AS name_patient"),
+                'patients.date_of_birth',
+                'patients.gener',
+                DB::raw('group_concat(DISTINCT(c.code) SEPARATOR " - ") AS CUPS'),                
+                DB::raw('SUM(laboratory_tube.amount)')
             )
-            ->orderByDesc('laboratories.created_at')
+            ->groupBy('laboratories.patient')
             ->get()
-         );
-
+        );
     }
 
     public function registerEvents(): array
     {
-
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:G1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = 'A1:J1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(11);
             },
         ];
     }
-
 }

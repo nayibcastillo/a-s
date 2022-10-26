@@ -34,6 +34,16 @@ class LaboratoriesController extends Controller
         //
     }
 
+    public function getAllTubes($id)
+    {
+        $tubes = DB::table('laboratory_tube')
+            ->where('laboratory_id', '=', $id)
+            ->join('colors', 'colors.id', '=', 'laboratory_tube.color_id')
+            ->select('laboratory_tube.*', 'colors.color', 'colors.hex')
+            ->get();
+        return $this->success($tubes);
+    }
+
     public function paginate()
     {
         return $this->success(Laboratories::with('patient')
@@ -96,8 +106,10 @@ class LaboratoriesController extends Controller
     {
         $base64Order = saveBase64File($request->file_order, 'order/', false, '.pdf');
         $base64Document = saveBase64File($request->file_document, 'document/', false, '.pdf');
+        $base64Consentimiento = saveBase64File($request->file_cosentimiento, 'consentimiento/', false, '.pdf');
         $order = URL::to('/') . '/api/file?path=' . $base64Order;
         $document = URL::to('/') . '/api/file?path=' . $base64Document;
+        $consentimiento = URL::to('/') . '/api/file?path=' . $base64Consentimiento;
         $id = Laboratories::create([
             'patient' => $request->get('patient')['id'],
             'date' => $request->get('date'),
@@ -108,6 +120,7 @@ class LaboratoriesController extends Controller
             'ips_id' => $request->get('ips_id'),
             'file_document' => $document,
             'file_order' => $order,
+            'file_consentimiento' => $consentimiento,
         ])->id;
         foreach ($request->get('cups') as $cup) {
             CupLaboratory::create([
@@ -163,14 +176,42 @@ class LaboratoriesController extends Controller
     public function tomarOrAnular(Request $request)
     {
         Laboratories::updateOrCreate(['id' => $request->get('id')], $request->all());
+    }
+
+    public function asignarHoras(Request $request)
+    {
+        $hours = $request->all();
+        foreach ($hours as $hour) {
+            $id_lab = $hour['id_lab'];
+            DB::table('laboratory_tube')->where('id', $hour['id'])->update(['hour' => $hour['hour']]);
+        }
+        $lab = DB::table('laboratory_tube')->where('laboratory_id', $id_lab)->get();
+        $cambioEstado = true;
+        foreach ($lab as $lb) {
+            if ($lb->hour == null)
+                $cambioEstado = false;
+        }
+        if ($cambioEstado) {
+            Laboratories::where('id', $id_lab)->update(['status' => 'Tomado']);
+        }
+        return $this->success('Holi');
+        //Laboratories::updateOrCreate(['id' => $request->get('id')], $request->all());
+    }
+
+    public function asignarTubos(Request $request)
+    {
         if ($request->has('tube')) {
             $tubes = $request->get('tube');
+            Laboratories::updateOrCreate(['id' => $request->get('id')], ['status_tube' => 'true']);
             foreach ($tubes as $tube) {
-                DB::table('laboratory_tube')->insert([
-                    'laboratory_id' => $tube['id_laboratory'],
-                    'color_id' => $tube['color_id'],
-                    'amount' => $tube['amount'],
-                ]);
+                for ($i = 0; $i < $tube['amount']; $i++) {
+                    DB::table('laboratory_tube')->insert([
+                        'laboratory_id' => $tube['id_laboratory'],
+                        'color_id' => $tube['color_id'],
+                        'amount' => 1,
+                        'count' => $i + 1
+                    ]);
+                }
             }
         }
     }
@@ -249,14 +290,8 @@ class LaboratoriesController extends Controller
 
     public function report()
     {
-        $laboratoriesday = Laboratories::whereDate('created_at', Carbon::today())
-            ->with('patient', 'cup', 'place', 'contract', 'professional', 'cie10', 'motivo')
-            ->get();
-
-        return Excel::download(new LaboratoryExport(), 'reporte-dia.xlsx');
-        return 'asd';
-        /* $pdf = PDF::loadHTML($contenido);
-        return $pdf->download('reporte.pdf'); */
+        $today = Carbon::today();
+        return Excel::download(new LaboratoryExport(request()->all()), 'reporte-dia'.$today.'.xlsx');
     }
 
     public function downloadFiles($id)
@@ -278,7 +313,7 @@ class LaboratoriesController extends Controller
             ->join('patients as p', 'l.patient', '=', 'p.id')
             ->join('type_documents as t', 'p.type_document_id', '=', 't.id')
             ->select(
-                DB::raw("CONCAT(p.firstname, ' ', p.middlename, ' ', p.surname, ' ', p.secondsurname) AS name_patient"),
+                DB::raw("CONCAT_WS(' ', p.firstname, p.middlename, p.surname, p.secondsurname) AS name_patient"),
                 'p.type_document_id',
                 'p.identifier',
                 'p.gener',
@@ -287,26 +322,32 @@ class LaboratoriesController extends Controller
                 'l.*'
             )
             ->first();
+            
         $cups = Laboratories::where('laboratories.id', $id)
             ->join('cup_laboratories as cl', 'cl.id_laboratory', '=', 'laboratories.id')
             ->join('cups as c', 'cl.id_cup', '=', 'c.id')
             ->join('colors', 'colors.id', '=', 'c.color_id')
-            ->select('c.code', 'c.color_id','colors.abbreviation', DB::raw('group_concat(c.code SEPARATOR " - ") AS CUPS'))
+            ->join('laboratory_tube', function($join) {
+                $join->on('laboratory_tube.laboratory_id', '=', 'laboratories.id');
+                $join->on('laboratory_tube.color_id', '=', 'colors.id');
+            } )
+            ->select(DB::raw('MAX(laboratory_tube.count) as count'),'c.code', 'c.color_id', 'colors.abbreviation', DB::raw('group_concat(DISTINCT(c.code) SEPARATOR " - ") AS CUPS'))
             ->groupBy('c.color_id')
-            ->get();
-        //return $cups;
+            ->get();   
+
         $ips = DB::table('laboratories as l')->where('l.id', $id)
             ->join('companies as c', 'c.id', '=', 'l.ips_id')
             ->select('c.name', 'c.tin', 'c.dv')
             ->first();
+            
         $cupsHTML = '';
-      
+
         $edad = Carbon::parse($patient->date_of_birth)->age;
         $hora = date("g:i a", strtotime($patient->hour));
-        $fecha = date("d/m/Y", strtotime($patient->hour));
+        $fecha = date("d/m/Y", strtotime($patient->date));
         $codebar = new DNS1D();
         $codebarLaboratory = $codebar->getBarcodeHTML(str_pad($patient->id, 12, "0", STR_PAD_LEFT), 'EAN13', 1.8, 20);
-        
+
         /* AGREGAS EL HEADER DEL HTML DE LA ETIQUETA GENERAL */
         $contenido = '<!DOCTYPE html>
         <html lang="en" style="margin: 2pt;">
@@ -341,21 +382,39 @@ class LaboratoriesController extends Controller
             </style>
         </head>
         <body style="margin: 0;"> ';
-        for ($i=0; $i<count($cups); $i++){
-            $num = $i +1;
-            $cupsHTML=$cups[$i]["CUPS"];
-            $contenido .='                      
+        for ($i = 0; $i < count($cups); $i++) {
+           
+            $cupsHTML = $cups[$i]["CUPS"];
+            for($j = 0; $j < $cups[$i]["count"]; $j++){ 
+                $num = $j + 1;
+                $contenido .= '                      
                 <div class="page">
-                    <span style="font-size: 7.5px;">' . $patient->name_patient . ' <small style="margin-left: 30px;; font-size: 4px">' 
-                    . $cups[$i]["abbreviation"] . ' - ' .$num .'/'.count($cups). '</small><br>'
-                . $patient->code . '. ' . number_format($patient->identifier, 0, "", ".") . '<br>Edad: '
-                . $edad . ' años - (' . date("d/m/Y", strtotime($patient->date_of_birth)) . ')<br>Sexo: ' . $patient->gener . '<br>Fecha y hora: ' . $fecha . ' a las ' . $hora . '<br></span>
+                    <span style="font-size: 7.5px;">' 
+                        . $patient->name_patient . ' 
+                        <small style="position: absolute; font-weight: 800; right: 10px; font-size: 6px">'
+                            . $cups[$i]["abbreviation"] . ' - ' . $num . '/' .  $cups[$i]["count"] . '
+                        </small>
+                        <br>'
+                        . $patient->code . '. ' . number_format($patient->identifier, 0, "", ".") . '
+                        <br>Edad: '. $edad . ' años - (' . date("d/m/Y", strtotime($patient->date_of_birth)) . ')
+                        <br>Sexo: ' . $patient->gener . '<br>Fecha: ' . $fecha . '. Hora: _________
+                        <br>
+                    </span>
                     ' . $codebarLaboratory . '
-                    <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">' . $cupsHTML . '</p>
-                    <div class="vertical"><b style="font-size: 3.2px !important">' . number_format($ips->tin, 0, "", ".") . '-' . $ips->dv . '</b> ' .  $ips->name . '</div> 
+                    <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">' 
+                        . $cupsHTML . '
+                    </p>
+                    <div class="vertical">
+                        <b style="font-size: 3.2px !important">' 
+                            . number_format($ips->tin, 0, "", ".") . '-' . $ips->dv . '
+                        </b> ' .  $ips->name . '
+                    </div> 
                 </div>';
+                
+             }
+            
         }
-        $contenido.='</body>
+        $contenido .= '</body>
         </html>';
         $pdf = PDF::loadHTML($contenido)->setPaper([0.0, 0.0, 71, 144], 'landscape');
         return $this->success('data:application/pdf;base64,', base64_encode($pdf->stream()));

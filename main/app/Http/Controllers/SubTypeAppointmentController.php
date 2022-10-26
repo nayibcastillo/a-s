@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SubTypeAppointmentResource;
 use App\Models\SubTypeAppointment;
 use App\Models\TypeAppointment;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class SubTypeAppointmentController extends Controller
 {
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -21,9 +23,17 @@ class SubTypeAppointmentController extends Controller
         }
     }
 
+    public function paginate() 
+    {
+        return $this->success(
+            SubTypeAppointment::orderBy('name')
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
+    }
+
     /**
      * Show the form for creating a new resource.
-     *
+     *k
      * @return \Illuminate\Http\Response
      */
     public function create()
