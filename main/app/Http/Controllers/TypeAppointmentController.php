@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TypeAppointmentResource;
 use App\Models\TypeAppointment;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class TypeAppointmentController extends Controller
 {
+    use ApiResponser;
     /**
      * Display a listing of the resource.
      *
@@ -30,6 +32,14 @@ class TypeAppointmentController extends Controller
     public function create()
     {
         //
+    }
+
+    public function paginate()
+    {
+        return $this->success(
+            TypeAppointment::orderBy('name')
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
     }
 
     /**

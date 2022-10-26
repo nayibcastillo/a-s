@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompensationFund extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'code',
+        'nit',
+        'status'
+    ];
 }

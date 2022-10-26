@@ -104,7 +104,7 @@ class PersonController extends Controller
                     'p.first_name',
                     'pos.name as position',
                     'd.name as dependency',
-                    'c.name as company',
+                    'c.short_name as company',
                     DB::raw(
                         'w.id AS work_contract_id'
                     )
@@ -134,11 +134,16 @@ class PersonController extends Controller
         );
     }
 
-    public function validarCedula($documento){
+    public function validarCedula($documento)
+    {
+        $user = '';
         $person = DB::table("people")
             ->where('identifier', $documento)
             ->exists();
-        return $this->success($person);
+        if ($person) {
+            $user =  DB::table('people')->where('identifier', $documento)->first();
+        }
+        return $this->success($person, $user);
     }
 
     public function getAll(Request $request)
@@ -230,6 +235,7 @@ class PersonController extends Controller
                     'p.marital_status',
                     'p.address',
                     'p.cell_phone',
+                    'p.signature',
                     'p.first_name',
                     'p.first_surname',
                     'p.id',
@@ -237,7 +243,9 @@ class PersonController extends Controller
                         "Concat_ws('', IFNULL(p.image, p.image_blob )) As image"
                     ),
                     'p.second_name',
-                    'p.second_surname'
+                    'p.second_surname',
+                    'p.title',
+                    'p.status'
                 )
                 ->LeftJoin('work_contracts as w', function ($join) {
                     $join->on('p.id', '=', 'w.person_id')
@@ -279,9 +287,7 @@ class PersonController extends Controller
         try {
             $salary = WorkContract::find($request->get('id'));
             $salary->update($request->all());
-            $salary->date_of_admission = request()->get('date_of_admission');
             $salary->save();
-            return response()->success($salary);
             return response()->json(['message' => 'Se ha actualizado con éxito']);
         } catch (\Throwable $th) {
             return $this->error($th->getMessage(), 500);
@@ -369,21 +375,18 @@ class PersonController extends Controller
     {
         try {
             $person = Person::find($id);
-            if (ImgUploadFacade::validate(request()->get('image'))) {
-                ImgUploadFacade::deleteImg($person->image_blob);
-                $infoImg =  ImgUploadFacade::converFromBase64(request()->get('image'));
-                request()->merge([
-                    'image_blob' =>  $infoImg['image_blob'],
-                    'image' =>  $infoImg['image']
-                ]);
+            $personData = $request->all();
+            if ($request->image) {
+                if ($request->image != $person->image) {
+                    $personData["image"] = URL::to('/') . '/api/image?path=' . saveBase64($personData["image"], 'people/');
+                    $person->update($personData);
+                    $person->save();
+                } else {
+                    $person->update($personData);
+                }
+            } else {
+                $person->update($request->all());
             }
-
-            $person->update($request->all());
-
-            // if (!file_exists($current_path)) {
-            //     mkdir($current_path, 0777, true);
-            // }
-
             return response()->json($person);
         } catch (\Throwable $th) {
             return $this->error([$th->getMessage(), $th->getLine(), $th->getFile()], 500);
@@ -412,7 +415,7 @@ class PersonController extends Controller
 
             $personData["personId"] = null;
             $personData["company_worked_id"] = $personData['workContract']['company_id'];
-           // return $personData;
+            // return $personData;
             $per = $person = Person::create($personData);
             $contractData = $personData["workContract"];
             $contractData["person_id"] = $person->id;
@@ -673,19 +676,17 @@ class PersonController extends Controller
 
     public function personCompanies($personId)
     {
-        $companies = DB::table('company_person')->where('person_id',$personId)->get('*');
+        $companies = DB::table('company_person')->where('person_id', $personId)->get('*');
         return $this->success($companies);
     }
 
     public function personBoards($personId)
     {
         $board = DB::table('usuario')
-        ->join('boards', 'usuario.board_id','=','boards.id')
-        ->where('person_id',$personId)
-        ->select('boards.id', 'boards.name_board')
-        ->get();
+            ->join('boards', 'usuario.board_id', '=', 'boards.id')
+            ->where('person_id', $personId)
+            ->select('boards.id', 'boards.name_board')
+            ->get();
         return $this->success($board);
     }
-
-    
 }

@@ -28,9 +28,14 @@ class EpsController extends Controller
     {
         try {
             return $this->success(
-                Eps::orderBy('name')->when(request()->get('name'), function (Builder $q) {
-                    $q->where('name', 'like', '%' . request()->get('name') . '%');
-                })->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+                Eps::orderBy('name')
+                ->when(request()->get('name'), function ($q, $fill) {
+                    $q->where('name', 'like', '%' . $fill . '%');
+                })
+                ->when(request()->get('code'), function ($q, $fill) {
+                    $q->where('code', 'like', '%' . $fill . '%');
+                })
+                ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
             );
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);

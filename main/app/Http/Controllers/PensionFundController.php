@@ -27,6 +27,9 @@ class PensionFundController extends Controller
                 ->when(request()->get('name'), function ($q, $fill) {
                     $q->where('name', 'like', '%' . $fill . '%');
                 })
+                ->when(request()->get('code'), function ($q, $fill) {
+                    $q->where('code', 'like', '%' . $fill . '%');
+                })
                 ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
         );
     }

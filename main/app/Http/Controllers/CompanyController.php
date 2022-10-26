@@ -101,10 +101,18 @@ class CompanyController extends Controller
 
     public function saveCompanyData(Request $request)
     {
-        $infoImg =  ImgUploadFacade::converFromBase64($request->input('logo'));
-        $request->merge([
-            'logo' => URL::to('/') . '/api/image?path=' . $infoImg['image_blob'],
-        ]);
+        if ($request->has('logo')) {
+            $infoImg =  ImgUploadFacade::converFromBase64($request->input('logo'));
+            $request->merge([
+                'logo' => URL::to('/') . '/api/image?path=' . $infoImg['image_blob'],
+            ]);
+        }
+        if ($request->has('page_heading')) {
+            $page_heading =  ImgUploadFacade::converFromBase64($request->input('page_heading'));
+            $request->merge([
+                'page_heading' => URL::to('/') . '/api/image?path=' . $page_heading['image_blob'],
+            ]);
+        }
         $company = Company::findOrFail($request->get('id'));
         $company->update($request->all());
         return $this->success(
@@ -221,9 +229,19 @@ class CompanyController extends Controller
         $companies = Company::query();
         return $this->success(CompanyResource::collection($companies->where('type', 1)->get()));
     }
+
     public function getAllCompanies()
     {
         $companies = DB::table('companies')->get();
-        return $this->success($companies);
+        return $this->success(
+            Company::orderBy('name')
+                ->when(request()->get('name'), function ($q, $fill) {
+                    $q->where('name', 'like', '%' . $fill . '%');
+                })
+                ->when(request()->get('tin'), function ($q, $fill) {
+                    $q->where('tin', 'like', '%' . $fill . '%');
+                })
+                ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
     }
 }

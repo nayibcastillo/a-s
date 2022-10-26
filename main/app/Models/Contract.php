@@ -35,10 +35,16 @@ class Contract extends Model
     {
         return $this->belongsTo(Administrator::class);
     }
-    public function departments(): BelongsToMany
+    /* public function departments(): BelongsToMany
     {
         return $this->belongsToMany(Department::class);
+    } */
+
+    public function departments()
+    {
+        return $this->hasMany(ContractDepartment::class, 'contract_id', 'id')->with('department');
     }
+
     public function municipalities(): BelongsToMany
     {
         return $this->belongsToMany(Municipality::class);

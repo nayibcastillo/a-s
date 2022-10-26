@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contract;
+use App\Models\ContractDepartment;
 use App\Models\Cup;
 use App\Policy;
 use App\Service;
@@ -57,10 +58,17 @@ class ContractController extends Controller
 
     public function paginate()
     {
-        $contract = Contract::query();
-        $contract->with(['company:id,name', 'administrator:id,name', 'regimentypes:id,name']);
-        $result = $contract->get(['id', 'company_id', 'administrator_id', 'start_date', 'end_date', 'name', 'code', 'status']);
-        return $this->success($result);
+        return $this->success(Contract::with(['company:id,name', 'administrator:id,name', 'regimentypes:id,name'])
+            ->when(request()->get('name'), function ($q, $fill) {
+                $q->where('name','like', '%' . $fill . '%');
+            })
+            ->when(request()->get('code'), function ($q, $fill) {
+                $q->where('code','like', '%' . $fill . '%');
+            })
+            ->orderBy('state')
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1)));
+        /* $result = $contract->get(['id', 'company_id', 'administrator_id', 'start_date', 'end_date', 'name', 'code', 'status']);
+        return $this->success($result); */
     }
 
     /**
@@ -82,7 +90,11 @@ class ContractController extends Controller
     public function store(Request $request)
     {
         try {
-
+            if ($request->has('state') && $request->has('status')) {
+                Contract::where('id', $request->id)
+                ->update(['state' => $request->state, 'status' => $request->status]);
+                return $this->success('Actualizado con éxito');
+            }
             $contract =  Contract::create([
                 // "id" => request()->get("id"),
                 "name" => request()->get("name"),
@@ -167,7 +179,7 @@ class ContractController extends Controller
                 }
             }
 
-            return response()->success('contrato creado correctamente ');
+            return response()->success('Contrato creado correctamente.');
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
         }
@@ -192,12 +204,13 @@ class ContractController extends Controller
      */
     public function edit($id)
     {
+        $data2 = Contract::with('departments')->where('id', $id)->get();
 
         $data =  Contract::with([
             'company:id,name',
             'regimentypes:id,name',
             'administrator:id,name',
-            'departments:id,name',
+            'departments',
             'municipalities:id,name',
             'locations:id,name',
             'technicNotes',
@@ -213,7 +226,7 @@ class ContractController extends Controller
             },
             'policies'
         ])->find($id);
-        return response()->success($data);
+        return $this->success($data);
     }
 
     /**
