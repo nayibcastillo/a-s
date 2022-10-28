@@ -2,30 +2,25 @@
 
 namespace App\Exports;
 
+use App\Models\Laboratories;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithDrawings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize, WithDrawings, WithStyles
+class LaboratoryExport implements FromView, WithEvents, WithDrawings
 {
 
     public function __construct($data)
     {
         $this->fecha = $data['fecha'];
-    }
-
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            1    => ['font' => ['bold' => true]],
-        ];
+        $this->company_id = $data['company_id'];
+        $this->company = DB::table('companies')->where('id', $this->company_id)->first();
+        $this->person_id = $data['person_id'];
     }
 
     public function drawings()
@@ -33,48 +28,29 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
         $drawing = new Drawing();
         $drawing->setName('Logo');
         $drawing->setDescription('This is my logo');
-        $drawing->setPath(public_path('/app/public/terceros/alifehealth.jpg'));
-        $drawing->setHeight(90);
-        $drawing->setCoordinates('A1');
+        $drawing->setPath(public_path('/app/public/people/'. explode("people/", $this->company->logo)[1]));
+        $drawing->setHeight(50);
+        $drawing->setCoordinates('B1');
 
         return $drawing;
     }
 
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            'N°',
-            'Tipo de doc',
-            'N° de documento',
-            'Apellidos y nombres',
-            'Fecha de nacimiento',
-            'Sexo',
-            'Exámenes a procesar',
-            ['Tipo de muestra', 'T'],
-            'Total muestras',
-            'Temperatura',
-            'Observaciones (EPS)',
-        ];
-    }
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
-    {
-        return new Collection(
-            DB::table('laboratory_tube')
+        return view('exports.LaboratoryReport', [
+            'laboratories' =>  DB::table('laboratory_tube')
                 ->select(
                     'laboratories.id',
                     'type_documents.code',
                     'patients.identifier',
-                    DB::raw('CONCAT_WS(" ",patients.surname,patients.secondsurname,patients.firstname,patients.middlename)'),
+                    DB::raw('CONCAT_WS(" ",patients.surname,patients.secondsurname,patients.firstname,patients.middlename) as full_name'),
                     'patients.date_of_birth',
                     'patients.gener',
                     DB::raw('(SELECT GROUP_CONCAT(DISTINCT(cups.code) SEPARATOR " - ") 
-                        FROM cup_laboratories
-			            INNER JOIN cups ON cup_laboratories.id_cup=cups.id 
-                        WHERE cup_laboratories.id_laboratory =laboratories.id) AS cups'),
-                    DB::raw('SUM(laboratory_tube.amount) AS Examenes'),
+                    FROM cup_laboratories
+                    INNER JOIN cups ON cup_laboratories.id_cup=cups.id 
+                    WHERE cup_laboratories.id_laboratory =laboratories.id) AS cups'),
+                    DB::raw('SUM(laboratory_tube.amount) AS examenes'),
                     'eps.name',
                 )
                 ->join('laboratories', 'laboratory_tube.laboratory_id', '=', 'laboratories.id')
@@ -89,7 +65,22 @@ class LaboratoryExport implements FromCollection,  WithHeadings, ShouldAutoSize,
                     $q->whereBetween('date', [$f1, $f2]);
                 })
                 ->groupBy('laboratory_tube.laboratory_id')
-                ->get()
-        );
+                ->get(),
+            'company' => DB::table('companies')->where('id', $this->company_id)->first(),
+            'person' => DB::table('people')->where('id', $this->person_id)->first()
+        ]);
     }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function(AfterSheet $event) {
+   
+                $event->sheet->getDelegate()->freezePane('A9');
+                
+   
+            },
+        ];
+    }
+
 }

@@ -118,8 +118,10 @@ class ContractController extends Controller
                     ->update(['state' => $request->state, 'status' => $request->status]);
                 return $this->success('Actualizado con éxito');
             }
-            Contract::updateOrCreate(["id" => request()->get("id")],
-                ["name" => request()->get("name"),
+            $contract = Contract::updateOrCreate(
+                ["id" => request()->get("id")],
+                [
+                    "name" => request()->get("name"),
                     "code" => request()->get("code"),
                     "number" => request()->get("number"),
                     "administrator_id" => request()->get("administrator_id"),
@@ -127,40 +129,44 @@ class ContractController extends Controller
                     "end_date" => request()->get("end_date"),
                     "price" => request()->get("price"),
                     "payment_method_id" => request()->get("payment_modality"),
+                    "company_id" => request()->get("company_id")
                     // "contract_type_id" => request()->get("contract_type"),
                     // "payment_method_id" => request()->get("payment_method_id"),
                     // "benefits_plan_id" => request()->get("benefits_plan_id"),
                     // "price_list_id" => request()->get("price_list_id"),
                     // "variation" => request()->get("variation"),
                     // "regimen_id" => request()->get("regimen_id")
-                    //"company_id" => request()->get("company_id")
-                ]);
+                ]
+            );
 
-            /* $departments = request()->get("department_id");
+            $departments = request()->get("department_id");
             if ($departments[0] == 0) $departments = DB::table('departments')->pluck('id')->toArray();
-
 
             $municipalities = request()->get("municipality_id");
             if ($municipalities[0] == 0) {
                 $municipalities = DB::table('municipalities')->whereIn('department_id', $departments)->pluck('id')->toArray();
             }
-
-            // $companies = request()->get("company_id");
-            // if ($companies[0] == 0) $companies = DB::table('companies')->pluck('id')->toArray();
-
+            
             $regimens = request()->get("regimen_id");
             if ($regimens[0] == 0) $regimens = DB::table('regimen_types')->pluck('id')->toArray();
 
-            $locations = request()->get("location_id");
+            $type_service = request()->get("type_service_id");
+            if ($type_service[0] == 0) $type_service = DB::table('type_service')->pluck('id')->toArray();
+            
+            /* $locations = request()->get("location_id");
             if ($locations[0] == 0) {
                 $locations = DB::table('locations')->where('company_id', request()->get("company_id"))->pluck('id')->toArray();
-            }
+            }  */
 
-            $contract->departments()->sync($departments);
-            $contract->municipalities()->sync($municipalities);
+            // $companies = request()->get("company_id");
+            // if ($companies[0] == 0) $companies = DB::table('companies')->pluck('id')->toArray();
             // $contract->companies()->sync($companies);
+            
+            $contract->departments_()->sync($departments);
+            $contract->municipalities()->sync($municipalities);
             $contract->regimentypes()->sync($regimens);
-            $contract->locations()->sync($locations);
+            /* $contract->locations()->sync($locations); */
+            $contract->type_service()->sync($type_service);
 
             foreach (request()->get("poliza") as $poliza) {
                 Policy::create([
@@ -199,7 +205,7 @@ class ContractController extends Controller
 
                     $newService->specialities()->sync($specialities);
                 }
-            } */
+            } 
 
             return response()->success('Contrato creado correctamente.');
         } catch (\Throwable $th) {
@@ -229,7 +235,8 @@ class ContractController extends Controller
         $data2 = Contract::with('departments')->where('id', $id)->get();
 
         $data =  Contract::with([
-            'company:id,name',
+            /* 'company:id,name', */
+            'type_service:id,name',
             'regimentypes:id,name',
             'administrator:id,name',
             'departments',

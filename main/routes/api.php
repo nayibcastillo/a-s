@@ -600,6 +600,7 @@ Route::group(
         Route::get("validate-info-patient", [DataInitPersonController::class, "validatePatientByLineFront"]);
 
         Route::resource('pretty-cash', 'PrettyCashController');
+        Route::resource('type-service', 'TypeServiceController');
         Route::resource('dependencies', 'DependencyController');
         Route::resource('rotating-turns', RotatingTurnController::class);
         Route::resource('group', GroupController::class);
