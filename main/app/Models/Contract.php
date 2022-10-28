@@ -45,6 +45,21 @@ class Contract extends Model
         return $this->hasMany(ContractDepartment::class, 'contract_id', 'id')->with('department');
     }
 
+    public function departments_(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
+    public function type_service(): BelongsToMany
+    {
+        return $this->belongsToMany(TypeService::class);
+    }
+
+    public function regimentypes(): BelongsToMany
+    {
+        return $this->belongsToMany(RegimenType::class);
+    }
+
     public function municipalities(): BelongsToMany
     {
         return $this->belongsToMany(Municipality::class);
@@ -52,10 +67,6 @@ class Contract extends Model
     public function locations(): BelongsToMany
     {
         return $this->belongsToMany(Location::class);
-    }
-    public function regimentypes(): BelongsToMany
-    {
-        return $this->belongsToMany(RegimenType::class);
     }
     public function policies(): HasMany
     {
