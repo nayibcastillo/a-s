@@ -123,6 +123,7 @@ use App\Http\Controllers\PayrollPaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\BodegasController;
 use App\Http\Controllers\LaboratoriesController;
 use App\Http\Controllers\LaboratoriesPlacesController;
 use App\Http\Controllers\TaskController;
@@ -268,8 +269,8 @@ Route::group(
 
 
 
-        /**/
-
+        /* Paginations */
+        Route::get('paginateBodegas', [BodegasController::class,'paginate']);
         Route::get('paginateRetentionType', [RetentionTypeController::class, 'paginate']);
         Route::resource('retention-type', 'RetentionTypeController');
 
@@ -457,6 +458,12 @@ Route::group(
         Route::resource('hotels', 'HotelController');
         Route::resource('drivingLicenses', 'DrivingLicenseController');
 
+        Route::resource('bodegas', BodegasController::class);
+        Route::post('bodegas-activar-inactivar', [BodegasController::class,'activarInactivar']);
+        Route::post('grupos-bodegas', [BodegasController::class,'storeGrupo']);
+        Route::post('estibas', [BodegasController::class,'storeEstiba']);
+        Route::get('bodegas-with-estibas/{id}', [BodegasController::class,'bodegasConGrupos']);
+        Route::get('grupos-with-estibas/{id}', [BodegasController::class,'gruposConEstibas']);
 
         Route::resource('third-party', 'ThirdPartyController');
         Route::resource('third-party-person', 'ThirdPartyPersonController');
