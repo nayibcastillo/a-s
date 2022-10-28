@@ -24,7 +24,7 @@ class RetentionTypeController extends Controller
 
     public function paginate()
     {
-        return $this->success(
+        /* return $this->success(
             DB::table('retention_types as r')
             ->select(
                 'r.id',
@@ -35,6 +35,33 @@ class RetentionTypeController extends Controller
                 'r.description'
             )
             ->join('account_plans as a', 'a.id', '=', 'account_plan_id')
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        ); */
+
+        return $this->success(
+            DB::table('retention_types as r')
+            ->select(
+                'r.id',
+                'r.name',
+                'r.account_plan_id',
+                DB::raw('concat(a.code," - ",a.name) as account_plan'),
+                'r.percentage',
+                'r.state',
+                'r.description'
+            )
+            ->join('account_plans as a', 'a.id', '=', 'account_plan_id')
+            ->when(request()->get('nombre'), function ($q, $fill) {
+                $q->where('r.name', 'like', '%' . $fill . '%');
+            })
+            ->when(request()->get('porcentaje'), function ($q, $fill) {
+                $q->where('percentage', 'like', '%' . $fill . '%');
+            })
+            ->when(request()->get('cuentaAsociada'), function ($q, $fill) {
+                $q->where('a.name', 'like', '%' . $fill . '%');
+            })
+            ->when(request()->get('estado'), function ($q, $fill) {
+                $q->where('state', '=', $fill);
+            })
             ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
         );
     }
