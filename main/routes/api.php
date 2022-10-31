@@ -458,7 +458,7 @@ Route::group(
         Route::resource('hotels', 'HotelController');
         Route::resource('drivingLicenses', 'DrivingLicenseController');
 
-        Route::resource('bodegas', BodegasController::class);
+        Route::resource('bodegas', 'BodegasController');
         Route::post('bodegas-activar-inactivar', [BodegasController::class,'activarInactivar']);
         Route::post('grupos-bodegas', [BodegasController::class,'storeGrupo']);
         Route::post('estibas', [BodegasController::class,'storeEstiba']);
