@@ -9,7 +9,7 @@ class ThirdParty extends Model
 {
 
     protected $guarded = ['id'];
-    /* protected $fillable = [
+    protected $fillable = [
         'nit',
         'person_type',
         'third_party_type',
@@ -52,8 +52,11 @@ class ThirdParty extends Model
         'state',
         'rut',
         'cod_dian_address',
-        'image'
-    ]; */
+        'image',
+        'company_id',
+        'Id_Proveedor',
+        'retention_type'
+    ];
 
     public function thirdPartyPerson()
     {
