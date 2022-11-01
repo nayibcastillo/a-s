@@ -313,7 +313,8 @@ Route::group(
         Route::put('liquidate/{id}', [PersonController::class, 'liquidate']);
         Route::get('liquidado/{id}', [WorkContractController::class, 'getLiquidated']);
 
-
+        Route::get('cities-by-municipalities/{id}', [CityController::class, 'showByMunicipality']);
+        
         /** Rutas inventario dotacion rrhh */
         /*
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
