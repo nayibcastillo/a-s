@@ -127,6 +127,9 @@ use App\Http\Controllers\BodegasController;
 use App\Http\Controllers\LaboratoriesController;
 use App\Http\Controllers\LaboratoriesPlacesController;
 use App\Http\Controllers\RegimenTypeController;
+use App\Http\Controllers\FixedTurnController;
+use App\Http\Controllers\FixedTurnHourController;
+use App\Http\Controllers\RotatingTurnController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
@@ -383,8 +386,9 @@ Route::group(
             'fechaFin'    => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
         ]);
 
-        Route::resource('fixed-turns', FixedTurnController::class);
+        Route::resource('fixed-turns', 'FixedTurnController');
         Route::get('fixed_turn', [PersonController::class, 'fixed_turn']);
+        Route::post('/rotating-turns/change-state/{id}', [RotatingTurnController::class, 'changeState']);
         Route::post('/fixed-turns/change-state/{id}', [FixedTurnController::class, 'changeState']);
         Route::get('/fixed-turn-hours', [FixedTurnHourController::class, 'index']);
         Route::get('/reporte/horarios/{fechaInicio}/{fechaFin}/turno_fijo', [ReporteHorariosController::class, 'fixed_turn_diaries'])->where([
@@ -432,6 +436,7 @@ Route::group(
         Route::get('paginateCountries', [CountryController::class, 'paginate']);
         Route::resource('countries', 'CountryController');
 
+        Route::get('get-rotating-turns', [RotatingTurnController::class,"paginate"]);
         Route::get('paginateDepartment', [DepartmentController::class, 'paginate']);
         Route::get('paginateMunicipality', [MunicipalityController::class, 'paginate']);
 
@@ -614,7 +619,7 @@ Route::group(
         Route::resource('pretty-cash', 'PrettyCashController');
         Route::resource('type-service', 'TypeServiceController');
         Route::resource('dependencies', 'DependencyController');
-        Route::resource('rotating-turns', RotatingTurnController::class);
+        Route::resource('rotating-turns', 'RotatingTurnController');
         Route::resource('group', GroupController::class);
         Route::resource('positions', 'PositionController');
 

@@ -19,7 +19,13 @@ class RotatingTurnController extends Controller
 	{
 		//
 		return $this->success(
-			RotatingTurn::get(["id as value", "name as text"])
+			RotatingTurn::
+			 with('sunday')
+			 ->with('saturday')
+			 ->when(request()->get('name'), function ($q, $fill) {
+				$q->where('name', 'like', '%' . $fill . '%');
+			})
+			->get(["*","id as value", "name as text", "state"])
 		);
 	}
 
@@ -28,6 +34,19 @@ class RotatingTurnController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
+
+
+	public function paginate () {
+		return $this->success(
+			RotatingTurn::orderBy('state')->select("*","id as value", "name as text", "state")->
+			with('sunday', 'saturday')
+			->when(request()->get('name'), function ($q, $fill) {
+				$q->where('name', 'like', '%' . $fill . '%');
+			})
+			->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+		);
+	}
+    
 	public function create()
 	{
 		//
