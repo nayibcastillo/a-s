@@ -126,6 +126,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\BodegasController;
 use App\Http\Controllers\LaboratoriesController;
 use App\Http\Controllers\LaboratoriesPlacesController;
+use App\Http\Controllers\RegimenTypeController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
@@ -308,13 +309,16 @@ Route::group(
         Route::get('paginatePensionFund', [PensionFundController::class, 'paginate']);
         Route::resource('pension-funds', 'PensionFundController');
 
+        Route::get('paginateRegimes', [RegimenTypeController::class, 'paginate']);
+        Route::get('levels-with-regimes/{id}', [RegimenTypeController::class, 'regimenesConNiveles']);
+
 
         Route::put('liquidateOrActivate/{id}', [PersonController::class, 'liquidateOrActivate']);
         Route::put('liquidate/{id}', [PersonController::class, 'liquidate']);
         Route::get('liquidado/{id}', [WorkContractController::class, 'getLiquidated']);
 
         Route::get('cities-by-municipalities/{id}', [CityController::class, 'showByMunicipality']);
-        
+
         /** Rutas inventario dotacion rrhh */
         /*
 		Route::get('/inventary-dotation-by-category',  [InventaryDotationController::class, 'indexGruopByCategory']);
