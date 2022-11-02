@@ -18,20 +18,22 @@ class DocumentTypesController extends Controller
     public function index()
     {
         return $this->success(DocumentTypes::where('status', '=', 'Activo')
-        ->get(['name As text', 'id As value']));
+            ->get(['name As text', 'id As value']));
     }
 
     public function paginate()
     {
         $data = Request()->all();
         $page = key_exists('page', $data) ? $data['page'] : 1;
-        $pageSize = key_exists('pageSize',$data) ? $data['pageSize'] : 10;
+        $pageSize = key_exists('pageSize', $data) ? $data['pageSize'] : 10;
         return $this->success(
-            DocumentTypes::when( Request()->get('name') , function($q, $fill)
-            {
-                $q->where('name','like','%'.$fill.'%');
+            DocumentTypes::when(Request()->get('name'), function ($q, $fill) {
+                $q->where('name', 'like', '%' . $fill . '%');
             })
-            ->paginate($pageSize, ['*'],'page', $page));
+                ->orderBy('status', 'asc')
+                ->orderBy('name', 'asc')
+                ->paginate($pageSize, ['*'], 'page', $page)
+        );
     }
 
     /**
@@ -53,7 +55,7 @@ class DocumentTypesController extends Controller
     public function store(Request $request)
     {
         try {
-            $typeDocument = DocumentTypes::updateOrCreate( [ 'id'=> $request->get('id') ]  , $request->all() );
+            $typeDocument = DocumentTypes::updateOrCreate(['id' => $request->get('id')], $request->all());
             return ($typeDocument->wasRecentlyCreated) ? $this->success('Creado con exito') : $this->success('Actualizado con exito');
         } catch (\Throwable $th) {
             return response()->json([$th->getMessage(), $th->getLine()]);
