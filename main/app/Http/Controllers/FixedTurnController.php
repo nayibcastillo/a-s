@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FixedTurn;
 use App\Models\FixedTurnHour;
+use App\Models\Person;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
@@ -15,10 +16,15 @@ class FixedTurnController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
+
+    private function getCompany(){
+        return Person::find(Auth()->user()->person_id)->company_worked_id;
+    }
+
 	public function index()
 	{
 		return $this->success(
-			FixedTurn::orderBy('state')->select("id as value", "name as text", "state")
+            FixedTurn::where('company_id',$this->getCompany())->orderBy('state')->select("id as value", "name as text", "state")
 			->when(request()->get('name'), function ($q, $fill) {
 				$q->where('name', 'like', '%' . $fill . '%');
 			})
@@ -42,16 +48,18 @@ class FixedTurnController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $req)
+
+    public function store(Request $req)
 	{
 		//
 
-		$fixedTurnData = $req->except("days");
-		$fixed = FixedTurn::create($fixedTurnData);
-		$hours = $req->get("days");
-		$fixed->horariosTurnoFijo()->createMany($hours);
-		return $this->success("creado con éxito");
 		try {
+            $fixedTurnData = $req->except("days");
+            $fixedTurnData['company_id']=$this->getCompany();
+            $fixed = FixedTurn::create($fixedTurnData);
+            $hours = $req->get("days");
+            $fixed->horariosTurnoFijo()->createMany($hours);
+            return $this->success("creado con éxito");
 		} catch (\Throwable $err) {
 			return $this->error($err->getMessage(), 500);
 		}
@@ -68,7 +76,8 @@ class FixedTurnController extends Controller
 		//
 		try {
 			return $this->success(
-				FixedTurn::where("id", $id)
+				FixedTurn::where('company_id',$this->getCompany())
+                ->where("id", $id)
 					->with("horariosTurnoFijo")
 					->first()
 			);
@@ -97,15 +106,17 @@ class FixedTurnController extends Controller
 	 */
 	public function update(Request $req, $id)
 	{
-		$fixedTurnData = $req->except("days");
-		$fixed = FixedTurn::find($id);
-		$fixed->update($fixedTurnData);
-		$hours = $req->get("days");
-
-		FixedTurnHour::where('fixed_turn_id',$id)->delete();
-		$fixed->horariosTurnoFijo()->createMany($hours);
-		return $this->success("Actualizado con éxito");
 		try {
+            $fixedTurnData = $req->except("days");
+            $fixedTurnData['company_id']=$this->getCompany();
+            return $fixedTurnData;
+            /* $fixed = FixedTurn::find($id);
+            $fixed->update($fixedTurnData);
+            $hours = $req->get("days");
+
+            FixedTurnHour::where('fixed_turn_id',$id)->delete();
+            $fixed->horariosTurnoFijo()->createMany($hours);
+            return $this->success("Actualizado con éxito"); */
 		} catch (\Throwable $err) {
 			return $this->error($err->getMessage(), 500);
 		}
