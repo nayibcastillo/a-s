@@ -23,9 +23,10 @@ class RotatingTurn extends Model
 		"breack_time_two",
 		"sunday_id",
 		"saturday_id",
+        "company_id",
 		"color"
 	];
-    
+
     public function company(){
         return $this->belongsTo(Company::class);
     }

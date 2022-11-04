@@ -109,14 +109,13 @@ class FixedTurnController extends Controller
 		try {
             $fixedTurnData = $req->except("days");
             $fixedTurnData['company_id']=$this->getCompany();
-            return $fixedTurnData;
-            /* $fixed = FixedTurn::find($id);
+            $fixed = FixedTurn::find($id);
             $fixed->update($fixedTurnData);
             $hours = $req->get("days");
 
             FixedTurnHour::where('fixed_turn_id',$id)->delete();
             $fixed->horariosTurnoFijo()->createMany($hours);
-            return $this->success("Actualizado con éxito"); */
+            return $this->success("Actualizado con éxito");
 		} catch (\Throwable $err) {
 			return $this->error($err->getMessage(), 500);
 		}
