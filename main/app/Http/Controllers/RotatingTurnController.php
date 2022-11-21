@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RotatingTurn;
+use App\Models\Person;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Throwable;
@@ -15,11 +16,22 @@ class RotatingTurnController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
+
+    private function getCompany(){
+        return Person::find(Auth()->user()->person_id)->company_worked_id;
+    }
+
 	public function index()
 	{
 		//
 		return $this->success(
-			RotatingTurn::get(["id as value", "name as text"])
+			RotatingTurn::where('company_id',$this->getCompany())->
+			 with('sunday')
+			 ->with('saturday')
+			 ->when(request()->get('name'), function ($q, $fill) {
+				$q->where('name', 'like', '%' . $fill . '%');
+			})
+			->get(["*","id as value", "name as text", "state"])
 		);
 	}
 
@@ -28,6 +40,20 @@ class RotatingTurnController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
+
+
+	public function paginate () {
+		return $this->success(
+			RotatingTurn::where('company_id',$this->getCompany())->
+            orderBy('state')->select("*","id as value", "name as text", "state")->
+			with('sunday', 'saturday')
+			->when(request()->get('name'), function ($q, $fill) {
+				$q->where('name', 'like', '%' . $fill . '%');
+			})
+			->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+		);
+	}
+
 	public function create()
 	{
 		//
@@ -42,7 +68,10 @@ class RotatingTurnController extends Controller
 	public function store(Request $request)
 	{
 		try {
-			return $this->success(RotatingTurn::create($request->all()));
+            $rotatingTurnData=$request->all();
+            $rotatingTurnData['company_id']=$this->getCompany();
+			return $this->success(RotatingTurn::create($rotatingTurnData));
+			/* return $this->success(RotatingTurn::create($request->all())); */
 		} catch (Throwable $th) {
 			return $this->error($th->getMessage(), 400);
 		}
@@ -84,7 +113,10 @@ class RotatingTurnController extends Controller
 		try {
 
 			$rt = RotatingTurn::find($id);
-			$rt->update($request->all());
+            $rotatingTurnData=$request->all();
+            $rotatingTurnData['company_id']=$this->getCompany();
+            //return [ "antes" => $request->all(), "despues" => $rotatingTurnData];
+            $rt->update($rotatingTurnData);
 			return $this->success('Actualizado correctamente');
 		} catch (\Throwable $th) {
 			return $this->error($th->getMessage(), 402);

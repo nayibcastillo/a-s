@@ -33,8 +33,8 @@ class MunicipalityController extends Controller
             Municipality::all(['name as text', 'id as value'])
         );
     }
-    
-    
+
+
       public function paginate()
     {
         return $this->success(
@@ -48,7 +48,7 @@ class MunicipalityController extends Controller
             ])
             ->whereHas('department',function($q){
                 $q->when( request()->get('department'), function($q, $fill){
-                
+
                     $q->where('name', 'like','%'.$fill.'%');
                 });
             })
@@ -63,11 +63,11 @@ class MunicipalityController extends Controller
             ->paginate(Request()->get('pageSize', 10), ['*'], 'page', Request()->get('page', 1))
         );
     }
-    
-    
-    
+
+
+
      public function store(Request $request)
-    {  
+    {
         try {
             $validate_code = Municipality::where('code', $request->get('code'))->first();
             if ($validate_code) {
@@ -78,6 +78,24 @@ class MunicipalityController extends Controller
         } catch (\Throwable $th) {
             return $this->error($th->getMessage(), 200);
         }
+    }
+
+    /**
+     * 25/10/22
+     * Busca los munucipios de acuerdo el id de Estado
+     */
+    public function show ($state_id)
+    {
+        return $this->success(
+            Municipality::where('department_id', $state_id)
+            ->orderBy('name', 'asc')
+            ->when(request()->get('name'),
+                function ($q, $fill){
+                    $q->where('name', 'like', '%'.$fill.'%');
+                })
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
+            //->get(['name as text', 'id as value']);
     }
 
 }

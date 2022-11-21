@@ -15,7 +15,7 @@
     <table>
         <thead>
             <tr>
-                <th rowspan="3" colspan="3" style="border: 3px solid black;">
+                <th rowspan="3" colspan="3" style="border: 3px solid black; padding: 6px">
                     {{-- <img src="{{URL::to('people/wSZfAQhloRdcIgYJw0dGVvPz8yScC51666796122.png')}}"> --}}
                 </th>
                 <th rowspan="3" colspan="11" style="text-align: center; font-weight: 600; border: 3px solid black">
@@ -23,14 +23,14 @@
                     PROCESO: LABORATORIO CLINICO-PREANALITICO <br>
                     FORMATO DE REMISION DE MUESTRAS A ALIFE HEALTH S.A.S
                 </th>
-                <th colspan="5" style="width: 180px; font-weight: 600; border: 3px solid black">CODIGO: 
+                <th colspan="5" style="width: 180px; font-weight: 600; border: 3px solid black">CODIGO:
                 </th>
             </tr>
             <tr>
                 <th colspan="5" style="width: 180px; font-weight: 600; border: 3px solid black">VERSION: 1</th>
             </tr>
             <tr>
-                <th colspan="5" style="width: 180px; font-weight: 600; border: 3px solid black">VIGENCIA: 
+                <th colspan="5" style="width: 180px; font-weight: 600; border: 3px solid black">VIGENCIA:
                 </th>
             </tr>
             <tr>
@@ -135,8 +135,8 @@
                     <td style="vertical-align: center; text-align: center; border: 3px solid black;"> {{ $laboratory->identifier }} </td>
                     <td style="vertical-align: center; border: 3px solid black;"> {{ $laboratory->full_name }} </td>
                     <td style="vertical-align: center; text-align: center; border: 3px solid black;"> {{ $laboratory->date_of_birth }} </td>
-                    <td style="vertical-align: center; text-align: center; border: 3px solid black;"> {{ $laboratory->gener == 'M' ? 'X' : '' }} </td>
                     <td style="vertical-align: center; text-align: center; border: 3px solid black;"> {{ $laboratory->gener == 'F' ? 'X' : '' }} </td>
+                    <td style="vertical-align: center; text-align: center; border: 3px solid black;"> {{ $laboratory->gener == 'M' ? 'X' : '' }} </td>
                     <td style="vertical-align: center; text-align: center; border: 3px solid black; width: 230px; word-wrap: break-word;"> {{ $laboratory->cups }} </td>
                     <td style="vertical-align: center; text-align: center; border: 3px solid black"></td>
                     <td style="vertical-align: center; text-align: center; border: 3px solid black"></td>

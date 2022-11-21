@@ -30,7 +30,7 @@ class LaboratoryExport implements FromView, WithEvents, WithDrawings
         $drawing->setDescription('This is my logo');
         $drawing->setPath(public_path('/app/public/people/'. explode("people/", $this->company->logo)[1]));
         $drawing->setHeight(50);
-        $drawing->setCoordinates('B1');
+        $drawing->setCoordinates('A1');
 
         return $drawing;
     }
@@ -46,9 +46,9 @@ class LaboratoryExport implements FromView, WithEvents, WithDrawings
                     DB::raw('CONCAT_WS(" ",patients.surname,patients.secondsurname,patients.firstname,patients.middlename) as full_name'),
                     'patients.date_of_birth',
                     'patients.gener',
-                    DB::raw('(SELECT GROUP_CONCAT(DISTINCT(cups.code) SEPARATOR " - ") 
+                    DB::raw('(SELECT GROUP_CONCAT(DISTINCT(cups.code) SEPARATOR " - ")
                     FROM cup_laboratories
-                    INNER JOIN cups ON cup_laboratories.id_cup=cups.id 
+                    INNER JOIN cups ON cup_laboratories.id_cup=cups.id
                     WHERE cup_laboratories.id_laboratory =laboratories.id) AS cups'),
                     DB::raw('SUM(laboratory_tube.amount) AS examenes'),
                     'eps.name',
@@ -75,10 +75,10 @@ class LaboratoryExport implements FromView, WithEvents, WithDrawings
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-   
+
                 $event->sheet->getDelegate()->freezePane('A9');
-                
-   
+
+
             },
         ];
     }
