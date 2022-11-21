@@ -29,7 +29,7 @@ class CompensationFundController extends Controller
                 ->when(request()->get('code'), function ($q, $fill) {
                     $q->where('code', 'like', '%' . $fill . '%');
                 })
-                ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+                ->paginate(request()->get('pageSize', 5), ['*'], 'page', request()->get('page', 1))
         );
     }
 
