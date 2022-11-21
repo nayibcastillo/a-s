@@ -28,7 +28,7 @@ class WorkContractTypeController extends Controller
             WorkContractType::when(Request()->get('name'), function ($q, $fill) {
                 $q->where('name', 'like', '%' . $fill . '%');
             })
-                ->paginate(Request()->get('pageSize', 10), ['*'], 'page', Request()->get('page', 1))
+                ->paginate(Request()->get('pageSize', 6), ['*'], 'page', Request()->get('page', 1))
         );
     }
 

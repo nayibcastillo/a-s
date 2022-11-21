@@ -120,6 +120,7 @@ use App\Http\Controllers\DispensingPointController;
 use App\Http\Controllers\ElectronicPayrollController;
 use App\Http\Controllers\PayrollConfigController;
 use App\Http\Controllers\PayrollPaymentController;
+use App\Http\Controllers\ContractTermController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ColorController;
@@ -266,10 +267,10 @@ Route::group(
         Route::get('parametrizacion/nomina/ssocial_empresa', [PayrollConfigController::class, 'sSocialEmpresaDatos']);
         Route::get('parametrizacion/nomina/ssocial_funcionario', [PayrollConfigController::class, 'sSocialFuncionarioDatos']);
 
-
+        Route::resource('contract-terms', 'ContractTermController')->except(['create', 'edit']);
 
         /**/
-
+        Route::get('paginate-contract-term', [ContractTermController::class, 'paginate']);
         Route::get('paginateRetentionType', [RetentionTypeController::class, 'paginate']);
         Route::resource('retention-type', 'RetentionTypeController');
 
