@@ -16,36 +16,36 @@ class Company extends Model
 
     protected  $fillable =
     [
-        "id", 
-        "name", 
-        "short_name", 
-        "tin", 
+        "id",
+        "name",
+        "short_name",
+        "tin",
         "dv",
-        "address", 
-        "code", 
-        "agreements", 
-        "category", 
-        "city", 
+        "address",
+        "code",
+        "agreements",
+        "category",
+        "city",
         "country_code",
-        "creation_date", 
-        "disabled", 
+        "creation_date",
+        "disabled",
         "email",
-        "encoding_characters", 
-        "interface_id", 
-        "logo", 
-        "parent_id", 
-        "pbx", 
-        "regional_id", 
-        "send_email", 
-        "settings", 
-        "slogan", 
-        "phone", 
-        "email_contact", 
+        "encoding_characters",
+        "interface_id",
+        "logo",
+        "parent_id",
+        "pbx",
+        "regional_id",
+        "send_email",
+        "settings",
+        "slogan",
+        "phone",
+        "email_contact",
         "social_reason",
         "document_type",
-        "state", 
+        "state",
         "telephone",
-        "type", 
+        "type",
         "api_key",
         "globo_id",
         "simbol",
@@ -72,6 +72,16 @@ class Company extends Model
     public function locations()
     {
         return   $this->hasMany(Location::class);
+    }
+
+    public function fixedTurns()
+    {
+        return   $this->hasMany(FixedTurn::class);
+    }
+
+    public function rotatingTurns()
+    {
+        return   $this->hasMany(RotatingTurn::class);
     }
 
     public function arl()

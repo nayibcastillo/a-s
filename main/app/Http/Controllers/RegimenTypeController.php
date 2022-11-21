@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Level;
 use App\Models\RegimenType;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -18,6 +19,32 @@ class RegimenTypeController extends Controller
     public function index()
     {
         return $this->success(RegimenType::get(['name As text', 'id As value']));
+    }
+
+    public function paginate()
+    {
+        return $this->success(
+            RegimenType::when(request()->get('name'), function ($q, $fill) {
+                $q->where('name', 'like', '%' . $fill . '%');
+            })->when(request()->get('code'), function ($q, $fill) {
+                $q->where('code', 'like', '%' . $fill . '%');
+            })->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
+    }
+
+    public function regimenesConNiveles($id)
+    {
+        return $this->success(
+            Level::where('regimen_id', $id)
+            ->when(request()->get('name'), function ($q, $fill) {
+                $q->where('name', 'like', '%' . $fill . '%');
+            })
+            ->when(request()->get('code'), function ($q, $fill) {
+                $q->where('code', 'like', '%' . $fill . '%' );
+            })
+            ->when(request()->get('cuote'), function ($q, $fill) {
+                $q->where('cuote', 'like', '%' . $fill . '%' );
+            })->paginate(request()->get('pageSize', 5), ['*'], 'page', request()->get('page', 1)));
     }
 
     /**

@@ -82,6 +82,19 @@ class CityController extends Controller
 		//
 	}
 
+	public function showByMunicipality($id)
+	{
+        return $this->success(
+            City::where('municipality_id', $id)
+            ->orderBy('name', 'asc')
+            ->when(request()->get('name'),
+                function ($q, $fill){
+                    $q->where('name', 'like', '%'.$fill.'%');
+                })
+            ->paginate(request()->get('pageSize', 10), ['*'], 'page', request()->get('page', 1))
+        );
+	}
+
 	/**
 	 * Show the form for editing the specified resource.
 	 *

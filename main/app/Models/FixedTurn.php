@@ -14,7 +14,13 @@ class FixedTurn extends Model
 		"extra_hours",
 		"leave_tolerance",
 		"name",
+        "company_id"
 	];
+
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
+
 	public function horariosTurnoFijo()
 	{
 		return $this->hasMany(FixedTurnHour::class);
