@@ -36,7 +36,8 @@ class Appointment extends Model
         'globo_id',
         'message_confirm',
         'date_updated_state',
-        'user_modifier'
+        'user_modifier',
+        'contract_id'
 
     ];
 
