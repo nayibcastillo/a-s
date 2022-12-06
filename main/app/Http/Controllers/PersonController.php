@@ -29,7 +29,7 @@ class PersonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($company = 0, $speciality = 0)
+    public function index($company = 0, $speciality = 0, Request $request)
     {
         // TODO: refactor para solo funcionarios?
         if (request()->get('type')) {
@@ -42,17 +42,21 @@ class PersonController extends Controller
             ->whereHas('specialties', function ($q) use ($speciality) {
                 $q->where('id', $speciality);
             })
-            ->with(
-                [
-                    'specialities:id',
-                    'companies:id',
-                    'restriction:id,person_id,company_id',
-                    'restriction.regimentypes:id,name',
-                    'restriction.company:id,name',
-                    'restriction.contracts:id,name',
-                    'restriction.companies:id,name',
-                    'restriction.typeappointments:id,name'
-                ])
+            ->whereHas(
+                'restriction',
+                function ($q) use ($request) {
+                    $q->where('company_id', $request->company_id);
+                }
+            )
+            ->orWhereHas('restriction.companies', function ($q) use ($request) {
+                $q->where('companies.id', $request->company_id);
+            })
+
+            /* [
+                'restriction:id,person_id,company_id',
+                'restriction.company:id,name',
+                'restriction.companies:id,name',
+            ] */
             // ->where('to_globo', 1)
             // ->when(request()->get('type-appointment'), function ($q) {
             //     $q->whereHas('restriction.typeappointments', function ($q) {
@@ -69,7 +73,7 @@ class PersonController extends Controller
             //         $q->where('regimen_type_id', request()->get('regimen_id'));
             //     });
             // })
-            ->get(['*','id As value', DB::raw('concat(first_name, " ", first_surname)  As text')]);
+            ->get(['*', 'id As value', DB::raw('concat(first_name, " ", first_surname)  As text')]);
         return response()->success($persons);
     }
 

@@ -129,9 +129,9 @@ class ContractController extends Controller
                     "end_date" => request()->get("end_date"),
                     "price" => request()->get("price"),
                     "payment_method_id" => request()->get("payment_modality"),
-                    "company_id" => request()->get("company_id")
+                    "company_id" => request()->get("company_id"),
                     // "contract_type_id" => request()->get("contract_type"),
-                    // "payment_method_id" => request()->get("payment_method_id"),
+                    "payment_method_id" => request()->get("payment_method_id"),
                     // "benefits_plan_id" => request()->get("benefits_plan_id"),
                     // "price_list_id" => request()->get("price_list_id"),
                     // "variation" => request()->get("variation"),
@@ -146,28 +146,28 @@ class ContractController extends Controller
             if ($municipalities[0] == 0) {
                 $municipalities = DB::table('municipalities')->whereIn('department_id', $departments)->pluck('id')->toArray();
             }
-            
+
             $regimens = request()->get("regimen_id");
             if ($regimens[0] == 0) $regimens = DB::table('regimen_types')->pluck('id')->toArray();
 
             $type_service = request()->get("type_service_id");
             if ($type_service[0] == 0) $type_service = DB::table('type_service')->pluck('id')->toArray();
-            
-            /* $locations = request()->get("location_id");
+
+            $locations = request()->get("location_id");
             if ($locations[0] == 0) {
                 $locations = DB::table('locations')->where('company_id', request()->get("company_id"))->pluck('id')->toArray();
-            }  */
+            } 
 
             // $companies = request()->get("company_id");
             // if ($companies[0] == 0) $companies = DB::table('companies')->pluck('id')->toArray();
             // $contract->companies()->sync($companies);
-            
+
             $contract->departments_()->sync($departments);
             $contract->municipalities()->sync($municipalities);
             $contract->regimentypes()->sync($regimens);
-            /* $contract->locations()->sync($locations); */
+            $contract->locations()->sync($locations);
             $contract->type_service()->sync($type_service);
-
+            Policy::where('contract_id', $contract->id)->delete();
             foreach (request()->get("poliza") as $poliza) {
                 Policy::create([
                     "contract_id" =>  $contract->id,
@@ -178,7 +178,9 @@ class ContractController extends Controller
                     "coverage" =>  $poliza["coberturapoliza"],
                 ]);
             }
-
+            $technicNotes = TechnicNote::where('contract_id', $contract->id)->pluck('id');
+            Service::whereIn('technic_note_id',$technicNotes->values())->delete();
+            TechnicNote::where('contract_id', $contract->id)->delete();
             foreach (request()->get("technicalNote") as $technicalNote) {
                 $newTechnicalNote = TechnicNote::create([
                     "contract_id" =>  $contract->id,
@@ -187,7 +189,6 @@ class ContractController extends Controller
                     "anio" =>  $technicalNote["techn_note_year_cups"],
                     "is_active" => ($technicalNote["is_default"]) ? 1 : 0,
                 ]);
-
                 foreach ($technicalNote["cups"] as $service) {
                     $newService = Service::create([
                         "technic_note_id" =>  $newTechnicalNote->id,
@@ -196,16 +197,16 @@ class ContractController extends Controller
                         "value" =>  $service["valor"],
                         "centro_costo_id" =>  $service["centro_costo_id"],
                         "frequency" =>  $service["frequency"],
+                        "speciality_id" =>  $service["speciality_id"],
                     ]);
-
-                    $specialities = $service["speciality"];
+                   /*  $specialities = $service["speciality"];
                     if ($specialities[0] == 0) {
                         $specialities =  Cup::find($service["namec"]["value"])->specialities()->pluck('id')->toArray();
                     }
 
-                    $newService->specialities()->sync($specialities);
+                    $newService->specialities()->sync($specialities); */
                 }
-            } 
+            }
 
             return response()->success('Contrato creado correctamente.');
         } catch (\Throwable $th) {
