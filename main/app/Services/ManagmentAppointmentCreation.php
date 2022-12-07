@@ -197,6 +197,7 @@ class ManagmentAppointmentCreation
                 'observation' =>  $this->data['observation'],
                 'link' => '',
                 'contract_id' => $this->data['contract_id'],
+                'route_id' => $this->data['route_id'],
             ]);
         });
     }

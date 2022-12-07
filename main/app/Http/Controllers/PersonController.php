@@ -42,7 +42,7 @@ class PersonController extends Controller
             ->whereHas('specialties', function ($q) use ($speciality) {
                 $q->where('id', $speciality);
             })
-            ->whereHas(
+            ->orWhereHas(
                 'restriction',
                 function ($q) use ($request) {
                     $q->where('company_id', $request->company_id);

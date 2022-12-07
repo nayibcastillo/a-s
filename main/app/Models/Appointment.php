@@ -37,7 +37,8 @@ class Appointment extends Model
         'message_confirm',
         'date_updated_state',
         'user_modifier',
-        'contract_id'
+        'contract_id',
+        'route_id',
 
     ];
 

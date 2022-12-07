@@ -132,6 +132,8 @@ class ContractController extends Controller
                     "company_id" => request()->get("company_id"),
                     // "contract_type_id" => request()->get("contract_type"),
                     "payment_method_id" => request()->get("payment_method_id"),
+                    "payment_methods_contracts_id" => request()->get("payment_methods_contracts_id"),
+                    "benefits_plans_id" => request()->get("benefits_plans_id"),
                     // "benefits_plan_id" => request()->get("benefits_plan_id"),
                     // "price_list_id" => request()->get("price_list_id"),
                     // "variation" => request()->get("variation"),
@@ -156,7 +158,7 @@ class ContractController extends Controller
             $locations = request()->get("location_id");
             if ($locations[0] == 0) {
                 $locations = DB::table('locations')->where('company_id', request()->get("company_id"))->pluck('id')->toArray();
-            } 
+            }
 
             // $companies = request()->get("company_id");
             // if ($companies[0] == 0) $companies = DB::table('companies')->pluck('id')->toArray();
@@ -179,7 +181,7 @@ class ContractController extends Controller
                 ]);
             }
             $technicNotes = TechnicNote::where('contract_id', $contract->id)->pluck('id');
-            Service::whereIn('technic_note_id',$technicNotes->values())->delete();
+            Service::whereIn('technic_note_id', $technicNotes->values())->delete();
             TechnicNote::where('contract_id', $contract->id)->delete();
             foreach (request()->get("technicalNote") as $technicalNote) {
                 $newTechnicalNote = TechnicNote::create([
@@ -198,8 +200,9 @@ class ContractController extends Controller
                         "centro_costo_id" =>  $service["centro_costo_id"],
                         "frequency" =>  $service["frequency"],
                         "speciality_id" =>  $service["speciality_id"],
+                        "route_id" =>  $service["route_id"],
                     ]);
-                   /*  $specialities = $service["speciality"];
+                    /*  $specialities = $service["speciality"];
                     if ($specialities[0] == 0) {
                         $specialities =  Cup::find($service["namec"]["value"])->specialities()->pluck('id')->toArray();
                     }
@@ -280,5 +283,28 @@ class ContractController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getPaymentMethodsContracts()
+    {
+        return $this->success(DB::table('payment_methods_contracts')->get(['id as value', 'name as text']));
+    }
+
+    public function getAttentionRoutes()
+    {
+        return $this->success(DB::table('attention_routes')->get(['id as value', 'name as text']));
+    }
+
+    public function getAttentionRoutesCustom(Request $request)
+    {
+        return $this->success(
+            DB::table('attention_routes')
+                ->when($request->birthday, function ($q, $fill) use($request) {
+                    $q->where('age_min', '<=', $fill);
+                    $q->where('age_max', '>', $fill);
+                    $q->where('gender', 'like', '%' . $request->gender . '%');
+                })
+                ->get(['id as value', 'name as text'])
+        );
     }
 }

@@ -17,6 +17,8 @@ class Contract extends Model
         "administrator_id",
         "contract_type",
         "payment_method_id",
+        "payment_methods_contracts_id",
+        "benefits_plans_id",
         "benefits_plan_id",
         "start_date",
         "end_date",

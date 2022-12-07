@@ -17,7 +17,8 @@ class Service extends Model
         "value",
         "frequency",
         "centro_costo_id",
-        "speciality_id"
+        "speciality_id",
+        "route_id"
     ];
 
     public function specialities(): BelongsToMany
