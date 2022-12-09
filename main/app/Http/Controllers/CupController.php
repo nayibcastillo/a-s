@@ -77,10 +77,10 @@ class CupController extends Controller
         });
 
         $cups->when(request()->get('type'), function ($q) {
-            $q->where(function ($q) {
+            $q->whereHas('type_service', function ($q) {
                 $q->where('type_service_id', request()->get('type'));
             });
-        });
+        }); //?relacionar con la nueva tabla
 
         return $this->success($cups->get(['id as value',  DB::raw("CONCAT( code, ' - ' ,description) as text")])->take(30));
     }
