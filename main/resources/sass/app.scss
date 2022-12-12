@@ -6,7 +6,7 @@
 @import "~bootstrap/scss/variables";
 @import "variables";
 @import "~bootstrap/scss/mixins";
-@import '~bootstrap/scss/bootstrap'; 
+@import '~bootstrap/scss/bootstrap';
 @import 'bootstrap';
 @import '~bootstrap-vue/src/index.scss';
 
@@ -71,3 +71,9 @@
 // icons
 
 @import "icons";
+@font-face {
+    font-family: 'Dolce-Vita';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/public/fonts/Dolce-Vita.ttf');
+}

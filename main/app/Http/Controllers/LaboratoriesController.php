@@ -322,7 +322,7 @@ class LaboratoriesController extends Controller
                 'l.*'
             )
             ->first();
-            
+
         $cups = Laboratories::where('laboratories.id', $id)
             ->join('cup_laboratories as cl', 'cl.id_laboratory', '=', 'laboratories.id')
             ->join('cups as c', 'cl.id_cup', '=', 'c.id')
@@ -333,13 +333,13 @@ class LaboratoriesController extends Controller
             } )
             ->select(DB::raw('MAX(laboratory_tube.count) as count'),'c.code', 'c.color_id', 'colors.abbreviation', DB::raw('group_concat(DISTINCT(c.code) SEPARATOR " - ") AS CUPS'))
             ->groupBy('c.color_id')
-            ->get();   
+            ->get();
 
         $ips = DB::table('laboratories as l')->where('l.id', $id)
             ->join('companies as c', 'c.id', '=', 'l.ips_id')
             ->select('c.name', 'c.tin', 'c.dv')
             ->first();
-            
+
         $cupsHTML = '';
 
         $edad = Carbon::parse($patient->date_of_birth)->age;
@@ -355,7 +355,11 @@ class LaboratoriesController extends Controller
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://fonts.cdnfonts.com/css/swiss-721-3" rel="stylesheet">
             <style>
+            body {
+                font-family: "Swiss 721", sans-serif;
+            }
             .vertical {
                 position: absolute;
                 font-size: 3px;
@@ -383,14 +387,14 @@ class LaboratoriesController extends Controller
         </head>
         <body style="margin: 0;"> ';
         for ($i = 0; $i < count($cups); $i++) {
-           
+
             $cupsHTML = $cups[$i]["CUPS"];
-            for($j = 0; $j < $cups[$i]["count"]; $j++){ 
+            for($j = 0; $j < $cups[$i]["count"]; $j++){
                 $num = $j + 1;
-                $contenido .= '                      
+                $contenido .= '
                 <div class="page">
-                    <span style="font-size: 7.5px;">' 
-                        . $patient->name_patient . ' 
+                    <span style="font-size: 7.5px;">'
+                        . $patient->name_patient . '
                         <small style="position: absolute; font-weight: 800; right: 10px; font-size: 6px">'
                             . $cups[$i]["abbreviation"] . ' - ' . $num . '/' .  $cups[$i]["count"] . '
                         </small>
@@ -401,22 +405,22 @@ class LaboratoriesController extends Controller
                         <br>
                     </span>
                     ' . $codebarLaboratory . '
-                    <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">' 
+                    <p style="font-size: 7.5px;margin-top: 0; padding-top: 0;margin-bottom: 0; padding-bottom: 0;">'
                         . $cupsHTML . '
                     </p>
                     <div class="vertical">
-                        <b style="font-size: 3.2px !important">' 
+                        <b style="font-size: 3.2px !important">'
                             . number_format($ips->tin, 0, "", ".") . '-' . $ips->dv . '
                         </b> ' .  $ips->name . '
-                    </div> 
+                    </div>
                 </div>';
-                
+
              }
-            
+
         }
         $contenido .= '</body>
         </html>';
-        $pdf = PDF::loadHTML($contenido)->setPaper([0.0, 0.0, 71, 144], 'landscape');
+        $pdf = PDF::loadHTML($contenido)->setPaper([0.0, 0.0, 71, 144.56], 'landscape');
         return $this->success('data:application/pdf;base64,', base64_encode($pdf->stream()));
         //return $pdf->stream('etiqueta.pdf');
     }
