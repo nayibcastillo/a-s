@@ -43,17 +43,7 @@ class PersonController extends Controller
             ->whereHas('specialties', function ($q) use ($speciality) {
                 $q->where('id', $speciality);
             })
-            ->when($request->company_id, function ($q) use ($request) {
-                $q->whereHas(
-                    'restriction',
-                    function ($q) use ($request) {
-                        $q->where('company_id', $request->company_id);
-                    }
-                )->orWhereHas('restriction.companies', function ($q) use ($request) {
-                    $q->where('companies.id', $request->company_id);
-                });
-            })
-            /* ->where(function ($q) use ($request) {
+            /* ->when($request->company_id, function ($q) use ($request) {
                 $q->whereHas(
                     'restriction',
                     function ($q) use ($request) {
@@ -63,6 +53,18 @@ class PersonController extends Controller
                     $q->where('companies.id', $request->company_id);
                 });
             }) */
+            ->where(function ($q) use ($request) {
+                $q->when($request->company_id, function ($q) use ($request) {
+                    $q->whereHas(
+                        'restriction',
+                        function ($q) use ($request) {
+                            $q->where('company_id', $request->company_id);
+                        }
+                    )->orWhereHas('restriction.companies', function ($q) use ($request) {
+                        $q->where('companies.id', $request->company_id);
+                    });
+                });
+            })
 
             /* ->toSql(); */
 
