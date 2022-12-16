@@ -73,6 +73,11 @@ class Appointment extends Model
         return $this->belongsTo(CallIn::class, 'call_id');
     }
 
+    function contract()
+    {
+        return $this->belongsTo(Contract::class, 'contract_id');
+    }
+
     function location()
     {
         return $this->belongsTo(Location::class, 'call_id');

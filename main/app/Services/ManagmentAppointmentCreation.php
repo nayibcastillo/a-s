@@ -233,6 +233,7 @@ class ManagmentAppointmentCreation
             'callIn.patient.RegimenType',
             'callIn.patient.contract',
             'callIn.patient.level',
+            'contract',
             'space'
 
         )->find($this->appointment['id']);
@@ -283,8 +284,8 @@ class ManagmentAppointmentCreation
                     ],
                 ],
                 'agreement' => [
-                    'id' => $appointmentData->callIn->patient->contract->number,
-                    'name' => $appointmentData->callIn->patient->contract->name
+                    'id' => $appointmentData->contract->number,
+                    'name' => $appointmentData->contract->name
                 ],
                 'location' => [
                     'id' =>  findingKey($this->space->agendamiento->location) ? $this->space->agendamiento->location->id : null,
@@ -319,7 +320,7 @@ class ManagmentAppointmentCreation
 
             $cup = Cup::find($appointment->procedure);
             $location = Location::find($appointment->callin->patient->location_id);
-            $contract = Contract::find($appointment->callin->patient->contract_id);
+            $contract = Contract::find($appointment->contract_id);
             $typeDocument =    TypeDocument::find($appointment->callin->patient->type_document_id);
             $regimenType =    RegimenType::find($appointment->callin->patient->regimen_id);
             $level = Level::find($appointment->callin->patient->level_id);

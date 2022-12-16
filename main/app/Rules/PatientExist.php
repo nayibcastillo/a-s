@@ -27,11 +27,12 @@ class PatientExist implements Rule
     public function passes($attribute, $value)
     {
 
-        $patient = DB::table('patients')->where('identifier', $value)->first();
+        /* $patient = DB::table('patients')->where('identifier', $value)->first();
         if ($patient) {
             return  is_numeric($patient->contract_id);
         }
-        return false;
+        return false; */
+        return true;
     }
 
     /**

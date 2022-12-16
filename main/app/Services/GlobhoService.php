@@ -59,7 +59,7 @@ class GlobhoService
 
             $cup = Cup::find($appointment->procedure);
             $location = Location::find($appointment->callin->patient->location_id);
-            $contract = Contract::find($appointment->callin->patient->contract_id);
+            $contract = Contract::find($appointment->contract_id);
             $typeDocument =    TypeDocument::find($appointment->callin->patient->type_document_id);
             $regimenType =    RegimenType::find($appointment->callin->patient->regimen_id);
             $level = Level::find($appointment->callin->patient->level_id);
@@ -149,7 +149,7 @@ class GlobhoService
                     $appointment->save();
                     return  "Migrado... " . $response->json()['id'] . ' ' . $response->json()['message'] ;
                 } else {
-                    throw new Exception("No migrado: Respuesta globo :   " . json_encode($response->json()) . ' , Contacte con soporte con el codigo : ' . $appointment->id, 400);
+                    throw new Exception("No migrado: Respuesta globo :   " . json_encode($body) . ' , Contacte con soporte con el codigo : ' . $appointment->id, 400);
                 }
             }
         } catch (Exception $e) {
