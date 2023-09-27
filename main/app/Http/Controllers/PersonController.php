@@ -29,7 +29,7 @@ class PersonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($company = 0, $speciality = 0)
+    public function index($company = 0, $speciality = 0, Request $request)
     {
         // TODO: refactor para solo funcionarios?
         if (request()->get('type')) {
@@ -39,27 +39,58 @@ class PersonController extends Controller
         }
 
         $persons = Person::orderBy('first_name')
+            ->where('status', 'Activo')
             ->whereHas('specialties', function ($q) use ($speciality) {
                 $q->where('id', $speciality);
             })
-            // ->where('to_globo', 1)
-            // ->when(request()->get('type-appointment'), function ($q) {
-            //     $q->whereHas('restriction.typeappointments', function ($q) {
-            //         $q->where('type_appointment_id', request()->get('type-appointment'));
-            //     });
-            // })
-            // ->when(request()->get('contract_id'), function ($q) {
-            //     $q->whereHas('restriction.contracts', function ($q) {
-            //         $q->where('contract_id', request()->get('contract_id'));
-            //     });
-            // })
-            // ->when(request()->get('regimen_id'), function ($q) {
-            //     $q->whereHas('restriction.regimentypes', function ($q) {
-            //         $q->where('regimen_type_id', request()->get('regimen_id'));
-            //     });
-            // })
-            ->get(['id As value', DB::raw('concat(first_name, " ", first_surname)  As text')]);
+            /* ->when($request->company_id, function ($q) use ($request) {
+                $q->whereHas(
+                    'restriction',
+                    function ($q) use ($request) {
+                        $q->where('company_id', $request->company_id);
+                    }
+                )->orWhereHas('restriction.companies', function ($q) use ($request) {
+                    $q->where('companies.id', $request->company_id);
+                });
+            }) */
+            ->where(function ($q) use ($request) {
+                $q->when($request->company_id, function ($q) use ($request) {
+                    $q->whereHas(
+                        'restriction',
+                        function ($q) use ($request) {
+                            $q->where('company_id', $request->company_id);
+                        }
+                    )->orWhereHas('restriction.companies', function ($q) use ($request) {
+                        $q->where('companies.id', $request->company_id);
+                    });
+                });
+            })
+
+            /* ->toSql(); */
+
+            ->get(['*', 'id As value', DB::raw('concat(first_name, " ", first_surname)  As text')]);
         return response()->success($persons);
+        /* [
+                'restriction:id,person_id,company_id',
+                'restriction.company:id,name',
+                'restriction.companies:id,name',
+            ] */
+        // ->where('to_globo', 1)
+        // ->when(request()->get('type-appointment'), function ($q) {
+        //     $q->whereHas('restriction.typeappointments', function ($q) {
+        //         $q->where('type_appointment_id', request()->get('type-appointment'));
+        //     });
+        // })
+        // ->when(request()->get('contract_id'), function ($q) {
+        //     $q->whereHas('restriction.contracts', function ($q) {
+        //         $q->where('contract_id', request()->get('contract_id'));
+        //     });
+        // })
+        // ->when(request()->get('regimen_id'), function ($q) {
+        //     $q->whereHas('restriction.regimentypes', function ($q) {
+        //         $q->where('regimen_type_id', request()->get('regimen_id'));
+        //     });
+        // })
     }
 
     /**

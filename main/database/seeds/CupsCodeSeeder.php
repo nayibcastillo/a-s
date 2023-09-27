@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Color;
 use App\Models\Cup;
 use App\Models\Cup_type;
+use App\Models\CupTypeService;
 
 class CupsCodeSeeder extends Seeder
 {
@@ -1816,8 +1817,12 @@ class CupsCodeSeeder extends Seeder
             $code = self::CODES[$i];
             $cup = Cup::where('code', '=', $code)->first();
             if (!$cup) continue;
-            $cup->cup_type_id = Cup_type::inRandomOrder()->first()->id;
-            $cup->save();
+            //$cup->cup_type_id = Cup_type::inRandomOrder()->first()->id;
+            CupTypeService::create([
+                'cup_id' => $cup->id,
+                'type_service_id' => 8
+            ]);
+            //$cup->save();
         }
         for ($i = 0; $i < count(self::CODES_AMARILLO); $i++) {
             $code = self::CODES_AMARILLO[$i];

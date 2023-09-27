@@ -24,6 +24,17 @@ class SpecialityController extends Controller
         return SpecialityResource::collection(Speciality::sortedByName()->get(['id', 'name']));
     }
 
+    public function getForTypeService(Request $request)
+    {
+        $cups = Cup::whereHas('type_service', function($q) use ($request) {
+            $q->where('type_service_id', $request->type_service_id);
+        })->pluck('id');
+        return $this->success(
+            Speciality::whereHas('cups', function($q) use ($cups) {
+                $q->whereIn('cup_id', $cups);
+            })->get(['id as value', 'name as text'])
+        );
+    }
 
     public function paginate()
     {

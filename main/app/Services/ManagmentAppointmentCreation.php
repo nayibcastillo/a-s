@@ -50,8 +50,8 @@ class ManagmentAppointmentCreation
         SendAppointmentCreatedNotification $sendAppointmentCreatedNotification
     ) {
         $this->globhoService = $globhoService;
-        $this->EMAIL_ELIBOM = 'app@sevicol.com.co';
-        $this->PASS_ELIBOM = 't77Mp35gEu';
+        //$this->EMAIL_ELIBOM = '';
+        //$this->PASS_ELIBOM = 't77Mp35gEu';
         $this->BASE_URI_GLOBO = 'https://mogarsalud.globho.com/api/integration/appointment';
         $this->sendAppointmentModifiedNotification = $sendAppointmentModifiedNotification;
         $this->sendAppointmentCreatedNotification = $sendAppointmentCreatedNotification;
@@ -77,22 +77,22 @@ class ManagmentAppointmentCreation
                         $this->appointment->save();
                     }
 
-                    $this->getDataAppointment($this->appointment->id);
-                    $waitingList =  WaitingList::firstWhere('appointment_id', $this->appointment->id);
+                    $this->getDataAppointment($this->appointment['id']);
+                    $waitingList =  WaitingList::firstWhere('appointment_id', $this->appointment['id']);
                     $waitingList->state = 'Agendado';
                     $waitingList->save();
-                    $this->getDataAppointment($this->appointment->id);
+                    $this->getDataAppointment($this->appointment['id']);
                     break;
 
                 case false:
                     $this->updateCall();
                     $this->createAppointment();
-                    $this->getDataAppointment($this->appointment->id);
+                    $this->getDataAppointment();
                     break;
             }
 
             if (!isset($this->data['space'])) {
-                $this->CreateWailist($this->appointment->id);
+                $this->CreateWailist($this->appointment['id']);
             }
 
             if (isset($this->data['space'])) {
@@ -105,30 +105,30 @@ class ManagmentAppointmentCreation
 
                 $this->space->share = $this->space->share - $this->reducer;
 
-                if ($this->space->share <= 0  ) {
+                if ($this->space->share <= 0) {
                     $this->space->status = 0;
                 }
 
                 $this->space->saveOrFail();
-                $this->appointment->code = $this->company->simbol . date("ymd", strtotime($this->space->hour_start)) . str_pad($this->appointment->id, 7, "0", STR_PAD_LEFT);
-                $this->appointment->link = 'https://meet.jit.si/' . $this->company->simbol . date("ymd", strtotime($this->appointment->space->hour_start)) . str_pad($this->appointment->id, 7, "0", STR_PAD_LEFT);
+                $this->appointment->code = $this->company->simbol . date("ymd", strtotime($this->space->hour_start)) . str_pad($this->appointment['id'], 7, "0", STR_PAD_LEFT);
+                $this->appointment->link = 'https://meet.jit.si/' . $this->company->simbol . date("ymd", strtotime($this->appointment->space->hour_start)) . str_pad($this->appointment['id'], 7, "0", STR_PAD_LEFT);
                 $this->appointment->saveOrFail();
 
 
                 if ($this->space->person->to_globo) {
-                    $this->response =  $this->reportToGlobo($this->appointment->id);
+                    $this->response =  $this->reportToGlobo($this->appointment['id']);
                 }
 
 
                 HistoryAppointment::create([
-                    'appointment_id' =>  $this->appointment->id,
+                    'appointment_id' =>  $this->appointment['id'],
                     'user_id' => auth()->user()->id,
                     'description' => json_encode($this->body)
                 ]);
 
 
                 Log::info([
-                    'appointment_id' => $this->appointment->id . ' :heart: ',
+                    'appointment_id' => $this->appointment['id'] . ' :heart: ',
                     'message' => $this->sendMessage($this->appointment, $this->space, $this->data, $this->company),
                     'User' => (auth()->user()) ? auth()->user()->usuario : 'Sin usuario',
                     'body' => json_encode($this->body),
@@ -196,6 +196,8 @@ class ManagmentAppointmentCreation
                 'price' => $this->getPriceCuote(),
                 'observation' =>  $this->data['observation'],
                 'link' => '',
+                'contract_id' => $this->data['contract_id'],
+                'route_id' => $this->data['route_id'],
             ]);
         });
     }
@@ -231,9 +233,10 @@ class ManagmentAppointmentCreation
             'callIn.patient.RegimenType',
             'callIn.patient.contract',
             'callIn.patient.level',
+            'contract',
             'space'
 
-        )->find($this->appointment->id);
+        )->find($this->appointment['id']);
 
 
         $cup = Cup::find($appointmentData->procedure);
@@ -276,13 +279,13 @@ class ManagmentAppointmentCreation
                     'id' =>  $this->space->person->identifier,
                     'name' => $this->space->person->full_name,
                     'company' => [
-					'id' => ($appointmentData->space->person->company) ? $appointmentData->space->person->company->tin : '',
-					'name' => ($appointmentData->space->person->company) ? $appointmentData->space->person->company->name : ''
-                  ],
+                        'id' => ($appointmentData->space->person->company) ? $appointmentData->space->person->company->tin : '',
+                        'name' => ($appointmentData->space->person->company) ? $appointmentData->space->person->company->name : ''
+                    ],
                 ],
                 'agreement' => [
-                    'id' => $appointmentData->callIn->patient->contract->number,
-                    'name' => $appointmentData->callIn->patient->contract->name
+                    'id' => $appointmentData->contract->number,
+                    'name' => $appointmentData->contract->name
                 ],
                 'location' => [
                     'id' =>  findingKey($this->space->agendamiento->location) ? $this->space->agendamiento->location->id : null,
@@ -317,7 +320,7 @@ class ManagmentAppointmentCreation
 
             $cup = Cup::find($appointment->procedure);
             $location = Location::find($appointment->callin->patient->location_id);
-            $contract = Contract::find($appointment->callin->patient->contract_id);
+            $contract = Contract::find($appointment->contract_id);
             $typeDocument =    TypeDocument::find($appointment->callin->patient->type_document_id);
             $regimenType =    RegimenType::find($appointment->callin->patient->regimen_id);
             $level = Level::find($appointment->callin->patient->level_id);
@@ -333,7 +336,7 @@ class ManagmentAppointmentCreation
 
                 if (gettype($level) == 'object' &&     gettype($regimenType) == 'object' && gettype($location) == 'object' && gettype($contract) == 'object') {
 
-                   $this->body =  $body = [
+                    $this->body =  $body = [
                         "id" => 0,
                         "startDate" => Carbon::parse($appointment->space->hour_start)->format('Y-m-d H:i'),
                         "endDate" => Carbon::parse($appointment->space->hour_end)->format('Y-m-d H:i'),
@@ -351,7 +354,7 @@ class ManagmentAppointmentCreation
                             "firstlastName" => $appointment->callin->patient->surname,
                             "secondlastName" => $appointment->callin->patient->secondsurname,
                             "email" => $appointment->callin->patient->email,
-                            "phone" => $appointment->callin->patient->phone .' - ' .  $appointment->callin->patient->optional_phone,
+                            "phone" => $appointment->callin->patient->phone . ' - ' .  $appointment->callin->patient->optional_phone,
                             "birthDate" => $appointment->callin->patient->date_of_birth,
                             "gender" =>  $appointment->callin->patient->gener,
                             "codeRegime" => $regimenType->code,
@@ -369,8 +372,8 @@ class ManagmentAppointmentCreation
                             'id' =>  $appointment->space->person->identifier,
                             'name' => $appointment->space->person->full_name,
                             'company' => [
-                					'id' => ($appointment->space->person->company) ? $appointment->space->person->company->tin : '',
-                					'name' => ($appointment->space->person->company) ? $appointment->space->person->company->name : ''
+                                'id' => ($appointment->space->person->company) ? $appointment->space->person->company->tin : '',
+                                'name' => ($appointment->space->person->company) ? $appointment->space->person->company->name : ''
                             ],
                         ],
                         'agreement' => [
@@ -385,12 +388,12 @@ class ManagmentAppointmentCreation
                     ];
 
                     $response = Http::withOptions([
-                                                'verify' => false,
-                                            ])
+                        'verify' => false,
+                    ])
                         ->post(
-                        'https://mogarsalud.globho.com/api/integration/appointment' . "?api_key=$company->code",
-                        $body
-                    );
+                            'https://mogarsalud.globho.com/api/integration/appointment' . "?api_key=$company->code",
+                            $body
+                        );
 
                     if ($response->ok()) {
                         $appointment->on_globo = 1;

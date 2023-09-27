@@ -14,6 +14,7 @@ use App\Models\Cup_type;
 use App\Models\Space;
 use App\Services\CupService;
 use App\Models\Speciality;
+use App\Models\TypeService;
 use App\Traits\ApiResponser;
 use Dotenv\Result\Success;
 use Illuminate\Database\Eloquent\Builder;
@@ -76,10 +77,10 @@ class CupController extends Controller
         });
 
         $cups->when(request()->get('type'), function ($q) {
-            $q->where(function ($q) {
-                $q->where('cup_type_id', request()->get('type'));
+            $q->whereHas('type_service', function ($q) {
+                $q->where('type_service_id', request()->get('type'));
             });
-        });
+        }); //?relacionar con la nueva tabla
 
         return $this->success($cups->get(['id as value',  DB::raw("CONCAT( code, ' - ' ,description) as text")])->take(30));
     }
@@ -88,12 +89,12 @@ class CupController extends Controller
     {
         try {
             return $this->success(
-                Cup::orderBy('description')->with('colors','type_cup')
+                Cup::orderBy('description')->with('colors','type_service')
                     ->when(request()->get('description'), function (Builder $q) {
                         $q->where('description', 'like', '%' . request()->get('description') . '%');
                     })
-                    ->when(request()->get('cup_type_id'), function (Builder $q) {
-                        $q->where('cup_type_id', '=', request()->get('cup_type_id'));
+                    ->when(request()->get('type_service_id'), function (Builder $q) {
+                        $q->where('type_service_id', '=', request()->get('type_service_id'));
                     })
                     ->when(request()->get('code'), function (Builder $q) {
                         $q->where('code', 'like', '%' . request()->get('code') . '%');
@@ -105,7 +106,7 @@ class CupController extends Controller
     }
 
     public function getTypes() {
-        return $this->success(Cup_type::select('id as value', 'name as text')->get());
+        return $this->success(TypeService::select('id as value', 'name as text')->get());
     }
 
 
@@ -129,6 +130,7 @@ class CupController extends Controller
         try {
             $Cup = Cup::updateOrCreate(['id' => request()->get('id')], request()->all());
             $Cup->specialities()->sync(request()->get('specialities'));
+            $Cup->type_service()->sync(request()->get('type_service_id'));
             return ($Cup->wasRecentlyCreated === true) ? response()->success('Creado con éxito') : response()->success('Actualizado con éxito');
         } catch (\Throwable $th) {
             return  $this->errorResponse([$th->getMessage(), $th->getFile(), $th->getLine()]);
@@ -144,7 +146,7 @@ class CupController extends Controller
     public function show($cup)
     {
         return response()->success(
-            Cup::with('specialities:id')
+            Cup::with('specialities:id', 'type_service:id')
                 ->find($cup)
         );
     }

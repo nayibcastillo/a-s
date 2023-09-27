@@ -12,7 +12,7 @@ class Cup extends Model
         'description',
         'speciality',
         'nickname',
-        'cup_type_id',
+        'type_service_id',
         'color_id'
     ];
 
@@ -27,8 +27,8 @@ class Cup extends Model
         return $this->belongsTo(Color::class, 'color_id');
     }
 
-    public function type_cup()
+    public function type_service()
     {
-        return $this->belongsTo(Cup_type::class, 'cup_type_id');
+        return $this->belongsToMany(TypeService::class);
     }
 }

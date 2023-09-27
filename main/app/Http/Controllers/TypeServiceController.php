@@ -12,9 +12,14 @@ class TypeServiceController extends Controller
 	//
 	use ApiResponser;
 
-	public function index()
+	public function index(Request $request)
 	{
-		return $this->success(TypeService::all(['name As text', 'id As value']));
+        return $this->success(
+            TypeService::when($request->is_service, function ($q, $fill) {
+                $q->where('is_service', $fill);
+            })
+                ->get(['name As text', 'id As value'])
+        );
 	}
 	public function allByFormality($formality)
 	{

@@ -653,6 +653,9 @@ Route::group(
         Route::resource("contract-for-select", "ContractController");
 
         Route::post("contracts", [ContractController::class, 'store']);
+        Route::get("get-payment-methods-contracts", [ContractController::class, 'getPaymentMethodsContracts']);
+        Route::get("get-attention-routes", [ContractController::class, 'getAttentionRoutes']);
+        Route::post("get-attention-routes-custom", [ContractController::class, 'getAttentionRoutesCustom']);
         Route::get("contracts", [ContractController::class, 'paginate']);
         Route::get("contracts-for-select", [ContractController::class, 'index']);
         Route::get("contracts/{id?}", [ContractController::class, 'edit']);
@@ -675,6 +678,7 @@ Route::group(
 
         // Specialities
         Route::get("get-specialties/{sede?}/{procedure?}", [SpecialityController::class, "index",]);
+        Route::post("get-specialties-type-service", [SpecialityController::class, "getForTypeService",]);
         Route::get("get-professionals/{ips?}/{speciality?}", 'PersonController@index');
         Route::resource("specialities", "SpecialityController");
         Route::get("get-specialties-by-procedure/{cup?}", "SpecialityController@byProcedure");
