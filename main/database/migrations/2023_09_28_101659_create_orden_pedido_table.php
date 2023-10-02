@@ -24,8 +24,6 @@ class CreateOrdenPedidoTable extends Migration
             $table->timestamp('Fecha')->nullable()->useCurrent();
             $table->integer('Id_Cliente')->nullable();
             $table->string('Estado', 50)->nullable();
-
-            $table->index(['1'], 'Índice');
         });
     }
 

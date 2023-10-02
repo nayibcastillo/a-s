@@ -17,8 +17,6 @@ class CreateProductDotationTypesTable extends Migration
             $table->integer('id')->primary();
             $table->string('name', 50)->nullable();
             $table->timestamps();
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

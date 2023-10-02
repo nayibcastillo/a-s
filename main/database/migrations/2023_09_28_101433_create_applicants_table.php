@@ -30,8 +30,6 @@ class CreateApplicantsTable extends Migration
             $table->integer('driving_license_id')->nullable();
             $table->string('curriculum', 500)->nullable();
             $table->timestamps();
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

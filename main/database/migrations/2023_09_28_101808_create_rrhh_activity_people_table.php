@@ -19,8 +19,6 @@ class CreateRrhhActivityPeopleTable extends Migration
             $table->integer('rrhh_activity_id')->nullable();
             $table->enum('state', ['activo', 'cancelado'])->default('Activo');
             $table->timestamps();
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

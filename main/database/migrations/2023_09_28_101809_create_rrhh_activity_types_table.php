@@ -19,8 +19,6 @@ class CreateRrhhActivityTypesTable extends Migration
             $table->string('color', 100)->nullable();
             $table->timestamps();
             $table->enum('state', ['activo', 'cancelado'])->default('Activo');
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

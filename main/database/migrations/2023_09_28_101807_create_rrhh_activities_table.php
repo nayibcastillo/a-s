@@ -26,8 +26,6 @@ class CreateRrhhActivitiesTable extends Migration
             $table->enum('state', ['anulada', 'aprobada'])->default('Aprobada');
             $table->integer('rrhh_activity_type_id')->nullable();
             $table->integer('dependency_id')->nullable();
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

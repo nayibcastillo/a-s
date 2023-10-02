@@ -18,14 +18,12 @@ class CreateInventaryDotationsTable extends Migration
             $table->integer('product_dotation_type_id')->nullable();
             $table->string('name', 50)->nullable();
             $table->string('code', 50)->nullable();
-            $table->enum('type', ['dotaci„≥n', 'epp'])->nullable();
+            $table->enum('type', ['dotaciÔøΩn', 'epp'])->nullable();
             $table->enum('status', ['nuevo', 'usado'])->nullable();
             $table->double('cost', 50, 2)->nullable();
             $table->integer('stock')->nullable();
             $table->timestamps();
             $table->bigInteger('product_id')->nullable();
-            
-            $table->index(['1'], '√çndice');
         });
     }
 

@@ -14,7 +14,7 @@ class CreateActaRecepcionInternacionalTable extends Migration
     public function up()
     {
         Schema::create('Acta_Recepcion_Internacional', function (Blueprint $table) {
-            $table->integer('Id_Acta_Recepcion_Internacional')->primary();
+            $table->integer('Id_Acta_Recepcion_Internacional');
             $table->integer('Id_Bodega')->nullable();
             $table->bigInteger('Id_Bodega_Nuevo')->nullable();
             $table->integer('Identificacion_Funcionario');

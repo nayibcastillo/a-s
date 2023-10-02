@@ -16,8 +16,6 @@ class CreateBoardsTable extends Migration
         Schema::create('boards', function (Blueprint $table) {
             $table->integer('id');
             $table->string('name_board', 50);
-            
-            $table->index(['1'], 'Índice');
         });
     }
 

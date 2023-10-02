@@ -25,8 +25,6 @@ class CreateDotationsTable extends Migration
             $table->string('type', 50)->nullable();
             $table->bigInteger('delivery_code')->nullable();
             $table->string('delivery_state', 50)->nullable();
-            
-            $table->index(['1'], 'Índice');
         });
     }
 
