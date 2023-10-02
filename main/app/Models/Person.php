@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\LateArrivalController;
 use App\Restriction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Person extends Model
 {
@@ -190,4 +191,10 @@ class Person extends Model
     {
         return $this->belongsTo(TypeDocument::class,'type_document_id');
     }
+
+    public function scopeFullName($q)
+    {
+        return $q->select('*', DB::raw("CONCAT_WS(' ', first_name, second_name, first_surname, second_surname) as full_names"));
+    }
+
 }
