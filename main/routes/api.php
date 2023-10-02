@@ -8,6 +8,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ArlController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\AuthThirdController;
 use App\Http\Controllers\CaracterizacionController;
 use App\Http\Controllers\CategoryController;
@@ -292,6 +293,8 @@ Route::group(
         Route::resource('disability-leaves', CoreDisabilityLeaveController::class);
         Route::get('paginateNoveltyTypes', [DisabilityLeaveController::class, 'paginate']);
 
+        Route::get('paginateAlert', [AlertController::class, 'paginate']);
+
         Route::resource('risk', CoreRiskTypesController::class);
         Route::get('paginateRiskTypes', [RiskTypesController::class, 'paginate']);
 
@@ -418,6 +421,8 @@ Route::group(
 
         Route::get('/horarios/datos/generales/{semana}', [RotatingTurnHourController::class, 'getDatosGenerales']);
         Route::resource('alerts', 'AlertController');
+        Route::get('read-alert', [AlertController::class, 'read']);
+        Route::get('mark-all-notifications-as-read', [AlertController::class, 'markAllAsRead']);
         Route::get('account-plan-balance', [AccountPlanController::class, 'listBalance']);
         Route::resource('countable_incomes', CountableIncomeController::class);
         Route::resource('countable_deductions', 'CountableDeductionController');
@@ -828,6 +833,7 @@ Route::group(
         Route::resource("product-accounting", "ProductAccountingPlanController");
 
         Route::resource("product", "ProductController");
+
     }
 );
 
