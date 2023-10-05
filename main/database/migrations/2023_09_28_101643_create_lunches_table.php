@@ -14,7 +14,7 @@ class CreateLunchesTable extends Migration
     public function up()
     {
         Schema::create('lunches', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('value')->nullable();
             $table->integer('user_id')->nullable();
             $table->enum('state', ['activo', 'inactivo'])->default('Activo');

@@ -14,7 +14,7 @@ class CreateListaGananciaTable extends Migration
     public function up()
     {
         Schema::create('Lista_Ganancia', function (Blueprint $table) {
-            $table->bigInteger('Id_Lista_Ganancia')->primary();
+            $table->bigIncrements('Id_Lista_Ganancia');
             $table->string('Codigo', 100)->nullable();
             $table->string('Nombre', 100)->nullable();
             $table->integer('Porcentaje')->nullable();

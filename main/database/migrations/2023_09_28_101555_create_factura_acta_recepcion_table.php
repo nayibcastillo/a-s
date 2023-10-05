@@ -14,7 +14,7 @@ class CreateFacturaActaRecepcionTable extends Migration
     public function up()
     {
         Schema::create('Factura_Acta_Recepcion', function (Blueprint $table) {
-            $table->bigInteger('Id_Factura_Acta_Recepcion')->primary();
+            $table->bigIncrements('Id_Factura_Acta_Recepcion');
             $table->bigInteger('Id_Acta_Recepcion')->nullable();
             $table->string('Factura', 100)->nullable();
             $table->date('Fecha_Factura');

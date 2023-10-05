@@ -14,7 +14,7 @@ class CreateTravelExpenseTransportsTable extends Migration
     public function up()
     {
         Schema::create('travel_expense_transports', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->enum('type', ['ida', 'vuelta']);
             $table->string('journey', 191);
             $table->string('company', 191);

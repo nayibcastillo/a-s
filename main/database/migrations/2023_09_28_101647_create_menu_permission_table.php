@@ -14,7 +14,7 @@ class CreateMenuPermissionTable extends Migration
     public function up()
     {
         Schema::create('menu_permission', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('menu_id')->nullable();
             $table->integer('permission_id')->nullable();
             $table->timestamps();

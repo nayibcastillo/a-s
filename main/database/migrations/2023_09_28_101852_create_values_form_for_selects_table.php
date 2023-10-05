@@ -14,7 +14,7 @@ class CreateValuesFormForSelectsTable extends Migration
     public function up()
     {
         Schema::create('values_form_for_selects', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->integer('variables_form_template_id');
             $table->timestamp('created_at')->useCurrent();

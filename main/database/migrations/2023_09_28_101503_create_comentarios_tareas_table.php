@@ -14,7 +14,7 @@ class CreateComentariosTareasTable extends Migration
     public function up()
     {
         Schema::create('comentarios_tareas', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('id_person');
             $table->dateTime('fecha');
             $table->string('comentario', 1000);

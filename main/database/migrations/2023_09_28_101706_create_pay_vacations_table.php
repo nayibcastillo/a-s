@@ -14,7 +14,7 @@ class CreatePayVacationsTable extends Migration
     public function up()
     {
         Schema::create('pay_vacations', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('payroll_factor_id');
             $table->integer('days');
             $table->enum('state', ['pago', 'no pagado'])->default('No Pagado');

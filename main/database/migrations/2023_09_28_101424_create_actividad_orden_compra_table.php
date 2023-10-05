@@ -14,7 +14,7 @@ class CreateActividadOrdenCompraTable extends Migration
     public function up()
     {
         Schema::create('Actividad_Orden_Compra', function (Blueprint $table) {
-            $table->bigInteger('Id_Actividad_Orden_Compra')->primary();
+            $table->bigIncrements('Id_Actividad_Orden_Compra');
             $table->integer('Id_Orden_Compra_Nacional')->nullable();
             $table->bigInteger('Id_Acta_Recepcion_Compra')->nullable();
             $table->bigInteger('Identificacion_Funcionario')->nullable();

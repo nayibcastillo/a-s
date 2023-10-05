@@ -14,7 +14,7 @@ class CreateThirdPartyFieldsTable extends Migration
     public function up()
     {
         Schema::create('third_party_fields', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('label', 191)->nullable();
             $table->string('name', 191)->nullable();
             $table->string('type', 191)->nullable();

@@ -14,7 +14,7 @@ class CreateAgendamientoCupTable extends Migration
     public function up()
     {
         Schema::create('agendamiento_cup', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('agendamiento_id')->nullable()->index('agendamiento_id');
             $table->integer('cup_id')->nullable()->index('cup_id');
             $table->timestamp('created_at')->nullable();

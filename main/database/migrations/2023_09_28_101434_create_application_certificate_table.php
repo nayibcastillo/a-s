@@ -14,7 +14,7 @@ class CreateApplicationCertificateTable extends Migration
     public function up()
     {
         Schema::create('application_certificate', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('person_id', 191);
             $table->string('patient_id', 191)->nullable();
             $table->string('cups_id', 191)->nullable();

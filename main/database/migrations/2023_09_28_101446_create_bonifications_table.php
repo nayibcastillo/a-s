@@ -14,7 +14,7 @@ class CreateBonificationsTable extends Migration
     public function up()
     {
         Schema::create('bonifications', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('countable_income_id')->nullable();
             $table->double('value', 50, 2)->nullable();
             $table->integer('work_contract_id')->nullable();

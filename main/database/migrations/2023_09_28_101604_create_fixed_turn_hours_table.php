@@ -14,7 +14,7 @@ class CreateFixedTurnHoursTable extends Migration
     public function up()
     {
         Schema::create('fixed_turn_hours', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('day', 191);
             $table->unsignedInteger('fixed_turn_id')->index('horario_turno_fijo_turno_fijo_id_foreign');
             $table->string('entry_time_one', 191);

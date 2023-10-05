@@ -14,7 +14,7 @@ class CreateAmbitsTable extends Migration
     public function up()
     {
         Schema::create('ambits', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->timestamps();
         });

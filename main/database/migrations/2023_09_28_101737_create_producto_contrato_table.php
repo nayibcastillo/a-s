@@ -14,7 +14,7 @@ class CreateProductoContratoTable extends Migration
     public function up()
     {
         Schema::create('Producto_Contrato', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Contrato')->primary();
+            $table->bigIncrements('Id_Producto_Contrato');
             $table->bigInteger('Id_Contrato')->nullable();
             $table->bigInteger('Id_Producto')->nullable();
             $table->string('Cum', 100)->nullable();

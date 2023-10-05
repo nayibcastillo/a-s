@@ -14,7 +14,7 @@ class CreateDurationsTable extends Migration
     public function up()
     {
         Schema::create('durations', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('value');
             $table->string('text', 20);
             $table->timestamp('created_at');

@@ -14,7 +14,7 @@ class CreateReasonsTable extends Migration
     public function up()
     {
         Schema::create('reasons', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('observation', 100)->nullable();
             $table->enum('pay_condition', ['no paga', 'pagado'])->nullable();
             $table->tinyInteger('status')->nullable()->index('status');

@@ -14,7 +14,7 @@ class CreateRetencionTable extends Migration
     public function up()
     {
         Schema::create('Retencion', function (Blueprint $table) {
-            $table->integer('Id_Retencion')->primary();
+            $table->bigIncrements('Id_Retencion');
             $table->string('Nombre', 150)->nullable();
             $table->integer('Id_Plan_Cuenta')->nullable()->index('Id_Plan_Cuenta_idx');
             $table->double('Porcentaje')->nullable();

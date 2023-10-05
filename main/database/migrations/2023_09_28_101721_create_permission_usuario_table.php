@@ -14,7 +14,7 @@ class CreatePermissionUsuarioTable extends Migration
     public function up()
     {
         Schema::create('permission_usuario', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('usuario_id')->nullable();
             $table->integer('permission_id')->nullable();
         });

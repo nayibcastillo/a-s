@@ -14,7 +14,7 @@ class CreateTravelExpenseHotelsTable extends Migration
     public function up()
     {
         Schema::create('travel_expense_hotels', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('travel_expense_id');
             $table->bigInteger('hotel_id');
             $table->integer('n_night');

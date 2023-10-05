@@ -14,7 +14,7 @@ class CreateTechnicNotesTable extends Migration
     public function up()
     {
         Schema::create('technic_notes', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('contract_id')->nullable();
             $table->date('start')->nullable();
             $table->date('end')->nullable();

@@ -14,7 +14,7 @@ class CreateServiceSpecialityTable extends Migration
     public function up()
     {
         Schema::create('service_speciality', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('speciality_id')->nullable();
             $table->bigInteger('service_id')->nullable();
             $table->timestamps();

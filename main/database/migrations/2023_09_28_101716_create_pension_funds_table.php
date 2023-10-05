@@ -14,11 +14,11 @@ class CreatePensionFundsTable extends Migration
     public function up()
     {
         Schema::create('pension_funds', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 150)->nullable();
             $table->string('code', 50)->nullable();
             $table->string('nit', 50)->nullable();
-            $table->enum('status7', ['activo', 'inactivo'])->default('Activo');
+            $table->enum('status7', ['Activo', 'Inactivo'])->default('Activo');
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrent();
         });

@@ -14,7 +14,7 @@ class CreatePayrollFactorsTable extends Migration
     public function up()
     {
         Schema::create('payroll_factors', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id')->index('novedad_funcionario_id_foreign');
             $table->unsignedInteger('disability_leave_id')->index('novedad_contable_licencia_incapacidad_id_foreign');
             $table->dateTime('date_start');

@@ -14,7 +14,7 @@ class CreateRegionalsTable extends Migration
     public function up()
     {
         Schema::create('regionals', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('institution_id');
             $table->string('name');
             $table->timestamps();

@@ -14,7 +14,7 @@ class CreateCupTypeServiceTable extends Migration
     public function up()
     {
         Schema::create('cup_type_service', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('cup_id');
             $table->integer('type_service_id');
             $table->timestamps();

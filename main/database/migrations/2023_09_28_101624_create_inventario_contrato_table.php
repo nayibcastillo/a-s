@@ -14,7 +14,7 @@ class CreateInventarioContratoTable extends Migration
     public function up()
     {
         Schema::create('Inventario_Contrato', function (Blueprint $table) {
-            $table->increments('Id_Inventario_Contrato');
+            $table->bigIncrements('Id_Inventario_Contrato');
             $table->integer('Id_Contrato')->nullable();
             $table->integer('Id_Inventario_Nuevo')->nullable();
             $table->integer('Id_Producto_Contrato')->nullable();

@@ -14,7 +14,7 @@ class CreateProductoActaRecepcionTable extends Migration
     public function up()
     {
         Schema::create('Producto_Acta_Recepcion', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Acta_Recepcion')->primary();
+            $table->bigIncrements('Id_Producto_Acta_Recepcion');
             $table->integer('Cantidad')->nullable();
             $table->double('Precio', 20, 2)->nullable();
             $table->integer('Impuesto')->nullable();

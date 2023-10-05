@@ -14,7 +14,7 @@ class CreateEstibaTable extends Migration
     public function up()
     {
         Schema::create('Estiba', function (Blueprint $table) {
-            $table->bigInteger('Id_Estiba')->primary();
+            $table->bigIncrements('Id_Estiba');
             $table->string('Nombre');
             $table->bigInteger('Id_Grupo_Estiba');
             $table->bigInteger('Id_Bodega_Nuevo')->nullable();

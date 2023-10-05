@@ -14,7 +14,7 @@ class CreateContractssTable extends Migration
     public function up()
     {
         Schema::create('contractss', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('number');
             $table->integer('administrator_id')->nullable();
             $table->string('name');

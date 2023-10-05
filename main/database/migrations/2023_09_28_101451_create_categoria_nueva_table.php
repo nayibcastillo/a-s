@@ -14,7 +14,7 @@ class CreateCategoriaNuevaTable extends Migration
     public function up()
     {
         Schema::create('Categoria_Nueva', function (Blueprint $table) {
-            $table->bigInteger('Id_Categoria_Nueva')->primary();
+            $table->bigIncrements('Id_Categoria_Nueva');
             $table->integer('company_id')->nullable();
             $table->string('Nombre', 200)->nullable();
             $table->integer('Departamento')->nullable();

@@ -14,7 +14,7 @@ class CreateCompanyContractTable extends Migration
     public function up()
     {
         Schema::create('company_contract', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('contract_id')->nullable();
             $table->bigInteger('company_id')->nullable();
             $table->timestamp('created_at')->nullable();

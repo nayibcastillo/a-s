@@ -14,7 +14,7 @@ class CreateDevolucionCompraTable extends Migration
     public function up()
     {
         Schema::create('Devolucion_Compra', function (Blueprint $table) {
-            $table->bigInteger('Id_Devolucion_Compra')->primary();
+            $table->bigIncrements('Id_Devolucion_Compra');
             $table->bigInteger('Id_No_Conforme')->nullable();
             $table->bigInteger('Identificacion_Funcionario')->nullable();
             $table->text('Observaciones')->nullable();

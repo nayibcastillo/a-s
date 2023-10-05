@@ -14,7 +14,7 @@ class CreateDrivingLicenseJobsTable extends Migration
     public function up()
     {
         Schema::create('driving_license_jobs', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('driving_license_id')->nullable();
             $table->integer('job_id')->nullable();
             $table->timestamps();

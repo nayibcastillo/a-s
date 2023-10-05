@@ -14,7 +14,7 @@ class CreateLaboratoriesTable extends Migration
     public function up()
     {
         Schema::create('laboratories', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('patient')->default(0);
             $table->dateTime('date');
             $table->bigInteger('contract_id');

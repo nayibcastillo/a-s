@@ -14,7 +14,7 @@ class CreateSubcategoriaTable extends Migration
     public function up()
     {
         Schema::create('Subcategoria', function (Blueprint $table) {
-            $table->integer('Id_Subcategoria')->primary();
+            $table->bigIncrements('Id_Subcategoria');
             $table->integer('Id_Categoria_Nueva')->nullable();
             $table->integer('company_id')->nullable();
             $table->string('Nombre', 100);

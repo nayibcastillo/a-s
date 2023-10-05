@@ -14,7 +14,7 @@ class CreateTravelExpenseTaxiCitiesTable extends Migration
     public function up()
     {
         Schema::create('travel_expense_taxi_cities', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('journeys');
             $table->bigInteger('taxi_city_id');
             $table->string('rate', 50)->default('');

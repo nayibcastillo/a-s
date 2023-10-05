@@ -14,7 +14,7 @@ class CreateMunicipalitiesTable extends Migration
     public function up()
     {
         Schema::create('municipalities', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('department_id')->nullable();
             $table->string('name', 200)->nullable();
             $table->string('code', 10)->nullable()->index('code');

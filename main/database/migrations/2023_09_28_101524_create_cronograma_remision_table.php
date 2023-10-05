@@ -14,7 +14,7 @@ class CreateCronogramaRemisionTable extends Migration
     public function up()
     {
         Schema::create('Cronograma_Remision', function (Blueprint $table) {
-            $table->integer('Id_Cronograma_Remision')->primary();
+            $table->bigIncrements('Id_Cronograma_Remision');
             $table->string('Dia', 20);
             $table->integer('Semana');
             $table->date('Fecha_Asignacion');

@@ -14,7 +14,7 @@ class CreateRemisionTable extends Migration
     public function up()
     {
         Schema::create('Remision', function (Blueprint $table) {
-            $table->bigInteger('Id_Remision')->primary();
+            $table->bigIncrements('Id_Remision');
             $table->bigInteger('Id_Contrato')->nullable();
             $table->timestamp('Fecha')->useCurrent();
             $table->string('Tipo', 200)->nullable();

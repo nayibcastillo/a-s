@@ -14,7 +14,7 @@ class CreateRegimeTecnicNotesTable extends Migration
     public function up()
     {
         Schema::create('regime_tecnic_notes', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->unsignedInteger('regime_id');
             $table->unsignedInteger('tecnic_note_id');
             $table->timestamps();

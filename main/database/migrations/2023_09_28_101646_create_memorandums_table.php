@@ -14,7 +14,7 @@ class CreateMemorandumsTable extends Migration
     public function up()
     {
         Schema::create('memorandums', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('person_id');
             $table->text('details')->nullable();
             $table->string('file', 500)->nullable();

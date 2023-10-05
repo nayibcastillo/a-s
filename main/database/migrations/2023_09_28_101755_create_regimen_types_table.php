@@ -14,7 +14,7 @@ class CreateRegimenTypesTable extends Migration
     public function up()
     {
         Schema::create('regimen_types', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('short', 50);
             $table->string('name', 50)->nullable();
             $table->string('code', 5)->nullable();

@@ -14,7 +14,7 @@ class CreatePreCompraTable extends Migration
     public function up()
     {
         Schema::create('Pre_Compra', function (Blueprint $table) {
-            $table->bigInteger('Id_Pre_Compra')->primary();
+            $table->bigIncrements('Id_Pre_Compra');
             $table->integer('Identificacion_Funcionario')->nullable();
             $table->dateTime('Fecha')->useCurrent();
             $table->integer('Id_Orden_Pedido')->nullable();

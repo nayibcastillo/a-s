@@ -14,7 +14,7 @@ class CreateRegimenTypeRestrictionTable extends Migration
     public function up()
     {
         Schema::create('regimen_type_restriction', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('regimen_type_id', 50)->nullable();
             $table->string('restriction_id', 50)->nullable();
             $table->timestamp('created_at')->nullable();

@@ -14,7 +14,7 @@ class CreateFormalityTypeServiceTable extends Migration
     public function up()
     {
         Schema::create('formality_type_service', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('formality_id')->default(0);
             $table->integer('type_service_id')->default(0);
         });

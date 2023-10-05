@@ -14,7 +14,7 @@ class CreateRestrictionsTable extends Migration
     public function up()
     {
         Schema::create('restrictions', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('company_id')->nullable();
             $table->bigInteger('person_id')->nullable();
             $table->timestamps();

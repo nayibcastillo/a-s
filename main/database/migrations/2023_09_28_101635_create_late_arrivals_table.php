@@ -14,7 +14,7 @@ class CreateLateArrivalsTable extends Migration
     public function up()
     {
         Schema::create('late_arrivals', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id');
             $table->integer('time')->nullable();
             $table->time('entry');

@@ -14,7 +14,7 @@ class CreateFieldsDependencesTable extends Migration
     public function up()
     {
         Schema::create('fields_dependences', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('parents_for_fields_id');
             $table->string('name', 50);
             $table->timestamp('updated_at')->useCurrent();

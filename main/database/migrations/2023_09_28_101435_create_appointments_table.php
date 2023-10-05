@@ -14,7 +14,7 @@ class CreateAppointmentsTable extends Migration
     public function up()
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('call_id')->default(0);
             $table->bigInteger('space_id')->nullable();
             $table->bigInteger('location_id')->nullable();

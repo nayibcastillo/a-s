@@ -14,7 +14,7 @@ class CreateVisaTypesTable extends Migration
     public function up()
     {
         Schema::create('visa_types', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 250)->nullable();
             $table->string('purpose', 500)->nullable();
             $table->enum('state', ['activo', 'inactivo'])->default('Activo');

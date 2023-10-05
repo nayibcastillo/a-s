@@ -14,7 +14,7 @@ class CreateFormulariosTable extends Migration
     public function up()
     {
         Schema::create('Formularios', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('Nombre', 50)->default('');
             $table->string('Descripcion', 500)->default('');
             $table->enum('Estado', ['activo', 'inactivo'])->default('Activo');

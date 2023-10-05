@@ -15,7 +15,7 @@ class CreateCitasTable extends Migration
     public function up()
     {
         Schema::create('citas', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code');
             $table->text('call_identificacion_paciente')->nullable();
             $table->text('call_identificacion_agente')->nullable();

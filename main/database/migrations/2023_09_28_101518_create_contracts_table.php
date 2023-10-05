@@ -14,7 +14,7 @@ class CreateContractsTable extends Migration
     public function up()
     {
         Schema::create('contracts', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->boolean('status')->default(1);
             $table->string('name');
             $table->enum('state', ['activo', 'inactivo'])->default('Activo');

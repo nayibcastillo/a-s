@@ -14,7 +14,7 @@ class CreatePriceListsTable extends Migration
     public function up()
     {
         Schema::create('price_lists', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->unsignedInteger('cup_id');
             $table->string('cum');
             $table->string('price');

@@ -14,7 +14,7 @@ class CreateSpacesTable extends Migration
     public function up()
     {
         Schema::create('spaces', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('agendamiento_id')->nullable()->index('agendamiento_id');
             $table->dateTime('hour_start')->nullable()->index('hour_start');
             $table->bigInteger('person_id')->nullable();

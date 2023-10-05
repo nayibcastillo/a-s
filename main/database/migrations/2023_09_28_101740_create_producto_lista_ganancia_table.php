@@ -14,7 +14,7 @@ class CreateProductoListaGananciaTable extends Migration
     public function up()
     {
         Schema::create('Producto_Lista_Ganancia', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Lista_Ganancia');
+            $table->bigIncrements('Id_Producto_Lista_Ganancia');
             $table->string('Cum', 200)->nullable();
             $table->double('Precio', 50, 2)->nullable();
             $table->bigInteger('Id_Lista_Ganancia')->nullable();

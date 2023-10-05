@@ -14,7 +14,7 @@ class CreateProductoOrdenCompraNacionalTable extends Migration
     public function up()
     {
         Schema::create('Producto_Orden_Compra_Nacional', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Orden_Compra_Nacional');
+            $table->bigIncrements('Id_Producto_Orden_Compra_Nacional');
             $table->bigInteger('Id_Orden_Compra_Nacional')->nullable();
             $table->bigInteger('Id_Inventario')->nullable();
             $table->bigInteger('Id_Producto')->nullable();

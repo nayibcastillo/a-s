@@ -15,7 +15,7 @@ class CreateRCuentaMedicasTable extends Migration
     public function up()
     {
         Schema::create('r_cuenta_medicas', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('certificado_bancario')->nullable();
             $table->integer('company_id')->nullable();
             $table->string('documento')->nullable();

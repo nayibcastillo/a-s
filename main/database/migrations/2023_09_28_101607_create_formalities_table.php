@@ -14,7 +14,7 @@ class CreateFormalitiesTable extends Migration
     public function up()
     {
         Schema::create('formalities', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 200)->nullable();
             $table->string('component', 225)->nullable();
             $table->timestamps();

@@ -14,7 +14,7 @@ class CreateAccountPlansTable extends Migration
     public function up()
     {
         Schema::create('account_plans', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('type_p', 191)->nullable();
             $table->string('type_niif', 191)->nullable();
             $table->integer('code')->nullable();

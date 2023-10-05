@@ -14,7 +14,7 @@ class CreateMarcationsTable extends Migration
     public function up()
     {
         Schema::create('marcations', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('type', 191);
             $table->string('description', 191);
             $table->string('date', 191);

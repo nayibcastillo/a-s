@@ -14,7 +14,7 @@ class CreateExtraHourReportsTable extends Migration
     public function up()
     {
         Schema::create('extra_hour_reports', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id')->index('reporte_extras_funcionario_id_foreign');
             $table->date('date');
             $table->integer('ht');

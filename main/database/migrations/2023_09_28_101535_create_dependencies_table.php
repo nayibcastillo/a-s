@@ -14,7 +14,7 @@ class CreateDependenciesTable extends Migration
     public function up()
     {
         Schema::create('dependencies', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 50)->nullable();
             $table->integer('group_id')->nullable()->index('dependencies_group_id_index');
             $table->timestamps();

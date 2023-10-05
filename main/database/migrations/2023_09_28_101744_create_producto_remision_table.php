@@ -14,7 +14,7 @@ class CreateProductoRemisionTable extends Migration
     public function up()
     {
         Schema::create('Producto_Remision', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Remision')->primary();
+            $table->bigIncrements('Id_Producto_Remision');
             $table->bigInteger('Id_Remision')->nullable()->index('Id_Remision_idx');
             $table->bigInteger('Id_Producto_Factura_Venta')->nullable();
             $table->integer('Id_Inventario')->nullable();

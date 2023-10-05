@@ -14,7 +14,7 @@ class CreateProductApplicationCertificateTable extends Migration
     public function up()
     {
         Schema::create('product_application_certificate', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('application_certificate_id', 191);
             $table->string('product_id', 191)->nullable();
             $table->string('amount', 191)->nullable();

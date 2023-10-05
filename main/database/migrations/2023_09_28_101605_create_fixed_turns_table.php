@@ -14,7 +14,7 @@ class CreateFixedTurnsTable extends Migration
     public function up()
     {
         Schema::create('fixed_turns', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->tinyInteger('extra_hours');
             $table->integer('entry_tolerance');

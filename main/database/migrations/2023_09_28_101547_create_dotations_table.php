@@ -14,7 +14,7 @@ class CreateDotationsTable extends Migration
     public function up()
     {
         Schema::create('dotations', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->timestamp('dispatched_at')->nullable();
             $table->integer('person_id')->nullable();
             $table->integer('user_id')->nullable();

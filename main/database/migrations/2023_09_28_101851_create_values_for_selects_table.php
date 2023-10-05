@@ -14,7 +14,7 @@ class CreateValuesForSelectsTable extends Migration
     public function up()
     {
         Schema::create('values_for_selects', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->integer('variables_clinical_history_model_id');
             $table->timestamp('created_at')->useCurrent();

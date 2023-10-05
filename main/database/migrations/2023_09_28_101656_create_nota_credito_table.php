@@ -14,7 +14,7 @@ class CreateNotaCreditoTable extends Migration
     public function up()
     {
         Schema::create('Nota_Credito', function (Blueprint $table) {
-            $table->bigInteger('Id_Nota_Credito')->primary();
+            $table->bigIncrements('Id_Nota_Credito');
             $table->text('Observacion')->nullable();
             $table->bigInteger('Id_Factura')->nullable();
             $table->string('Codigo', 100)->nullable();

@@ -14,7 +14,7 @@ class CreateVariablesFormTemplatesTable extends Migration
     public function up()
     {
         Schema::create('variables_form_templates', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 55);
             $table->string('property', 55);
             $table->string('type', 55);

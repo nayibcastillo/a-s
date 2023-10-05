@@ -14,7 +14,7 @@ class CreateContractTermsTable extends Migration
     public function up()
     {
         Schema::create('contract_terms', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name')->unique('contract_terms_name_unique');
             $table->enum('status', ['activo', 'inactivo'])->default('Activo');
             $table->timestamps();

@@ -14,6 +14,7 @@ class CreateOthersTable extends Migration
     public function up()
     {
         Schema::create('others', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('address');
             $table->string('agreements')->nullable();
             $table->string('category');
@@ -24,7 +25,6 @@ class CreateOthersTable extends Migration
             $table->tinyInteger('disabled');
             $table->string('email');
             $table->string('encoding_characters');
-            $table->unsignedBigInteger('id');
             $table->bigInteger('interface_id')->default(0);
             $table->text('logo')->nullable();
             $table->string('name');

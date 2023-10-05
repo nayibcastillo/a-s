@@ -14,7 +14,7 @@ class CreateSiteSettingsTable extends Migration
     public function up()
     {
         Schema::create('site_settings', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('url', 50)->nullable();
             $table->string('email', 50)->nullable();
             $table->string('folder_functionaries', 50)->nullable();

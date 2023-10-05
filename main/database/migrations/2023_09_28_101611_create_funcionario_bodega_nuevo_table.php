@@ -14,7 +14,7 @@ class CreateFuncionarioBodegaNuevoTable extends Migration
     public function up()
     {
         Schema::create('Funcionario_Bodega_Nuevo', function (Blueprint $table) {
-            $table->bigInteger('Id_Funcionario_Bodega_Nuevo')->primary();
+            $table->bigIncrements('Id_Funcionario_Bodega_Nuevo');
             $table->bigInteger('Id_Bodega_Nuevo');
             $table->bigInteger('Identificacion_Funcionario');
         });

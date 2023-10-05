@@ -14,7 +14,7 @@ class CreateActividadRemisionTable extends Migration
     public function up()
     {
         Schema::create('Actividad_Remision', function (Blueprint $table) {
-            $table->integer('Id_Actividad_Remision')->primary();
+            $table->bigIncrements('Id_Actividad_Remision');
             $table->bigInteger('Id_Remision')->nullable();
             $table->bigInteger('Identificacion_Funcionario')->nullable();
             $table->timestamp('Fecha');

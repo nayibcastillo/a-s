@@ -14,7 +14,7 @@ class CreateLocationPersonTable extends Migration
     public function up()
     {
         Schema::create('location_person', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('identifier', 13)->nullable();
             $table->string('nit_company', 11)->nullable();
             $table->string('location', 42)->nullable();

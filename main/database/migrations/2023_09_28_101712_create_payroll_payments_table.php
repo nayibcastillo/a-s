@@ -14,7 +14,7 @@ class CreatePayrollPaymentsTable extends Migration
     public function up()
     {
         Schema::create('payroll_payments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('user_id')->nullable();
             $table->string('payment_frequency', 50)->nullable();
             $table->date('start_period');

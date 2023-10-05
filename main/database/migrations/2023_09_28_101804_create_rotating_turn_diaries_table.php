@@ -14,7 +14,7 @@ class CreateRotatingTurnDiariesTable extends Migration
     public function up()
     {
         Schema::create('rotating_turn_diaries', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id')->nullable()->index('diario_turno_rotativo_funcionario_id_foreign');
             $table->date('date')->nullable();
             $table->date('leave_date')->nullable();

@@ -14,7 +14,7 @@ class CreateAgreementsTable extends Migration
     public function up()
     {
         Schema::create('agreements', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('contract_number', 10)->nullable();
             $table->string('contract_name')->nullable();
             $table->bigInteger('department_id')->nullable();

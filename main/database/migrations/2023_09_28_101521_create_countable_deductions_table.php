@@ -14,7 +14,7 @@ class CreateCountableDeductionsTable extends Migration
     public function up()
     {
         Schema::create('countable_deductions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('concept', 191);
             $table->string('accounting_account', 191);
             $table->boolean('state')->default(1);

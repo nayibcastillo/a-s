@@ -14,7 +14,7 @@ class CreateRrhhActivitiesTable extends Migration
     public function up()
     {
         Schema::create('rrhh_activities', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('description', 100)->nullable();
             $table->string('name', 100)->nullable();
             $table->string('user_id', 100)->nullable();

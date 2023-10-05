@@ -14,6 +14,7 @@ class CreateInstitutionsTable extends Migration
     public function up()
     {
         Schema::create('institutions', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('address');
             $table->string('agreements');
             $table->string('category');
@@ -25,7 +26,6 @@ class CreateInstitutionsTable extends Migration
             $table->string('epss');
             $table->string('email');
             $table->string('encoding_characters');
-            $table->unsignedBigInteger('id');
             $table->unsignedBigInteger('interface_id');
             $table->string('logo');
             $table->string('name');

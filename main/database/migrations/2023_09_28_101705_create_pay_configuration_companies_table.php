@@ -14,7 +14,7 @@ class CreatePayConfigurationCompaniesTable extends Migration
     public function up()
     {
         Schema::create('pay_configuration_companies', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('disability_percentage_id', 191);
             $table->string('deductions_pay', 191);
             $table->string('recurrent_pay', 191);

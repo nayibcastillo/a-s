@@ -14,7 +14,7 @@ class CreateFormTemplatesTable extends Migration
     public function up()
     {
         Schema::create('form_templates', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 20);
             $table->timestamp('created_at');
             $table->timestamp('update_at');

@@ -14,7 +14,7 @@ class CreateFormularioResponsesTable extends Migration
     public function up()
     {
         Schema::create('formulario_responses', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->timestamps();
             $table->bigInteger('formulario_id')->default(0);
             $table->bigInteger('question_id')->default(0);

@@ -14,7 +14,7 @@ class CreateCausalAnulacionTable extends Migration
     public function up()
     {
         Schema::create('Causal_Anulacion', function (Blueprint $table) {
-            $table->integer('Id_Causal_Anulacion')->primary();
+            $table->bigIncrements('Id_Causal_Anulacion');
             $table->string('Nombre', 500)->nullable();
         });
     }

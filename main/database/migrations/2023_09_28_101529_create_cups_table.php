@@ -14,7 +14,7 @@ class CreateCupsTable extends Migration
     public function up()
     {
         Schema::create('cups', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('type')->default(0);
             $table->integer('year')->nullable();
             $table->string('code', 20)->nullable();

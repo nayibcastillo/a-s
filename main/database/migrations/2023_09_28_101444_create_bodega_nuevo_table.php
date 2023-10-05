@@ -14,7 +14,7 @@ class CreateBodegaNuevoTable extends Migration
     public function up()
     {
         Schema::create('Bodega_Nuevo', function (Blueprint $table) {
-            $table->integer('Id_Bodega_Nuevo')->primary();
+            $table->bigIncrements('Id_Bodega_Nuevo');
             $table->string('Nombre');
             $table->string('Direccion');
             $table->string('Telefono', 60);

@@ -14,7 +14,7 @@ class CreateAttentionRoutesTable extends Migration
     public function up()
     {
         Schema::create('attention_routes', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 50)->nullable();
             $table->integer('id_type_service')->nullable();
             $table->string('age', 50)->nullable();

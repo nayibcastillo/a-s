@@ -14,7 +14,7 @@ class CreateDireccionDianTable extends Migration
     public function up()
     {
         Schema::create('Direccion_Dian', function (Blueprint $table) {
-            $table->integer('Id_Direccion_Dian')->primary();
+            $table->bigIncrements('Id_Direccion_Dian');
             $table->string('Codigo', 60);
             $table->string('Descripcion', 250);
         });

@@ -14,7 +14,7 @@ class CreateDianAddressesTable extends Migration
     public function up()
     {
         Schema::create('dian_addresses', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code', 50)->nullable();
             $table->string('description', 191)->nullable();
             $table->timestamps();

@@ -14,7 +14,7 @@ class CreateWinningListsTable extends Migration
     public function up()
     {
         Schema::create('winning_lists', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code', 50)->nullable();
             $table->string('name', 50)->nullable();
             $table->integer('percentage')->nullable();

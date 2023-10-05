@@ -14,7 +14,7 @@ class CreateLaboratoriesPlacesTable extends Migration
     public function up()
     {
         Schema::create('laboratories_places', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 50);
             $table->bigInteger('nit');
             $table->integer('verification_digit');

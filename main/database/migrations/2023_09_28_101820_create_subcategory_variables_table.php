@@ -14,7 +14,7 @@ class CreateSubcategoryVariablesTable extends Migration
     public function up()
     {
         Schema::create('subcategory_variables', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('subcategory_id')->nullable();
             $table->string('label')->nullable();
             $table->string('type', 11)->nullable();

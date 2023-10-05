@@ -14,7 +14,7 @@ class CreateParentsForFieldsTable extends Migration
     public function up()
     {
         Schema::create('parents_for_fields', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('variables_clinical_history_model_id');
             $table->integer('parent_id');
             $table->timestamp('created_at');

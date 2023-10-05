@@ -14,7 +14,7 @@ class CreateBenefitIncomesTable extends Migration
     public function up()
     {
         Schema::create('benefit_incomes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id');
             $table->unsignedInteger('countable_income_id');
             $table->integer('value');

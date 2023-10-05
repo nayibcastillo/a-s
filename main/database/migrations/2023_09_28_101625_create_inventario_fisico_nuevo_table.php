@@ -14,7 +14,7 @@ class CreateInventarioFisicoNuevoTable extends Migration
     public function up()
     {
         Schema::create('Inventario_Fisico_Nuevo', function (Blueprint $table) {
-            $table->integer('Id_Inventario_Fisico_Nuevo')->primary();
+            $table->bigIncrements('Id_Inventario_Fisico_Nuevo');
             $table->integer('Funcionario_Autoriza');
             $table->integer('Id_Bodega_Nuevo');
             $table->integer('Id_Grupo_Estiba');

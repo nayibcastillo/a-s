@@ -14,7 +14,7 @@ class CreateInventarioNuevoTable extends Migration
     public function up()
     {
         Schema::create('Inventario_Nuevo', function (Blueprint $table) {
-            $table->bigInteger('Id_Inventario_Nuevo')->primary();
+            $table->bigIncrements('Id_Inventario_Nuevo');
             $table->string('Codigo', 100)->nullable();
             $table->bigInteger('Id_Estiba')->nullable();
             $table->bigInteger('Id_Producto')->nullable();
@@ -38,8 +38,6 @@ class CreateInventarioNuevoTable extends Migration
             $table->integer('Cantidad_Leo')->default(0);
             $table->string('Negativo', 100)->nullable();
             $table->integer('Cantidad_Pendientes')->default(0);
-
-            $table->foreign('Id_Producto', 'Id_Producto')->references('Id_Producto')->on('producto');
         });
     }
 

@@ -14,7 +14,7 @@ class CreateCallInsTable extends Migration
     public function up()
     {
         Schema::create('call_ins', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('Id_Llamada', 100)->nullable();
             $table->unsignedBigInteger('Identificacion_Paciente');
             $table->unsignedBigInteger('Identificacion_Agente');

@@ -14,7 +14,7 @@ class CreateCodigoCiiuTable extends Migration
     public function up()
     {
         Schema::create('Codigo_Ciiu', function (Blueprint $table) {
-            $table->integer('Id_Codigo_Ciiu')->primary();
+            $table->bigIncrements('Id_Codigo_Ciiu');
             $table->string('Codigo', 60);
             $table->text('Descripcion');
         });

@@ -14,7 +14,7 @@ class CreateCupsTypeTable extends Migration
     public function up()
     {
         Schema::create('cups_type', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 100);
         });
     }

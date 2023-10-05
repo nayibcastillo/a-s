@@ -16,7 +16,7 @@ class CreateIpsCucutaTable extends Migration
         Schema::create('ips_cucuta', function (Blueprint $table) {
             $table->string('ips')->nullable();
             $table->string('direccion')->nullable();
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
         });
     }
 

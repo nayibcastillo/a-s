@@ -14,7 +14,7 @@ class CreatePuntoCronogramaRemisionTable extends Migration
     public function up()
     {
         Schema::create('Punto_Cronograma_Remision', function (Blueprint $table) {
-            $table->integer('Id_Punto_Cronograma_Remision')->primary();
+            $table->bigIncrements('Id_Punto_Cronograma_Remision');
             $table->integer('Id_Punto');
             $table->integer('Id_Cronograma');
         });

@@ -14,7 +14,7 @@ class CreatePerfilTable extends Migration
     public function up()
     {
         Schema::create('Perfil', function (Blueprint $table) {
-            $table->integer('Id_Perfil')->primary();
+            $table->bigIncrements('Id_Perfil');
             $table->string('Nombre', 200)->nullable();
             $table->string('Detalle', 100)->nullable();
             $table->string('Tablero', 100)->nullable();

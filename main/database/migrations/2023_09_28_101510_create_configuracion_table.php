@@ -14,7 +14,7 @@ class CreateConfiguracionTable extends Migration
     public function up()
     {
         Schema::create('Configuracion', function (Blueprint $table) {
-            $table->integer('Id_Configuracion')->primary();
+            $table->bigIncrements('Id_Configuracion');
             $table->enum('PagoNomina', ['mensual', 'quincenal'])->nullable();
             $table->integer('Extras_Legales')->nullable();
             $table->integer('Festivos_Legales')->nullable();

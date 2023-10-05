@@ -14,7 +14,7 @@ class CreateOrdenCompraInternacionalTable extends Migration
     public function up()
     {
         Schema::create('Orden_Compra_Internacional', function (Blueprint $table) {
-            $table->bigInteger('Id_Orden_Compra_Internacional')->primary();
+            $table->bigIncrements('Id_Orden_Compra_Internacional');
             $table->string('Codigo', 10)->nullable();
             $table->integer('Identificacion_Funcionario')->default(0);
             $table->timestamp('Fecha_Registro')->nullable()->useCurrent();

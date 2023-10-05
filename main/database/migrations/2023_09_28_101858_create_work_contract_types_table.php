@@ -14,7 +14,7 @@ class CreateWorkContractTypesTable extends Migration
     public function up()
     {
         Schema::create('work_contract_types', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->boolean('conclude')->default(0);
             $table->boolean('modified')->default(0);
             $table->string('name', 50)->nullable();

@@ -14,7 +14,7 @@ class CreateRotatingTurnHoursTable extends Migration
     public function up()
     {
         Schema::create('rotating_turn_hours', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id')->index('horario_turno_rotativo_funcionario_id_foreign');
             $table->unsignedInteger('rotating_turn_id')->index('horario_turno_rotativo_turno_rotativo_id_foreign');
             $table->date('date');

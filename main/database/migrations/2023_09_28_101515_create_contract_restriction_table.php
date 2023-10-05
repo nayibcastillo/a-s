@@ -14,7 +14,7 @@ class CreateContractRestrictionTable extends Migration
     public function up()
     {
         Schema::create('contract_restriction', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('contract_id', 50)->nullable();
             $table->string('restriction_id', 50)->nullable();
             $table->timestamp('created_at')->nullable();

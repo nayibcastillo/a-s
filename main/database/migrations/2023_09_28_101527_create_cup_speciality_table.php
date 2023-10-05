@@ -18,7 +18,7 @@ class CreateCupSpecialityTable extends Migration
             $table->integer('cup_id')->nullable();
             $table->integer('speciality_id')->nullable();
             $table->string('speciality_name', 32)->nullable();
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
         });
     }
 

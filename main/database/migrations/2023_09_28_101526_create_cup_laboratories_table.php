@@ -14,7 +14,7 @@ class CreateCupLaboratoriesTable extends Migration
     public function up()
     {
         Schema::create('cup_laboratories', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('id_laboratory');
             $table->bigInteger('id_cup');
             $table->string('file', 100)->nullable();

@@ -14,7 +14,7 @@ class CreateWorkContractsTable extends Migration
     public function up()
     {
         Schema::create('work_contracts', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('position_id')->nullable()->index('work_contracts_position_id_index');
             $table->integer('company_id')->nullable()->index('work_contracts_company_id_index');
             $table->boolean('liquidated')->default(0)->index('work_contracts_liquidated_index');

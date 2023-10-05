@@ -18,7 +18,7 @@ class CreateHistoryAppointmentsTable extends Migration
             $table->integer('appointment_id');
             $table->string('description');
             $table->timestamps();
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('icon', 120)->nullable();
         });
     }

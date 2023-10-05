@@ -14,7 +14,7 @@ class CreatePersonPayrollPaymentsTable extends Migration
     public function up()
     {
         Schema::create('person_payroll_payments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id');
             $table->unsignedInteger('payroll_payment_id');
             $table->integer('worked_days');

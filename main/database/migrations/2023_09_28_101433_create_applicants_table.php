@@ -14,7 +14,7 @@ class CreateApplicantsTable extends Migration
     public function up()
     {
         Schema::create('applicants', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('job_id')->default(0);
             $table->string('name', 150)->nullable();
             $table->string('surname', 150)->nullable();

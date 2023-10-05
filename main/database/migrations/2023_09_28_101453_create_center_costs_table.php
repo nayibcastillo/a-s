@@ -14,7 +14,7 @@ class CreateCenterCostsTable extends Migration
     public function up()
     {
         Schema::create('center_costs', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 50);
             $table->string('code', 50);
             $table->integer('parent_center_id');

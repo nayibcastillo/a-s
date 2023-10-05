@@ -14,7 +14,7 @@ class CreateHotelsTable extends Migration
     public function up()
     {
         Schema::create('hotels', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->enum('type', ['nacional', 'internacional'])->nullable();
             $table->string('name', 191)->nullable();
             $table->string('city_id', 191)->nullable();

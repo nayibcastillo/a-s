@@ -14,7 +14,7 @@ class CreateCallsTable extends Migration
     public function up()
     {
         Schema::create('calls', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('llamada_id')->nullable();
             $table->bigInteger('funcionario_id')->nullable();
             $table->bigInteger('paciente_id')->nullable();

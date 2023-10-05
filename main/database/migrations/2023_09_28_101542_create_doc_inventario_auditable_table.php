@@ -14,7 +14,7 @@ class CreateDocInventarioAuditableTable extends Migration
     public function up()
     {
         Schema::create('Doc_Inventario_Auditable', function (Blueprint $table) {
-            $table->integer('Id_Doc_Inventario_Auditable');
+            $table->bigIncrements('Id_Doc_Inventario_Auditable');
             $table->integer('Id_Bodega')->nullable();
             $table->timestamp('Fecha_Inicio')->nullable();
             $table->dateTime('Fecha_Fin')->nullable();

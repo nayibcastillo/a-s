@@ -14,7 +14,7 @@ class CreateFixedAssetsTable extends Migration
     public function up()
     {
         Schema::create('fixed_assets', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('type', 50)->nullable();
             $table->string('user_id', 50)->nullable();
             $table->integer('fixed_asset_type_id')->nullable();

@@ -14,7 +14,7 @@ class CreateSeveranceFundsTable extends Migration
     public function up()
     {
         Schema::create('severance_funds', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 150)->nullable();
             $table->string('nit', 50)->nullable();
             $table->timestamp('updated_at')->nullable()->useCurrent();

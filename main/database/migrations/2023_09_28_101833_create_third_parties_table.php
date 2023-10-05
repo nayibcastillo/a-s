@@ -14,7 +14,7 @@ class CreateThirdPartiesTable extends Migration
     public function up()
     {
         Schema::create('third_parties', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('nit', 50)->nullable();
             $table->enum('person_type', ['natural', 'juridico'])->nullable();
             $table->enum('third_party_type', ['cliente', 'proveedor'])->nullable();

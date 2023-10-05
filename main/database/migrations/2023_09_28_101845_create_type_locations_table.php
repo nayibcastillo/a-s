@@ -14,7 +14,7 @@ class CreateTypeLocationsTable extends Migration
     public function up()
     {
         Schema::create('type_locations', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('show_company_owners')->default(0);
             $table->string('name', 50)->nullable();
             $table->string('description', 50)->nullable();

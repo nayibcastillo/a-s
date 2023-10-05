@@ -14,7 +14,7 @@ class CreateFestivesTable extends Migration
     public function up()
     {
         Schema::create('festives', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('year')->nullable();
             $table->date('date')->nullable();
             $table->string('name', 100)->nullable();

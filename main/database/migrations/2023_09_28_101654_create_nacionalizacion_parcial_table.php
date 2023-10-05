@@ -14,7 +14,7 @@ class CreateNacionalizacionParcialTable extends Migration
     public function up()
     {
         Schema::create('Nacionalizacion_Parcial', function (Blueprint $table) {
-            $table->integer('Id_Nacionalizacion_Parcial')->primary();
+            $table->bigIncrements('Id_Nacionalizacion_Parcial');
             $table->integer('Id_Acta_Recepcion_Internacional');
             $table->integer('Identificacion_Funcionario');
             $table->string('Codigo', 20)->nullable();

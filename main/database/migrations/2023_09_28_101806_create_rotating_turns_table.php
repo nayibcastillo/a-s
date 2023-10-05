@@ -14,7 +14,7 @@ class CreateRotatingTurnsTable extends Migration
     public function up()
     {
         Schema::create('rotating_turns', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->boolean('extra_hours')->default(0);
             $table->integer('entry_tolerance')->default(0);

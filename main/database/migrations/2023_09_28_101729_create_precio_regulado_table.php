@@ -14,7 +14,7 @@ class CreatePrecioReguladoTable extends Migration
     public function up()
     {
         Schema::create('Precio_Regulado', function (Blueprint $table) {
-            $table->integer('Id_Precio_Regulado')->primary();
+            $table->bigIncrements('Id_Precio_Regulado');
             $table->string('Codigo_Cum', 60)->unique('Codigo_Cum');
             $table->decimal('Precio', 50, 2);
             $table->decimal('Precio_Anterior', 50, 2)->nullable();

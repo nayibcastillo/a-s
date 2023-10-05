@@ -14,7 +14,7 @@ class CreateTravelExpenseFeedingsTable extends Migration
     public function up()
     {
         Schema::create('travel_expense_feedings', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->enum('type', ['nacional', 'internacional']);
             $table->enum('breakfast', ['si', 'no']);
             $table->integer('rate')->nullable();

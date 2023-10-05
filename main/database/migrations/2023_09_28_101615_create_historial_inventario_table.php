@@ -14,7 +14,7 @@ class CreateHistorialInventarioTable extends Migration
     public function up()
     {
         Schema::create('Historial_Inventario', function (Blueprint $table) {
-            $table->bigInteger('Id_Historial_Inventario')->primary();
+            $table->bigIncrements('Id_Historial_Inventario');
             $table->bigInteger('Id_Inventario_Nuevo')->nullable();
             $table->bigInteger('Id_Estiba')->nullable();
             $table->string('Codigo_CUM', 100)->nullable();

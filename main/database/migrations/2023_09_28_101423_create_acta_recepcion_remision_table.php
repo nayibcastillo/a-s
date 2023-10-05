@@ -14,7 +14,7 @@ class CreateActaRecepcionRemisionTable extends Migration
     public function up()
     {
         Schema::create('Acta_Recepcion_Remision', function (Blueprint $table) {
-            $table->bigInteger('Id_Acta_Recepcion_Remision')->primary();
+            $table->bigIncrements('Id_Acta_Recepcion_Remision');
             $table->string('Codigo', 100)->nullable();
             $table->bigInteger('Id_Punto_Dispensacion')->nullable();
             $table->bigInteger('Id_Bodega')->nullable();

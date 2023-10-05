@@ -14,7 +14,7 @@ class CreateOrdenPedidoTable extends Migration
     public function up()
     {
         Schema::create('Orden_Pedido', function (Blueprint $table) {
-            $table->integer('Id_Orden_Pedido')->primary();
+            $table->bigIncrements('Id_Orden_Pedido');
             $table->integer('Id_Agentes_Cliente')->default(0);
             $table->string('Orden_Compra_Cliente')->default('0');
             $table->string('Archivo_Compra_Cliente')->default('0');

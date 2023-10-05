@@ -14,7 +14,7 @@ class CreateDisciplinaryProcessesTable extends Migration
     public function up()
     {
         Schema::create('disciplinary_processes', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('person_id')->nullable();
             $table->string('process_description', 50);
             $table->date('date_of_admission')->nullable();

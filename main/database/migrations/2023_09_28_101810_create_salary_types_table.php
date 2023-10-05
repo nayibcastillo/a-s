@@ -14,7 +14,7 @@ class CreateSalaryTypesTable extends Migration
     public function up()
     {
         Schema::create('salary_types', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 50);
             $table->enum('status', ['activo', 'inactivo'])->default('Activo');
             $table->timestamps();

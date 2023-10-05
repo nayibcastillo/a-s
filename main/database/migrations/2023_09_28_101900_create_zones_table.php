@@ -14,7 +14,7 @@ class CreateZonesTable extends Migration
     public function up()
     {
         Schema::create('zones', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->enum('status', ['activo', 'inactivo'])->default('Activo');
             $table->timestamps();

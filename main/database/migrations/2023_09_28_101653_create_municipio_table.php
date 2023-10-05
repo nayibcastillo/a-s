@@ -14,7 +14,7 @@ class CreateMunicipioTable extends Migration
     public function up()
     {
         Schema::create('Municipio', function (Blueprint $table) {
-            $table->integer('Id_Municipio')->primary();
+            $table->bigIncrements('Id_Municipio');
             $table->integer('Id_Departamento')->nullable();
             $table->string('Nombre', 200)->nullable();
             $table->string('Codigo', 10)->nullable();

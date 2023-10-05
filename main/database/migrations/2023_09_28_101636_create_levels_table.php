@@ -14,7 +14,7 @@ class CreateLevelsTable extends Migration
     public function up()
     {
         Schema::create('levels', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('number')->nullable();
             $table->string('code', 100)->nullable();
             $table->string('name', 100)->nullable();

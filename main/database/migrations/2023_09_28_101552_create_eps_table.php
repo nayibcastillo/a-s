@@ -14,7 +14,7 @@ class CreateEpsTable extends Migration
     public function up()
     {
         Schema::create('eps', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->string('logo');
             $table->string('address');

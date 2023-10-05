@@ -14,7 +14,7 @@ class CreateCountableIncomeTable extends Migration
     public function up()
     {
         Schema::create('countable_income', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('concept', 50);
             $table->enum('type', ['constitutivo', 'no constitutivo']);
             $table->string('accounting_account', 191)->nullable();

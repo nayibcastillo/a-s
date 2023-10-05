@@ -14,7 +14,7 @@ class CreateProductoNoConformeTable extends Migration
     public function up()
     {
         Schema::create('Producto_No_Conforme', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_No_Conforme')->primary();
+            $table->bigIncrements('Id_Producto_No_Conforme');
             $table->bigInteger('Id_Producto')->nullable();
             $table->bigInteger('Id_No_Conforme')->nullable();
             $table->bigInteger('Id_Compra')->nullable();

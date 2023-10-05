@@ -14,10 +14,10 @@ class CreatePersonSpecialityTable extends Migration
     public function up()
     {
         Schema::create('person_speciality', function (Blueprint $table) {
+            $table->bigIncrements('ids');
             $table->bigInteger('person_id')->nullable();
             $table->integer('speciality_id')->nullable();
             $table->timestamps();
-            $table->bigInteger('ids')->primary();
         });
     }
 

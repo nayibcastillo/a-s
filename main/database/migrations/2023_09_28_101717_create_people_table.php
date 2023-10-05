@@ -14,7 +14,7 @@ class CreatePeopleTable extends Migration
     public function up()
     {
         Schema::create('people', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->bigInteger('identifier')->nullable()->unique('funcionario_identidad_unique');
             $table->integer('type_document_id')->nullable()->index('type_document_id');
             $table->string('first_name', 191);

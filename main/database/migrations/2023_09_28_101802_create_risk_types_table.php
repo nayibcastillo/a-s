@@ -14,7 +14,7 @@ class CreateRiskTypesTable extends Migration
     public function up()
     {
         Schema::create('risk_types', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('risk_type', 250);
             $table->string('accounting_account', 250);
             $table->enum('status', ['activo', 'inactivo'])->default('Activo');

@@ -15,7 +15,7 @@ class CreateTypeAppointmentsTable extends Migration
     {
         Schema::create('type_appointments', function (Blueprint $table) {
             $table->string('description');
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->string('icon', 50)->nullable();
             $table->tinyInteger('face_to_face')->nullable();

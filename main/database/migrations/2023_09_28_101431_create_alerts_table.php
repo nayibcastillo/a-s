@@ -14,7 +14,7 @@ class CreateAlertsTable extends Migration
     public function up()
     {
         Schema::create('alerts', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('person_id')->default(0);
             $table->string('title', 250)->nullable();
             $table->boolean('modal')->default(0);

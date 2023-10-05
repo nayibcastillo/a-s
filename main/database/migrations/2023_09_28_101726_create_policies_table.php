@@ -14,7 +14,7 @@ class CreatePoliciesTable extends Migration
     public function up()
     {
         Schema::create('policies', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('contract_id')->nullable();
             $table->string('code', 50)->nullable();
             $table->date('start')->nullable();

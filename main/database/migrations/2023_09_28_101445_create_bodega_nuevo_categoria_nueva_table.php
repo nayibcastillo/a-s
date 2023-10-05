@@ -14,7 +14,7 @@ class CreateBodegaNuevoCategoriaNuevaTable extends Migration
     public function up()
     {
         Schema::create('Bodega_Nuevo_Categoria_Nueva', function (Blueprint $table) {
-            $table->integer('Id_Bodega_Nuevo_Categoria_Nueva');
+            $table->bigIncrements('Id_Bodega_Nuevo_Categoria_Nueva');
             $table->integer('Id_Bodega_Nuevo');
             $table->bigInteger('Id_Categoria_Nueva');
         });

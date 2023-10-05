@@ -14,7 +14,7 @@ class CreateDocInventarioFisicoTable extends Migration
     public function up()
     {
         Schema::create('Doc_Inventario_Fisico', function (Blueprint $table) {
-            $table->bigInteger('Id_Doc_Inventario_Fisico')->primary();
+            $table->bigIncrements('Id_Doc_Inventario_Fisico');
             $table->bigInteger('Id_Estiba')->nullable();
             $table->timestamp('Fecha_Inicio')->nullable();
             $table->dateTime('Fecha_Fin')->nullable();

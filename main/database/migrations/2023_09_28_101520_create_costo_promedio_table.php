@@ -14,7 +14,7 @@ class CreateCostoPromedioTable extends Migration
     public function up()
     {
         Schema::create('Costo_Promedio', function (Blueprint $table) {
-            $table->bigInteger('Id_Costo_Promedio')->primary();
+            $table->bigIncrements('Id_Costo_Promedio');
             $table->bigInteger('Id_Producto')->nullable();
             $table->decimal('Costo_Promedio', 50, 2)->nullable();
             $table->dateTime('Ultima_Actualizacion')->nullable();

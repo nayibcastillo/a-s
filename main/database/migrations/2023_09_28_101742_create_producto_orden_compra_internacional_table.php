@@ -14,7 +14,7 @@ class CreateProductoOrdenCompraInternacionalTable extends Migration
     public function up()
     {
         Schema::create('Producto_Orden_Compra_Internacional', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Orden_Compra_Internacional');
+            $table->bigIncrements('Id_Producto_Orden_Compra_Internacional');
             $table->bigInteger('Id_Orden_Compra_Internacional')->nullable();
             $table->bigInteger('Id_Producto')->nullable();
             $table->decimal('Costo', 30, 6)->nullable()->comment("Este valor esta representado en Dolares(USD)");

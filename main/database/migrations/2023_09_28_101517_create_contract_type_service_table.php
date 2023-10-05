@@ -14,7 +14,7 @@ class CreateContractTypeServiceTable extends Migration
     public function up()
     {
         Schema::create('contract_type_service', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('type_service_id');
             $table->integer('contract_id');
             $table->timestamps();

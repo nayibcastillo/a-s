@@ -14,7 +14,7 @@ class CreateBorradorTable extends Migration
     public function up()
     {
         Schema::create('Borrador', function (Blueprint $table) {
-            $table->integer('Id_Borrador')->primary();
+            $table->bigIncrements('Id_Borrador');
             $table->string('Codigo', 100)->nullable();
             $table->string('Tipo', 100)->nullable();
             $table->longText('Texto')->nullable();

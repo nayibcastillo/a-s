@@ -14,7 +14,7 @@ class CreateInventaryDotationsTable extends Migration
     public function up()
     {
         Schema::create('inventary_dotations', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('product_dotation_type_id')->nullable();
             $table->string('name', 50)->nullable();
             $table->string('code', 50)->nullable();

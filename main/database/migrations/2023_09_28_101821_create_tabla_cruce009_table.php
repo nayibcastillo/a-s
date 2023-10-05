@@ -15,7 +15,7 @@ class CreateTablaCruce009Table extends Migration
     public function up()
     {
         Schema::create('tabla_cruce009', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('IDENTIFICACION')->nullable();
             $table->string('TIPO_DOCUMENTO', 100)->nullable();
             $table->string('EPS', 100)->nullable();

@@ -14,7 +14,7 @@ class CreateAjusteIndividualTable extends Migration
     public function up()
     {
         Schema::create('Ajuste_Individual', function (Blueprint $table) {
-            $table->bigInteger('Id_Ajuste_Individual')->primary();
+            $table->bigIncrements('Id_Ajuste_Individual');
             $table->string('Codigo', 60)->nullable();
             $table->timestamp('Fecha')->nullable()->useCurrent();
             $table->integer('Identificacion_Funcionario')->nullable();

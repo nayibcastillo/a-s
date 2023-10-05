@@ -14,7 +14,7 @@ class CreateSubTypeAppointmentsTable extends Migration
     public function up()
     {
         Schema::create('sub_type_appointments', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('type_appointment_id');
             $table->string('description');
             $table->string('name');

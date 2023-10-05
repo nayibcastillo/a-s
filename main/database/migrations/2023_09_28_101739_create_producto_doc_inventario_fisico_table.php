@@ -14,7 +14,7 @@ class CreateProductoDocInventarioFisicoTable extends Migration
     public function up()
     {
         Schema::create('Producto_Doc_Inventario_Fisico', function (Blueprint $table) {
-            $table->bigInteger('Id_Producto_Doc_Inventario_Fisico');
+            $table->bigIncrements('Id_Producto_Doc_Inventario_Fisico');
             $table->bigInteger('Id_Producto')->nullable();
             $table->bigInteger('Id_Inventario_Nuevo')->nullable();
             $table->integer('Primer_Conteo')->nullable();

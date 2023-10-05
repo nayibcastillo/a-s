@@ -14,7 +14,7 @@ class CreateArlTable extends Migration
     public function up()
     {
         Schema::create('arl', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->string('nit', 191);
             $table->string('accounting_account', 191);

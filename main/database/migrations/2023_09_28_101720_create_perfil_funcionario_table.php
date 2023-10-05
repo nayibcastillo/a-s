@@ -14,7 +14,7 @@ class CreatePerfilFuncionarioTable extends Migration
     public function up()
     {
         Schema::create('Perfil_Funcionario', function (Blueprint $table) {
-            $table->integer('Id_Perfil_Funcionario')->primary();
+            $table->bigIncrements('Id_Perfil_Funcionario');
             $table->integer('Id_Perfil')->nullable();
             $table->bigInteger('Identificacion_Funcionario')->nullable();
             $table->string('Titulo_Modulo', 100)->nullable();

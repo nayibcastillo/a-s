@@ -14,10 +14,10 @@ class CreateEgressTypesTable extends Migration
     public function up()
     {
         Schema::create('egress_types', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->string('associated_account', 191);
-            $table->enum('type', ['prestamo', 'deducciã³n']);
+            $table->enum('type', ['prestamo', 'deducciï¿½n']);
             $table->enum('status', ['activo', 'inactivo'])->default('Activo');
             $table->timestamps();
         });

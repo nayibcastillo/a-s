@@ -14,7 +14,7 @@ class CreateDrivingLicensesTable extends Migration
     public function up()
     {
         Schema::create('driving_licenses', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('type', 50)->nullable();
             $table->string('description', 500)->nullable();
             $table->enum('state', ['activo', 'inactivo'])->default('Activo');

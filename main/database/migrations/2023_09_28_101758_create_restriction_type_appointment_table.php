@@ -14,7 +14,7 @@ class CreateRestrictionTypeAppointmentTable extends Migration
     public function up()
     {
         Schema::create('restriction_type_appointment', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('type_appointment_id', 50)->nullable();
             $table->string('restriction_id', 50)->nullable();
             $table->timestamp('created_at')->nullable();

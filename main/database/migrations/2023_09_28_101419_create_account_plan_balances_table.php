@@ -14,7 +14,7 @@ class CreateAccountPlanBalancesTable extends Migration
     public function up()
     {
         Schema::create('account_plan_balances', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('account_plan_id')->nullable();
             $table->double('balance', 50, 2)->nullable();
         });

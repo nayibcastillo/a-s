@@ -14,7 +14,7 @@ class CreateTipoRechazoTable extends Migration
     public function up()
     {
         Schema::create('Tipo_Rechazo', function (Blueprint $table) {
-            $table->integer('Id_Tipo_Rechazo')->primary();
+            $table->bigIncrements('Id_Tipo_Rechazo');
             $table->string('Nombre', 50)->nullable();
         });
     }

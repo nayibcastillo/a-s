@@ -14,7 +14,7 @@ class CreateTaxisTable extends Migration
     public function up()
     {
         Schema::create('taxis', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('route', 191)->nullable();
             $table->timestamps();
         });

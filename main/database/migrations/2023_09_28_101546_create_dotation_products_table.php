@@ -14,7 +14,7 @@ class CreateDotationProductsTable extends Migration
     public function up()
     {
         Schema::create('dotation_products', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('dotation_id')->nullable();
             $table->integer('inventary_dotation_id')->nullable();
             $table->integer('quantity');

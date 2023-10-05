@@ -14,7 +14,7 @@ class CreateTecnicNoteCupsTable extends Migration
     public function up()
     {
         Schema::create('tecnic_note_cups', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->unsignedInteger('cup_id');
             $table->unsignedInteger('tecnic_note_id');
             $table->timestamps();

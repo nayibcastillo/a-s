@@ -14,7 +14,7 @@ class CreateNoConformeTable extends Migration
     public function up()
     {
         Schema::create('No_Conforme', function (Blueprint $table) {
-            $table->bigInteger('Id_No_Conforme')->primary();
+            $table->bigIncrements('Id_No_Conforme');
             $table->timestamp('Fecha_registro')->nullable()->useCurrent();
             $table->string('Codigo', 100)->nullable();
             $table->string('Persona_Reporta', 100)->nullable();

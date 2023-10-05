@@ -14,7 +14,7 @@ class CreatePayrollRisksArlsTable extends Migration
     public function up()
     {
         Schema::create('payroll_risks_arls', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('prefix', 191);
             $table->string('concept', 191);
             $table->decimal('percentage', 4, 2);

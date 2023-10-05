@@ -14,7 +14,7 @@ class CreateCompanyPaymentConfigurationsTable extends Migration
     public function up()
     {
         Schema::create('company_payment_configurations', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('calculate_work_disability', 50)->nullable();
             $table->string('pay_deductions', 50)->nullable();
             $table->string('recurring_payment', 50)->nullable();

@@ -14,7 +14,7 @@ class CreateTaxiCitiesTable extends Migration
     public function up()
     {
         Schema::create('taxi_cities', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->enum('type', ['nacional', 'internacional'])->nullable();
             $table->bigInteger('taxi_id');
             $table->bigInteger('city_id');

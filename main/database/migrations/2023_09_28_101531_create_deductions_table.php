@@ -14,7 +14,7 @@ class CreateDeductionsTable extends Migration
     public function up()
     {
         Schema::create('deductions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id');
             $table->unsignedInteger('countable_deduction_id');
             $table->integer('value');

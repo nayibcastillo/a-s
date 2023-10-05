@@ -14,7 +14,7 @@ class CreateTypeDocumentsTable extends Migration
     public function up()
     {
         Schema::create('type_documents', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code', 5)->nullable();
             $table->integer('dian_code')->nullable();
             $table->string('name', 100)->nullable();

@@ -14,7 +14,7 @@ class CreateWaitingListsTable extends Migration
     public function up()
     {
         Schema::create('waiting_lists', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('origin', 20);
             $table->string('message_cancell')->nullable();
             $table->integer('type_appointment_id')->nullable();

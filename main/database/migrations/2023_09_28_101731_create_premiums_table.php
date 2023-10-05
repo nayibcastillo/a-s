@@ -14,7 +14,7 @@ class CreatePremiumsTable extends Migration
     public function up()
     {
         Schema::create('premiums', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('person_id')->nullable();
             $table->string('premium', 100)->nullable();
             $table->decimal('total_premium', 20, 2)->nullable();

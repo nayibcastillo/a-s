@@ -14,7 +14,7 @@ class CreateLoanFeesTable extends Migration
     public function up()
     {
         Schema::create('loan_fees', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('loan_id')->nullable();
             $table->integer('number')->nullable();
             $table->decimal('amortization', 50, 2)->nullable();

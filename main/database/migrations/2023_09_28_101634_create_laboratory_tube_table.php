@@ -14,7 +14,7 @@ class CreateLaboratoryTubeTable extends Migration
     public function up()
     {
         Schema::create('laboratory_tube', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('laboratory_id');
             $table->bigInteger('color_id');
             $table->bigInteger('amount');

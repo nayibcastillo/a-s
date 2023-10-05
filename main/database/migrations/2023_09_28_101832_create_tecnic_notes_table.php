@@ -14,7 +14,7 @@ class CreateTecnicNotesTable extends Migration
     public function up()
     {
         Schema::create('tecnic_notes', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('frequency');
             $table->string('alert_percentage');
             $table->string('unit_value');

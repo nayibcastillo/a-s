@@ -14,7 +14,7 @@ class CreateLoansTable extends Migration
     public function up()
     {
         Schema::create('loans', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code')->nullable();
             $table->timestamp('date')->nullable()->useCurrent();
             $table->enum('interest_type', ['sin', 'prestamo', 'capital'])->default('Sin');

@@ -14,7 +14,7 @@ class CreateFamiliaTable extends Migration
     public function up()
     {
         Schema::create('Familia', function (Blueprint $table) {
-            $table->integer('Id_Familia')->primary();
+            $table->bigIncrements('Id_Familia');
             $table->text('Nombre')->nullable();
         });
     }

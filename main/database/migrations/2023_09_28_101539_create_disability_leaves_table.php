@@ -14,7 +14,7 @@ class CreateDisabilityLeavesTable extends Migration
     public function up()
     {
         Schema::create('disability_leaves', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('concept', 191);
             $table->string('accounting_account', 191);
             $table->boolean('sum')->default(0);

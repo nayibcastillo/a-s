@@ -14,7 +14,7 @@ class CreateIngressTypesTable extends Migration
     public function up()
     {
         Schema::create('ingress_types', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->string('associated_account', 191);
             $table->enum('type', ['prestacional', 'no prestacional']);

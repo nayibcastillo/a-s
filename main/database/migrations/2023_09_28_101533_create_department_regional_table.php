@@ -14,7 +14,7 @@ class CreateDepartmentRegionalTable extends Migration
     public function up()
     {
         Schema::create('department_regional', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('departamento_id')->default(0);
             $table->integer('regional_id')->default(0);
             $table->timestamps();

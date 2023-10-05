@@ -15,7 +15,7 @@ class CreatePacienteUltimoTable extends Migration
     public function up()
     {
         Schema::create('Paciente-Ultimo', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('scEmpresa', 57)->nullable();
             $table->string('Desc_Sede', 32)->nullable();
             $table->string('Id_Tipodocumento', 4)->nullable();

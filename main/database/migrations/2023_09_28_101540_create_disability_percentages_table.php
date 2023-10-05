@@ -14,7 +14,7 @@ class CreateDisabilityPercentagesTable extends Migration
     public function up()
     {
         Schema::create('disability_percentages', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name', 191);
             $table->string('value', 191);
             $table->timestamps();

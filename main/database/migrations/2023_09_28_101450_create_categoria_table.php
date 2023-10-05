@@ -14,7 +14,7 @@ class CreateCategoriaTable extends Migration
     public function up()
     {
         Schema::create('Categoria', function (Blueprint $table) {
-            $table->integer('Id_Categoria')->primary();
+            $table->bigIncrements('Id_Categoria');
             $table->integer('Id_Bodega')->nullable();
             $table->string('Nombre', 100);
             $table->enum('Separable', ['si', 'no'])->default('No');

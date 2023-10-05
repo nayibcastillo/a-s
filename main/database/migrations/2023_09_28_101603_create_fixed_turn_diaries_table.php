@@ -14,7 +14,7 @@ class CreateFixedTurnDiariesTable extends Migration
     public function up()
     {
         Schema::create('fixed_turn_diaries', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('person_id')->index('diario_turno_fijo_funcionario_id_foreign');
             $table->date('date');
             $table->unsignedInteger('fixed_turn_id')->index('diario_turno_fijo_turno_fijo_id_foreign');

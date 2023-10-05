@@ -14,7 +14,7 @@ class CreateFuncionarioPuntoTable extends Migration
     public function up()
     {
         Schema::create('Funcionario_Punto', function (Blueprint $table) {
-            $table->bigInteger('Id_Funcionario_Punto')->primary();
+            $table->bigIncrements('Id_Funcionario_Punto');
             $table->bigInteger('Id_Punto_Dispensacion')->nullable();
             $table->bigInteger('Identificacion_Funcionario')->nullable();
             $table->timestamp('Fecha')->useCurrent();

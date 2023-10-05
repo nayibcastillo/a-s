@@ -14,7 +14,7 @@ class CreateTravelExpensesTable extends Migration
     public function up()
     {
         Schema::create('travel_expenses', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->bigInteger('person_id');
             $table->bigInteger('user_id');
             $table->bigInteger('approve_user_id');

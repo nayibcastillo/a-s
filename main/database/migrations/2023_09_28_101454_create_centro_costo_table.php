@@ -14,7 +14,7 @@ class CreateCentroCostoTable extends Migration
     public function up()
     {
         Schema::create('Centro_Costo', function (Blueprint $table) {
-            $table->integer('Id_Centro_Costo');
+            $table->bigIncrements('Id_Centro_Costo');
             $table->string('Nombre')->nullable();
             $table->string('Codigo')->nullable();
             $table->integer('Id_Centro_Padre')->nullable();

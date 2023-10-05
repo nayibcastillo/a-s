@@ -14,7 +14,7 @@ class CreateCompanyPersonTable extends Migration
     public function up()
     {
         Schema::create('company_person', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('person_id', 50)->nullable();
             $table->string('company_id', 50)->nullable();
             $table->timestamp('created_at')->nullable();

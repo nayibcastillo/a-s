@@ -14,7 +14,7 @@ class CreatePrettyCashTable extends Migration
     public function up()
     {
         Schema::create('pretty_cash', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->integer('person_id')->default(0);
             $table->integer('account_plan_id')->nullable();
             $table->double('initial_balance', 50, 2)->nullable();

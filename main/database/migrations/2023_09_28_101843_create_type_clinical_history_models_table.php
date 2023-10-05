@@ -14,7 +14,7 @@ class CreateTypeClinicalHistoryModelsTable extends Migration
     public function up()
     {
         Schema::create('type_clinical_history_models', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->bigIncrements('id');
             $table->string('name');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('update_at')->useCurrent();

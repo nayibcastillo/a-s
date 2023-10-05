@@ -14,7 +14,7 @@ class CreatePuntoDispensacionTable extends Migration
     public function up()
     {
         Schema::create('Punto_Dispensacion', function (Blueprint $table) {
-            $table->integer('Id_Punto_Dispensacion')->primary();
+            $table->bigIncrements('Id_Punto_Dispensacion');
             $table->string('Nombre', 200)->nullable();
             $table->string('Tipo', 200)->nullable();
             $table->enum('Tipo_Entrega', ['despacho', 'radicacion'])->nullable();

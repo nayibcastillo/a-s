@@ -14,7 +14,7 @@ class CreatePlanCuentasTable extends Migration
     public function up()
     {
         Schema::create('Plan_Cuentas', function (Blueprint $table) {
-            $table->integer('Id_Plan_Cuentas')->primary();
+            $table->bigIncrements('Id_Plan_Cuentas');
             $table->string('Tipo_P', 60)->nullable();
             $table->string('Tipo_Niif', 60)->nullable();
             $table->string('Codigo', 100)->nullable()->index('Codigo_idx');

@@ -14,7 +14,7 @@ class CreateCiiuCodesTable extends Migration
     public function up()
     {
         Schema::create('ciiu_codes', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
+            $table->bigIncrements('id');
             $table->string('code', 191)->nullable();
             $table->string('description', 191)->nullable();
             $table->timestamps();
